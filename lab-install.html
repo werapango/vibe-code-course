@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ติดตั้งซอฟต์แวร์ห้อง Lab — Vibe Coding × SDLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+  <style>
+    .fill td:last-child { min-width: 220px; border-bottom: 1px dotted var(--line); }
+    .signoff td { height: 30px; }
+    @media print {
+      .no-print { display: none !important; }
+      .page-break { break-before: page; }
+      table { font-size: 10pt; }
+    }
+  </style>
+</head>
+<body data-page="lab-install.html">
+<main>
+  <p class="eyebrow">สำหรับผู้ดูแลห้องปฏิบัติการ / IT</p>
+  <h1>เอกสารติดตั้งซอฟต์แวร์ห้องปฏิบัติการ</h1>
+  <p class="lede">รายการซอฟต์แวร์ เครือข่าย และวิธีตรวจรับเครื่อง สำหรับหลักสูตร 1 วัน
+  “พัฒนาซอฟต์แวร์ให้เป็นระบบ ในยุคที่ AI ช่วยเขียนโค้ด” — ใช้เครื่อง Windows ในห้อง Lab เท่านั้น
+  พิมพ์หน้านี้ส่งผู้ดูแลห้องได้ (Ctrl+P · ส่วนเมนูจะไม่ถูกพิมพ์)</p>
+
+  <div class="meta">
+    <span class="chip">🪟 Windows 10/11 64-bit</span>
+    <span class="chip">💰 ซอฟต์แวร์ฟรีทั้งหมด</span>
+    <span class="chip">🔐 ผู้เรียนไม่ต้องมีสิทธิ์ admin</span>
+    <span class="chip">⏱ ควรเสร็จก่อนวันอบรม ≥ 1 สัปดาห์</span>
+  </div>
+
+  <div class="table-wrap"><table class="fill"><tbody>
+    <tr><th>หลักสูตร</th><td>Vibe Coding × SDLC (Cloudflare Workers + ZCode)</td></tr>
+    <tr><th>วันที่อบรม</th><td></td></tr>
+    <tr><th>ห้อง / จำนวนเครื่อง</th><td></td></tr>
+    <tr><th>ผู้ประสานงาน (ผู้สอน)</th><td></td></tr>
+    <tr><th>ผู้ดูแลห้อง / IT</th><td></td></tr>
+    <tr><th>กำหนดติดตั้งเสร็จ</th><td></td></tr>
+  </tbody></table></div>
+
+  <div class="toc no-print">
+    <b>ในหน้านี้</b>
+    <ol>
+      <li><a href="#summary">สรุปสำหรับผู้ดูแล</a></li>
+      <li><a href="#software">1. รายการซอฟต์แวร์</a></li>
+      <li><a href="#install">2. วิธีติดตั้ง</a></li>
+      <li><a href="#config">3. ตั้งค่าหลังติดตั้ง</a></li>
+      <li><a href="#network">4. เครือข่ายและพอร์ต</a></li>
+      <li><a href="#verify">5. ตรวจรับเครื่อง</a></li>
+      <li><a href="#after">6. หลังจบการอบรม</a></li>
+      <li><a href="#signoff">ใบตรวจรับรายเครื่อง</a></li>
+    </ol>
+  </div>
+
+  <h2 id="summary">สรุปสำหรับผู้ดูแล</h2>
+  <ul>
+    <li>ติดตั้ง <strong>5 โปรแกรม</strong>: Node.js LTS, Git for Windows, VS Code, ZCode และเบราว์เซอร์ Chrome หรือ Edge — ฟรีทั้งหมด ไม่มีค่า license</li>
+    <li>เปิด <strong>HTTPS ขาออก (พอร์ต 443)</strong> ไปยังโดเมนในข้อ 4 และ<strong>ไม่บล็อก localhost</strong> พอร์ต 8976 และ 8787</li>
+    <li>ผู้เรียน<strong>ไม่ต้องมีสิทธิ์ administrator</strong> — ทุกคำสั่งในวันอบรมติดตั้งลงโฟลเดอร์ผู้ใช้หรือโฟลเดอร์โปรเจกต์</li>
+    <li><strong>ไม่ต้องติดตั้ง</strong> wrangler, Python, Docker หรือฐานข้อมูลใด ๆ — wrangler ติดตั้งเองในแต่ละโปรเจกต์ผ่าน npm</li>
+    <li>ตรวจรับด้วยสคริปต์ <a href="assets/check-lab.ps1" download><code>check-lab.ps1</code></a> (ข้อ 5) ทุกเครื่องต้องขึ้น “พร้อมใช้”</li>
+  </ul>
+
+  <h2 id="software">1. รายการซอฟต์แวร์</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>ซอฟต์แวร์</th><th>เวอร์ชัน</th><th>winget ID</th><th>ดาวน์โหลดทางการ</th><th>ใช้ทำอะไร</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Node.js</strong> (รวม npm)</td><td>LTS · <strong>22 ขึ้นไป</strong><br><span class="small">ทดสอบกับ 24.x · ล่าสุด 26.x</span></td><td><code>OpenJS.NodeJS.LTS</code></td><td><a href="https://nodejs.org/">nodejs.org</a> (.msi x64)</td><td>รัน <code>npm</code>, <code>npx wrangler</code>, สคริปต์ทดสอบ</td></tr>
+      <tr><td><strong>Git for Windows</strong> (รวม Git Bash)</td><td>2.4x ขึ้นไป<br><span class="small">ทดสอบกับ 2.56</span></td><td><code>Git.Git</code></td><td><a href="https://git-scm.com/download/win">git-scm.com</a></td><td>บันทึก checkpoint และ terminal หลักของหลักสูตร (Git Bash)</td></tr>
+      <tr><td><strong>Visual Studio Code</strong></td><td>ล่าสุด<br><span class="small">ทดสอบกับ 1.144</span></td><td><code>Microsoft.VisualStudioCode</code></td><td><a href="https://code.visualstudio.com/download">code.visualstudio.com</a> — เลือก <strong>System Installer</strong></td><td>อ่านโค้ดและดู diff</td></tr>
+      <tr><td><strong>ZCode</strong> (Z.ai)</td><td>ล่าสุด<br><span class="small">winget มี 3.17.x</span></td><td><code>ZhipuAI.ZCode</code></td><td><a href="https://zcode.z.ai/">zcode.z.ai</a></td><td>AI coding agent — ผู้เรียนล็อกอินบัญชีตัวเองวันอบรม</td></tr>
+      <tr><td><strong>Chrome</strong> หรือ <strong>Edge</strong></td><td>ล่าสุด</td><td><code>Google.Chrome</code></td><td><a href="https://www.google.com/chrome/">google.com/chrome</a> · Edge มีใน Windows แล้ว</td><td>สมัคร/ล็อกอินบริการ, ทดสอบแอป, F12 ดู cookie</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">curl และ PowerShell มีใน Windows 10/11 อยู่แล้ว · ไม่ต้องติดตั้ง extension ของ VS Code</p>
+
+  <h2 id="install">2. วิธีติดตั้ง</h2>
+  <p>เลือกทางใดทางหนึ่ง ทำบน<strong>เครื่องต้นแบบ 1 เครื่อง</strong>ก่อน ตรวจรับให้ผ่าน (ข้อ 5) แล้วจึงโคลน image หรือกระจายไปทุกเครื่อง</p>
+
+  <h3>ทาง A — winget (แนะนำ)</h3>
+  <p>เปิด <strong>PowerShell แบบ Run as administrator</strong> แล้วรัน:</p>
+<pre><code>winget install --id OpenJS.NodeJS.LTS -e --silent --scope machine --accept-package-agreements --accept-source-agreements
+winget install --id Git.Git -e --silent --scope machine --accept-package-agreements --accept-source-agreements
+winget install --id Microsoft.VisualStudioCode -e --silent --scope machine --accept-package-agreements --accept-source-agreements --override "/VERYSILENT /NORESTART /MERGETASKS=!runcode,addcontextmenufiles,addcontextmenufolders,addtopath"
+winget install --id ZhipuAI.ZCode -e --silent --scope machine --accept-package-agreements --accept-source-agreements
+winget install --id Google.Chrome -e --silent --scope machine --accept-package-agreements --accept-source-agreements</code></pre>
+  <ul>
+    <li><code>--scope machine</code> ทำให้ติดตั้งให้ผู้ใช้ทุกคนบนเครื่อง (สำคัญกับ VS Code ซึ่งค่าเริ่มต้นของ winget เป็นแบบติดตั้งรายผู้ใช้)</li>
+    <li>ถ้า ZCode ไม่รองรับ <code>--scope machine</code> ให้ตัดตัวเลือกนี้ออกเฉพาะบรรทัด ZCode แล้วตรวจว่าผู้ใช้อื่นบนเครื่องเปิดได้</li>
+  </ul>
+
+  <h3>ทาง B — ตัวติดตั้งแบบเงียบ (สำหรับ SCCM / Intune / สคริปต์ของห้อง)</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>โปรแกรม</th><th>ไฟล์</th><th>คำสั่งติดตั้งเงียบ</th></tr></thead>
+    <tbody>
+      <tr><td>Node.js</td><td><code>node-v24.x.x-x64.msi</code> หรือ v26</td><td><code>msiexec /i node-v24.x.x-x64.msi /qn /norestart</code></td></tr>
+      <tr><td>Git</td><td><code>Git-2.x-64-bit.exe</code></td><td><code>Git-2.x-64-bit.exe /VERYSILENT /NORESTART /NOCANCEL /SP-</code></td></tr>
+      <tr><td>VS Code</td><td><code>VSCodeSetup-x64-1.x.exe</code> (<strong>System</strong>, ไม่ใช่ UserSetup)</td><td><code>VSCodeSetup-x64-1.x.exe /VERYSILENT /NORESTART /MERGETASKS=!runcode,addcontextmenufiles,addcontextmenufolders,addtopath</code></td></tr>
+      <tr><td>ZCode</td><td><code>ZCode-3.x-win-x64.exe</code> (NSIS)</td><td><code>ZCode-3.x-win-x64.exe /S</code> <span class="small">— ข้อมูลจาก winget ยังไม่ได้ยืนยันจากเอกสารของ Z.ai ให้ทดสอบบนเครื่องต้นแบบ</span></td></tr>
+      <tr><td>Chrome</td><td><code>googlechromestandaloneenterprise64.msi</code></td><td><code>msiexec /i googlechromestandaloneenterprise64.msi /qn</code></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="config">3. ตั้งค่าหลังติดตั้ง</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>เรื่อง</th><th>ทำอะไร</th><th>เหตุผล</th></tr></thead>
+    <tbody>
+      <tr><td><strong>PATH</strong></td><td>เปิด terminal ใหม่ แล้ว <code>node -v</code>, <code>git --version</code>, <code>code --version</code> ต้องขึ้นเลขเวอร์ชัน</td><td>เอกสาร lab เรียกคำสั่งเหล่านี้ตรง ๆ</td></tr>
+      <tr><td><strong>อุ่น npm cache</strong> (แนะนำ)</td><td>รันคำสั่ง C3 ในข้อ 5.2 หนึ่งครั้งด้วย<strong>บัญชีผู้ใช้ที่ผู้เรียนจะใช้</strong> ก่อนบันทึก image</td><td>ทั้งห้องติดตั้งพร้อมกันตอน 10:00 — มี cache แล้วเร็วขึ้นมากและไม่แย่งแบนด์วิดท์</td></tr>
+      <tr><td><strong>ระบบคืนค่าเครื่อง</strong> (Deep Freeze ฯลฯ)</td><td>เปิดได้ แต่ต้อง<strong>ไม่รีสตาร์ทระหว่าง 09:00–16:00</strong> หรือกำหนดไดรฟ์/โฟลเดอร์ที่ไม่ถูกคืนค่าให้เก็บงาน</td><td>งานของผู้เรียนอยู่บนเครื่องทั้งวัน</td></tr>
+      <tr><td><strong>เบราว์เซอร์</strong></td><td>แนะนำปิดการบันทึกรหัสผ่านด้วย policy (<code>PasswordManagerEnabled = false</code>) · อนุญาต pop-up และการเปิด <code>http://localhost</code></td><td>เครื่องใช้ร่วมกัน · ล็อกอิน wrangler ส่งผลกลับมาที่ localhost</td></tr>
+      <tr><td><strong>PowerShell execution policy</strong></td><td>ไม่ต้องเปลี่ยน</td><td>หลักสูตรใช้ Git Bash · ใน PowerShell ใช้ <code>npx.cmd</code> แทนได้</td></tr>
+      <tr><td><strong>Antivirus / EDR</strong></td><td>ต้องไม่ลบหรือบล็อก <code>workerd.exe</code> และ <code>esbuild.exe</code> ใน <code>node_modules</code> ของโฟลเดอร์ผู้ใช้</td><td>เป็นตัวจำลอง Cloudflare บนเครื่อง (<code>npm run dev</code>)</td></tr>
+      <tr><td><strong>บัญชีบนเครื่อง</strong></td><td>อย่าล็อกอินบัญชีใดค้างไว้ใน ZCode, Cloudflare, Google หรือ ChatGPT ก่อนบันทึก image</td><td>ผู้เรียนแต่ละคนใช้บัญชีของตัวเอง</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="network">4. เครือข่ายและพอร์ต</h2>
+  <p>ทั้งหมดเป็น <strong>HTTPS ขาออก พอร์ต 443</strong> — ไม่มีการเปิดพอร์ตขาเข้าจากภายนอก</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>ปลายทาง</th><th>ใช้ตอน</th></tr></thead>
+    <tbody>
+      <tr><td><code>registry.npmjs.org</code></td><td>ติดตั้ง dependency (<code>npm create cloudflare</code>, <code>npm install</code>)</td></tr>
+      <tr><td><code>github.com</code>, <code>codeload.github.com</code>, <code>objects.githubusercontent.com</code></td><td>ดึง starter จาก <code>github.com/werapango/workers-app-starter</code></td></tr>
+      <tr><td><code>dash.cloudflare.com</code>, <code>api.cloudflare.com</code>, <code>*.cloudflare.com</code></td><td>สมัคร/ล็อกอิน, <code>wrangler login</code>, deploy, ฐานข้อมูล D1</td></tr>
+      <tr><td><code>*.workers.dev</code></td><td>เปิดแอปที่ผู้เรียน deploy</td></tr>
+      <tr><td><code>z.ai</code>, <code>*.z.ai</code> (รวม <code>zcode.z.ai</code>, <code>cdn-zcode.z.ai</code>)</td><td>ZCode ล็อกอิน เรียกโมเดล และอัปเดต</td></tr>
+      <tr><td><code>gemini.google.com</code>, <code>accounts.google.com</code>, <code>chatgpt.com</code>, <code>*.openai.com</code></td><td>Lab 2 เขียนเอกสารความต้องการด้วย chat LLM ผ่านเบราว์เซอร์</td></tr>
+      <tr><td><code>werapango.github.io</code></td><td>เว็บเอกสารประกอบการอบรม</td></tr>
+      <tr><td><code>fonts.googleapis.com</code>, <code>fonts.gstatic.com</code></td><td>ฟอนต์ของเว็บเอกสาร (ไม่มีก็ใช้งานได้)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>พอร์ตบนเครื่องตัวเอง (localhost)</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>พอร์ต</th><th>ใช้ทำอะไร</th><th>ถ้าถูกบล็อก</th></tr></thead>
+    <tbody>
+      <tr><td><code>8976</code></td><td><code>npx wrangler login</code> — หน้าเว็บ Cloudflare ส่งผลล็อกอินกลับมาที่ <code>http://localhost:8976</code></td><td>กด Allow แล้ว terminal ค้าง · ทางสำรอง: <code>npx wrangler login --device</code> (ล็อกอินด้วยรหัสแทน ไม่ใช้ localhost)</td></tr>
+      <tr><td><code>8787</code></td><td><code>npm run dev</code> — เปิดแอปทดสอบบนเครื่อง</td><td>ใช้ <code>npx wrangler dev --port 8788</code></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box">
+    <span class="label">🌐 ถ้าห้อง Lab ออกอินเทอร์เน็ตผ่าน proxy</span>
+    <p>ตั้งค่าตัวแปรระบบ <code>HTTPS_PROXY</code> และ <code>HTTP_PROXY</code> (wrangler และ Node ใช้ค่านี้) ·
+    <code>npm config set proxy …</code> / <code>npm config set https-proxy …</code> ·
+    <code>git config --system http.proxy …</code> — และถ้า proxy ถอดรหัส HTTPS ต้องติดตั้ง root certificate ของ proxy
+    แล้วตั้ง <code>NODE_EXTRA_CA_CERTS</code> ชี้ไปที่ไฟล์ certificate นั้น</p>
+  </div>
+
+  <h2 id="verify">5. ตรวจรับเครื่อง</h2>
+
+  <h3>5.1 สคริปต์ตรวจอัตโนมัติ — ทุกเครื่อง</h3>
+  <p>ดาวน์โหลด <a href="assets/check-lab.ps1" download><strong>check-lab.ps1</strong></a> ไว้ในโฟลเดอร์ใดก็ได้
+  แล้วรันด้วย<strong>บัญชีผู้ใช้ที่ผู้เรียนจะใช้</strong> (ไม่ต้องเป็น admin):</p>
+<pre><code>powershell -NoProfile -ExecutionPolicy Bypass -File check-lab.ps1</code></pre>
+  <p>สคริปต์ตรวจ 20 ข้อ: เวอร์ชันของ Node/npm/Git/Git Bash/VS Code/ZCode · การเข้าถึงโดเมนในข้อ 4 ·
+  พอร์ต 8976 และ 8787 ว่าง · npm ดึงแพ็กเกจได้จริง · ไม่มีบัญชี Cloudflare ค้างบนเครื่อง ·
+  แล้วบันทึกผลเป็นไฟล์ <code>check-lab-&lt;ชื่อเครื่อง&gt;.txt</code> ไว้ข้างสคริปต์</p>
+  <p>✅ <strong>ผ่านเมื่อ</strong>บรรทัดสุดท้ายขึ้น “พร้อมใช้ (PASS ทุกข้อ)” · ถ้าไม่ผ่าน ดูคอลัมน์ Detail ของข้อที่ FAIL</p>
+
+  <h3>5.2 ทดสอบครบวงจร — เครื่องต้นแบบ 1 เครื่อง (ผู้สอนทำร่วมกับ IT)</h3>
+  <p>เปิด <strong>Git Bash</strong> แล้วรันทีละบรรทัด:</p>
+<pre><code>cd ~
+npm create cloudflare@latest my-app -- --template=werapango/workers-app-starter --no-deploy --no-git --no-agents
+cd my-app
+npm run dev</code></pre>
+  <p>เปิด <code>http://localhost:8787</code> ต้องเห็นหน้าแอป และ <code>http://localhost:8787/api/health</code> ตอบ <code>"ok": true</code> → กด Ctrl+C
+  แล้วทดสอบล็อกอินและ deploy ด้วย<strong>บัญชีทดสอบของผู้สอน</strong>:</p>
+<pre><code>npx wrangler login
+npx wrangler deploy
+npx wrangler delete
+npx wrangler logout
+cd ~ && rm -rf my-app</code></pre>
+  <p>✅ <strong>ผ่านเมื่อ</strong>ทุกคำสั่งทำงาน · เปิด URL <code>*.workers.dev</code> ที่ได้จาก deploy ได้ · login ไม่ค้างหลังกด Allow ·
+  และหลัง logout รัน <code>check-lab.ps1</code> แล้วข้อ “no wrangler login” เป็น PASS</p>
+
+  <h2 id="after">6. หลังจบการอบรม</h2>
+  <p>ผู้เรียนได้รับคำแนะนำให้ออกจากระบบทุกบริการก่อนกลับ แต่เพื่อความปลอดภัยของบัญชีผู้เรียน ผู้ดูแลควรทำอย่างใดอย่างหนึ่ง:</p>
+  <ul>
+    <li><strong>คืนค่า image</strong> (ง่ายที่สุด) — หรือรีสตาร์ทถ้าใช้ระบบคืนค่าอัตโนมัติ</li>
+    <li>หรือทำความสะอาดเอง: ลบโฟลเดอร์ <code>%USERPROFILE%\my-app</code> (และโฟลเดอร์งานอื่นของผู้เรียน) ·
+    ลบ <code>%APPDATA%\xdg.config\.wrangler</code> (สิทธิ์ deploy ของ Cloudflare) ·
+    ออกจากระบบใน ZCode · ล้างข้อมูลเบราว์เซอร์ (cookie และรหัสผ่านที่บันทึก)</li>
+  </ul>
+  <p>แล้วรัน <code>check-lab.ps1</code> อีกครั้ง ข้อ “no wrangler login” ต้องเป็น PASS</p>
+
+  <h2 id="signoff" class="page-break">ใบตรวจรับรายเครื่อง</h2>
+  <p class="small">ผลจาก check-lab.ps1 (5.1) · เครื่องต้นแบบทำ 5.2 เพิ่ม</p>
+  <div class="table-wrap"><table class="signoff">
+    <thead><tr><th style="width:9%">เครื่อง</th><th style="width:14%">check-lab<br>PASS/FAIL</th><th>ข้อที่ไม่ผ่าน / การแก้ไข</th><th style="width:16%">ผู้ตรวจ</th><th style="width:13%">วันที่</th></tr></thead>
+    <tbody>
+      <tr><td>ต้นแบบ</td><td></td><td>5.2 ทดสอบครบวงจร: ☐ ผ่าน</td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="table-wrap"><table class="fill"><tbody>
+    <tr><th>สรุป: เครื่องพร้อมใช้</th><td>……… / ……… เครื่อง</td></tr>
+    <tr><th>ลงชื่อผู้ดูแลห้อง</th><td></td></tr>
+    <tr><th>ลงชื่อผู้สอน</th><td></td></tr>
+  </tbody></table></div>
+
+  <p class="small no-print">หน้าที่เกี่ยวข้อง: <a href="setup.html">เตรียมเครื่องและบัญชี</a> (ส่วนของผู้เรียน) · <a href="commands.html">รวมคำสั่ง</a></p>
+</main>
+</body>
+</html>

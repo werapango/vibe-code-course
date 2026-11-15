@@ -59,13 +59,14 @@
 
   <!-- ═════════════════════════ PART A ═════════════════════════ -->
   <h2 id="staff">PART A — เตรียมเครื่อง Lab (ผู้สอน / IT)</h2>
+  <div class="box"><span class="label">📄 เอกสารฉบับเต็มสำหรับผู้ดูแลห้อง</span><p>คำสั่งติดตั้งแบบเงียบ (winget / msiexec), รายการเครือข่าย, สคริปต์ตรวจรับ <code>check-lab.ps1</code> และใบตรวจรับรายเครื่องสำหรับพิมพ์ อยู่ที่ <a href="lab-install.html">เอกสารติดตั้งซอฟต์แวร์ห้อง Lab</a></p></div>
   <p>ผู้เรียน<strong>ไม่ต้องทำส่วนนี้</strong> — เป็นสเปกสำหรับผู้ดูแลห้อง Lab</p>
 
   <h3>A1. ซอฟต์แวร์ที่ต้องติดตั้งทุกเครื่อง</h3>
   <div class="table-wrap"><table>
     <thead><tr><th>ซอฟต์แวร์</th><th>เวอร์ชัน</th><th>ใช้ทำอะไร</th><th>หมายเหตุการติดตั้ง</th></tr></thead>
     <tbody>
-      <tr><td><strong>Node.js</strong></td><td>LTS (20 ขึ้นไป)</td><td>รัน <code>npm</code> และ <code>npx wrangler</code></td><td>ตัวติดตั้ง <code>.msi</code> จาก nodejs.org · ค่าเริ่มต้นทั้งหมด (รวม Add to PATH)</td></tr>
+      <tr><td><strong>Node.js</strong></td><td>LTS (22 ขึ้นไป)</td><td>รัน <code>npm</code> และ <code>npx wrangler</code></td><td>ตัวติดตั้ง <code>.msi</code> จาก nodejs.org · ค่าเริ่มต้นทั้งหมด (รวม Add to PATH)</td></tr>
       <tr><td><strong>Git for Windows</strong></td><td>ล่าสุด</td><td>checkpoint ทุก task + ได้ <strong>Git Bash</strong></td><td>ค่าเริ่มต้นทั้งหมด · คงตัวเลือก “Git Bash Here”</td></tr>
       <tr><td><strong>VS Code</strong></td><td>ล่าสุด</td><td>อ่านโค้ดและ diff</td><td>ติ๊ก “Add to PATH” และ “Open with Code”</td></tr>
       <tr><td><strong>ZCode</strong></td><td>ล่าสุด</td><td>AI coding agent</td><td>จากหน้าดาวน์โหลดของ Z.ai · <strong>ไม่ต้องล็อกอิน</strong> (ผู้เรียนล็อกอินบัญชีตัวเองวันอบรม)</td></tr>
@@ -181,7 +182,7 @@
     <p>กด Start → พิมพ์ <code>Git Bash</code> → Enter (หัวบรรทัดมีคำว่า <code>MINGW64</code>) แล้วตรวจเครื่องมือ:</p>
     <pre><code>node -v</code></pre>
     <pre><code>git --version</code></pre>
-    <div class="box check"><span class="label">✅ ผ่านเมื่อ</span><p>Node ได้ <code>v20</code> ขึ้นไป และ Git ขึ้นเลขเวอร์ชัน (ถ้าไม่ขึ้น แจ้งผู้สอน — เป็นปัญหาของเครื่อง ไม่ใช่ของคุณ)</p></div>
+    <div class="box check"><span class="label">✅ ผ่านเมื่อ</span><p>Node ได้ <code>v22</code> ขึ้นไป และ Git ขึ้นเลขเวอร์ชัน (ถ้าไม่ขึ้น แจ้งผู้สอน — เป็นปัญหาของเครื่อง ไม่ใช่ของคุณ)</p></div>
   </div></div>
 
   <div class="step"><div class="step-num">2</div><div class="step-body">
@@ -221,7 +222,7 @@
 
   <h3>เช็กลิสต์ก่อนเริ่ม Lab 1</h3>
   <ul class="checklist">
-    <li>Git Bash เปิดได้ · <code>node -v</code> ได้ v20 ขึ้นไป</li>
+    <li>Git Bash เปิดได้ · <code>node -v</code> ได้ v22 ขึ้นไป</li>
     <li>ZCode ล็อกอินด้วยบัญชีของฉัน เห็นโมเดล Flash / GLM-5.3 และโควต้า</li>
     <li>Cloudflare ยืนยันอีเมลแล้ว และไม่ได้ผูกบัตร</li>
     <li><code>npx wrangler whoami</code> แสดงอีเมลของฉัน</li>

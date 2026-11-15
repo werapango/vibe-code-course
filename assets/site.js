@@ -22,6 +22,7 @@ const PAGES = [
     ["lab-4.html", "Lab 4"],
   ]},
   { group: "อ้างอิง", items: [
+    ["lab-install.html", "ติดตั้งห้อง Lab"],
     ["templates.html", "Templates"],
     ["commands.html", "คำสั่ง"],
   ]},
@@ -34,7 +35,7 @@ const READING_ORDER = [
   "theory-2-requirements.html", "lab-2.html", "brief.html",
   "baseline.html", "theory-3-agent-skill.html", "lab-3.html",
   "theory-4-verify-release.html", "lab-4.html",
-  "templates.html", "commands.html",
+  "lab-install.html", "templates.html", "commands.html",
 ];
 
 const titleOf = (file) => {
