@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab 1 — Vibe warm-up + Starter สู่ production</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body data-page="lab-1.html">
+<main>
+  <p class="eyebrow">Lab 1 · 09:40–10:35 · 55 นาที</p>
+  <h1>Vibe warm-up แล้วพา starter ขึ้น production</h1>
+  <p class="lede">ครึ่งแรกลองให้ AI สร้างหน้าเว็บจาก prompt เดียวแล้ว deploy ทันที (vibe coding)
+  ครึ่งหลังดึง <strong>starter กลาง</strong> ที่มีฐานข้อมูลและระบบผู้ใช้ ตั้งค่าฐานข้อมูล deploy ขึ้น Cloudflare
+  แล้วลอง release และ rollback ด้วยมือตัวเอง — จบแล้วได้โปรเจกต์ที่ใช้ต่อทั้งวัน</p>
+
+  <div class="meta">
+    <span class="chip">⏱ 1a 20 นาที + 1b 35 นาที</span>
+    <span class="chip">🪙 1a: Flash ~20–50K · 1b: 0 token</span>
+    <span class="chip">🧭 SDLC: Implementation · Deployment · Operations</span>
+  </div>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>ช่วง</th><th>👤 คนทำ</th><th>🤖 agent ทำ</th></tr></thead>
+    <tbody>
+      <tr><td>Lab 1a</td><td>สั่งงาน สังเกต agent loop · deploy ด้วยคำสั่งเดียว</td><td>สร้าง <code>index.html</code> 1 ไฟล์ + แก้ 1 รอบ</td></tr>
+      <tr><td>Lab 1b</td><td>ทุกอย่าง: ดึง starter · สร้างฐานข้อมูล · migration · ทดสอบ · git · deploy · rollback · ดู log</td><td>— (ไม่ใช้ token)</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="toc">
+    <b>ในหน้านี้</b>
+    <ol>
+      <li><a href="#a">Lab 1a — Vibe warm-up</a></li>
+      <li><a href="#b">Lab 1b — Starter สู่ production</a></li>
+      <li><a href="#trouble">ปัญหาที่พบบ่อย</a></li>
+      <li><a href="#sdlc">SDLC ที่เพิ่งทำ</a></li>
+      <li><a href="#future">สร้าง starter นี้เองในอนาคต</a></li>
+    </ol>
+  </div>
+
+  <div class="box warn">
+    <span class="label">⚠ ก่อนเริ่ม</span>
+    <p>ผ่านเช็กลิสต์ <a href="setup.html#morning">เตรียมเครื่องและบัญชี (PART C)</a> แล้ว: ZCode ล็อกอินเป็นบัญชีของคุณ และ <code>npx wrangler whoami</code> แสดง<strong>อีเมลของคุณ</strong>
+    · คำสั่งทั้งหน้านี้พิมพ์ใน <strong>Git Bash</strong> บนเครื่อง Lab · เตรียมชื่อ subdomain <code>workers.dev</code> ไว้ 1 ชื่อ (ภาษาอังกฤษตัวเล็ก)</p>
+  </div>
+
+  <!-- ═════════════════ LAB 1a ═════════════════ -->
+  <h2 id="a">Lab 1a — Vibe warm-up (20 นาที)</h2>
+  <p>ลองแบบ “vibe coding” ของแท้: พูดสิ่งที่อยากได้ → AI สร้าง → ขึ้นอินเทอร์เน็ต — ไม่มี spec ไม่มีการทดสอบ เพื่อให้รู้สึกทั้งความเร็วและขีดจำกัดของวิธีนี้</p>
+
+  <div class="step"><div class="step-num">1</div><div class="step-body">
+    <h3>เตรียมโฟลเดอร์ <span class="small">· 2 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>agent ทำงานในโฟลเดอร์ที่เราเปิดให้เท่านั้น — สร้าง “บ้าน” เล็ก ๆ ให้มัน และแยกโฟลเดอร์ <code>site</code> ไว้เก็บไฟล์ที่จะขึ้นเว็บ</p>
+    </div>
+<pre><code>mkdir -p hello-vibe/site && cd hello-vibe</code></pre>
+    <p>เปิด <strong>ZCode</strong> ในโฟลเดอร์ <code>hello-vibe</code> แล้วเลือกโมเดล <strong>Flash</strong></p>
+  </div></div>
+
+  <div class="step"><div class="step-num">2</div><div class="step-body">
+    <h3>สั่งงานแรก + สังเกต agent loop <span class="small">· 6 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>ให้ agent สร้างหน้าเว็บไฟล์เดียว แล้ว<strong>ดูว่ามันทำงานเป็นวงอย่างไร</strong> (วางแผน → แก้ไฟล์ → สรุป) — ทฤษฎี 3 ช่วงบ่ายจะอ้างกลับมาที่สิ่งที่คุณเห็นตรงนี้</p>
+    </div>
+    <div class="box prompt"><span class="label">💬 พิมพ์ให้ ZCode (แก้ข้อความใน [ ])</span></div>
+<pre><code>สร้างไฟล์ site/index.html ไฟล์เดียว (CSS ฝังในไฟล์ ไม่ต้องมีไฟล์อื่น)
+เป็นหน้าแนะนำ [ตัวฉัน / หน่วยงานของฉัน] มีหัวเรื่องใหญ่ คำโปรย 1 ประโยค และการ์ด 3 ใบ
+โทนสี [อบอุ่น / เย็น / มินิมอล] อ่านภาษาไทยสวย และใช้บนมือถือได้
+ห้ามรันคำสั่งใด ๆ</code></pre>
+    <p>ระหว่างรอ ติ๊กเช็กลิสต์:</p>
+    <ul class="checklist">
+      <li>agent แสดง<strong>แผน</strong>ก่อนลงมือไหม</li>
+      <li>agent <strong>สร้าง/แก้ไฟล์</strong>อะไรบ้าง (ควรเป็น <code>site/index.html</code> ไฟล์เดียว)</li>
+      <li>agent พยายาม<strong>รันคำสั่ง</strong>อะไรไหม</li>
+      <li>เสร็จแล้ว agent <strong>สรุปผล</strong>อย่างไร</li>
+    </ul>
+  </div></div>
+
+  <div class="step"><div class="step-num">3</div><div class="step-body">
+    <h3>เปิดดู + สั่งแก้ 1 รอบ <span class="small">· 4 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>ฝึก “แก้ด้วยภาษาธรรมชาติ” — ไม่แตะโค้ดเอง</p>
+    </div>
+<pre><code>start site/index.html</code></pre>
+    <div class="box prompt"><span class="label">💬 ตัวอย่างการสั่งแก้</span></div>
+<pre><code>ปรับ site/index.html: เพิ่มปุ่ม "ติดต่อ" ที่กดแล้วเลื่อนไปท้ายหน้า และทำให้การ์ดเรียงเป็นแถวเดียวบนมือถือ</code></pre>
+    <div class="box token"><span class="label">🪙 ประหยัด token</span><p>แก้ไม่เกิน 2 รอบแล้วไปต่อ — warm-up ไม่ได้วัดความสวย</p></div>
+  </div></div>
+
+  <div class="step"><div class="step-num">4</div><div class="step-body">
+    <h3>Deploy ด้วยคำสั่งเดียว <span class="small">· 5 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>อัปโหลดโฟลเดอร์ <code>site</code> ขึ้น Cloudflare เป็นเว็บแบบไฟล์อย่างเดียว (static assets) โดยไม่ต้องมีโปรเจกต์หรือไฟล์ตั้งค่า
+      — <code>--name</code> คือชื่อ Worker (ส่วนหน้าของ URL) เปลี่ยน <code>somchai</code> เป็นชื่อของคุณ</p>
+    </div>
+<pre><code>npx wrangler deploy --assets ./site --name hello-somchai --compatibility-date 2025-11-01</code></pre>
+    <p>ถ้าเป็นการ deploy ครั้งแรกของบัญชี wrangler จะให้<strong>ตั้งชื่อ subdomain</strong> <code>workers.dev</code> — ตั้งตามที่ถาม (ทำครั้งเดียว ใช้กับทุกแอปของคุณ)
+    แล้วเปิด URL <code>https://hello-somchai.&lt;subdomain&gt;.workers.dev</code> จากเบราว์เซอร์และมือถือ</p>
+  </div></div>
+
+  <div class="step"><div class="step-num">5</div><div class="step-body">
+    <h3>คุยกัน: วิธีนี้พอไหม? <span class="small">· 3 นาที</span></h3>
+    <div class="box theory"><span class="label">📖 คำถามพาเข้าสู่ starter</span>
+      <p>ถ้าหน้าเว็บนี้ต้อง <strong>เก็บข้อมูล</strong> · มี <strong>ล็อกอิน</strong> · ให้ <strong>30 คนใช้พร้อมกัน</strong> · และ <strong>รู้ว่ามันถูกต้อง</strong> — prompt เดียวแบบนี้ยังพอไหม?
+      Vibe coding เหมาะกับต้นแบบ ส่วนระบบจริงต้องมี spec, การแตกงาน และการตรวจ — คือสิ่งที่เราจะทำทั้งวัน</p>
+    </div>
+    <p class="small">จะเก็บเว็บนี้ไว้หรือลบก็ได้ ลบด้วย <code>npx wrangler delete hello-somchai</code> (ตอบ y)</p>
+  </div></div>
+
+  <div class="box check"><span class="label">✅ ผ่าน Lab 1a เมื่อ</span>
+    <p>เปิด URL <code>hello-…workers.dev</code> จากมือถือได้ และตอบเช็กลิสต์ agent loop ครบ 4 ข้อ</p>
+  </div>
+
+  <!-- ═════════════════ LAB 1b ═════════════════ -->
+  <h2 id="b">Lab 1b — Starter สู่ production (35 นาที · 0 token)</h2>
+  <p>ทุกคำสั่งต่อจากนี้ <strong>คนพิมพ์เอง</strong> — ไม่ใช้ ZCode เลย เพื่อให้เห็นว่า deploy ระบบที่มีฐานข้อมูลและระบบผู้ใช้ไม่ต้องใช้ AI สักบรรทัด</p>
+
+  <div class="step"><div class="step-num">1</div><div class="step-body">
+    <h3>ดึง starter ด้วยคำสั่ง Cloudflare <span class="small">· 4 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>ใช้ <strong>C3</strong> (create-cloudflare) ดึงโครงเริ่มต้นจาก GitHub มาเป็นโฟลเดอร์ <code>my-app</code> และติดตั้ง dependency ให้ — ทุกคนในห้องได้โครงเดียวกัน
+      · <code>--no-deploy</code> ยังไม่ deploy · <code>--no-git</code> เราตั้ง Git เองในขั้น 6 · <code>--no-agents</code> ไม่ให้ C3 เขียน AGENTS.md ของ Cloudflare ทับของโปรเจกต์</p>
+    </div>
+    <p>กลับไปโฟลเดอร์ทำงาน (ออกจาก <code>hello-vibe</code>) ก่อน:</p>
+<pre><code>cd ..</code></pre>
+<pre><code>npm create cloudflare@latest my-app -- --template=werapango/workers-app-starter --no-deploy --no-git --no-agents</code></pre>
+<pre><code>cd my-app</code></pre>
+    <p class="small">C3 ตั้งชื่อ Worker (<code>name</code> ใน <code>wrangler.jsonc</code>) ตามชื่อโฟลเดอร์ และจัดรูปแบบไฟล์ใหม่เล็กน้อย — ปกติ · คำเตือน <code>npm warn install-scripts … esbuild / workerd</code> ไม่ต้องทำอะไร</p>
+  </div></div>
+
+  <div class="step"><div class="step-num">2</div><div class="step-body">
+    <h3>ทัวร์ starter + รันครั้งแรก (ยังไม่มีฐานข้อมูล) <span class="small">· 5 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>เห็นว่าแต่ละโฟลเดอร์อยู่ส่วนไหนของสถาปัตยกรรม และเห็นด้วยตาว่าแอปที่ “ยังไม่มีฐานข้อมูล” เป็นอย่างไร</p>
+    </div>
+<pre><code>code .</code></pre>
+    <div class="table-wrap"><table>
+      <thead><tr><th>ไฟล์/โฟลเดอร์</th><th>คืออะไร</th><th>phase</th></tr></thead>
+      <tbody>
+        <tr><td><code>public/</code></td><td>หน้าเว็บ = <strong>client</strong> (index.html, app.css, app.js)</td><td>Implementation</td></tr>
+        <tr><td><code>src/</code></td><td>API = <strong>server</strong> (routes/health, auth, users · lib/auth)</td><td>Implementation</td></tr>
+        <tr><td><code>wrangler.jsonc</code></td><td>infrastructure: ชื่อ Worker, assets, ฐานข้อมูล</td><td>Deployment</td></tr>
+        <tr><td><code>migrations/</code></td><td>schema ของฐานข้อมูล ทีละเวอร์ชัน (0001_auth.sql)</td><td>Design → Implementation</td></tr>
+        <tr><td><code>scripts/</code></td><td><code>smoke.mjs</code> ทดสอบตาม AC · <code>trace.mjs</code> ตามรอย AC → test</td><td>Testing</td></tr>
+        <tr><td><code>docs/SRS.md</code>, <code>docs/DESIGN.md</code></td><td>เอกสารความต้องการ/ออกแบบ (template) — ใช้ใน Lab 2</td><td>Requirements · Design</td></tr>
+        <tr><td><code>SPEC.md</code>, <code>TASKS.md</code>, <code>AGENTS.md</code>, <code>skills/</code></td><td>spec สำหรับ agent · WBS · กติกา agent · ขั้นตอนมาตรฐาน — ใช้ช่วงบ่าย</td><td>ทุก phase</td></tr>
+      </tbody>
+    </table></div>
+<pre><code>npm run dev</code></pre>
+    <p>เปิด <a href="http://localhost:8787" target="_blank" rel="noopener">http://localhost:8787/api/health</a> → ต้องเห็น <code>"db": "no-binding"</code> = แอปยังไม่ได้ผูกฐานข้อมูล → กลับ Git Bash กด <kbd>Ctrl</kbd>+<kbd>C</kbd></p>
+  </div></div>
+
+  <div class="step"><div class="step-num">3</div><div class="step-body">
+    <h3>สร้างฐานข้อมูล D1 <span class="small">· 3 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>สร้างฐานข้อมูลบนคลาวด์ชื่อ <code>app-db</code> และให้ wrangler เขียนการเชื่อมต่อ (binding ชื่อ <code>DB</code>) ลงใน <code>wrangler.jsonc</code> ให้เอง</p>
+    </div>
+<pre><code>npx wrangler d1 create app-db --binding DB --update-config</code></pre>
+    <p>เปิด <code>wrangler.jsonc</code> ต้องเห็นส่วน <code>"d1_databases"</code> ที่มี <code>database_id</code> ของคุณ (ถ้าไม่มี ดู<a href="#trouble">ปัญหาที่พบบ่อย</a>)</p>
+  </div></div>
+
+  <div class="step"><div class="step-num">4</div><div class="step-body">
+    <h3>Migration ในเครื่อง + ตั้งค่าครั้งแรก <span class="small">· 6 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>สร้างตาราง <code>users</code>, <code>sessions</code> ใน<strong>ฐานข้อมูลจำลองบนเครื่อง</strong> (<code>--local</code>) แล้วลองระบบผู้ใช้ที่ starter มีให้</p>
+    </div>
+<pre><code>npx wrangler d1 migrations apply app-db --local</code></pre>
+    <p class="small">ถามยืนยัน ตอบ <code>y</code></p>
+<pre><code>npm run dev</code></pre>
+    <ol>
+      <li><code>/api/health</code> ต้องเป็น <code>"db": "ready"</code></li>
+      <li>เปิด <a href="http://localhost:8787" target="_blank" rel="noopener">http://localhost:8787</a> → หน้า <strong>ตั้งค่าครั้งแรก</strong> → สร้าง admin (ชื่อ/รหัสของคุณ จำไว้)</li>
+      <li>เมนู <strong>ผู้ใช้</strong> → เพิ่มผู้ใช้ทั่วไป 1 คน</li>
+      <li>กด <kbd>F12</kbd> → แท็บ <strong>Network</strong> ล็อกเอาต์แล้วล็อกอินใหม่ ดูคำขอ <code>/api/auth/login</code> (method, status, JSON)
+      → แท็บ <strong>Application → Cookies</strong> เห็น <code>session</code> ที่ติ๊ก <strong>HttpOnly</strong></li>
+    </ol>
+  </div></div>
+
+  <div class="step"><div class="step-num">5</div><div class="step-body">
+    <h3>ทดสอบตาม acceptance criteria <span class="small">· 3 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>ให้สคริปต์เรียก API จริงตาม AC ทุกข้อใน <code>SPEC.md</code> แทนการคลิกเอง — บอก smoke test ด้วยว่า admin ของคุณชื่ออะไร (เปิด terminal ที่สอง ปล่อย dev รันไว้)</p>
+    </div>
+<pre><code>SMOKE_ADMIN_USER=ชื่อadmin SMOKE_ADMIN_PASS=รหัสadmin npm run smoke</code></pre>
+<pre><code>npm run trace</code></pre>
+    <p>smoke ต้องผ่านทั้งหมด (AC-A1.1 จะ “ข้าม” เพราะฐานข้อมูลมีผู้ใช้แล้ว) · trace ต้องขึ้น <code>✅ ตามรอยครบ</code></p>
+    <p class="small">PowerShell: <code>$env:SMOKE_ADMIN_USER="..."; $env:SMOKE_ADMIN_PASS="..."; npm run smoke</code></p>
+  </div></div>
+
+  <div class="step"><div class="step-num">6</div><div class="step-body">
+    <h3>ปัก checkpoint แรกด้วย Git <span class="small">· 3 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>จุดย้อนกลับที่ปลอดภัยก่อนทำอะไรต่อ · ตั้งชื่อ/อีเมล<strong>เฉพาะโปรเจกต์นี้</strong> (ไม่ใช้ <code>--global</code>) เพราะเครื่อง Lab เป็นของส่วนกลาง</p>
+    </div>
+<pre><code>git init</code></pre>
+<pre><code>git config user.name "ชื่อของคุณ"</code></pre>
+<pre><code>git config user.email "you@example.com"</code></pre>
+<pre><code>git add .</code></pre>
+<pre><code>git commit -m "lab 1: starter + local database"</code></pre>
+  </div></div>
+
+  <div class="step"><div class="step-num">7</div><div class="step-body">
+    <h3>ขึ้น production + สร้าง admin ทันที <span class="small">· 6 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>ฐานข้อมูลบนคลาวด์เป็น<strong>คนละตัว</strong>กับในเครื่อง จึงต้องรัน migration กับ <code>--remote</code> ก่อน แล้วค่อยอัปโหลดโค้ด</p>
+    </div>
+<pre><code>npx wrangler d1 migrations apply app-db --remote</code></pre>
+<pre><code>npx wrangler deploy</code></pre>
+    <p><strong>อ่านผลทีละบรรทัด:</strong> ขนาดที่อัปโหลด (Total Upload) · ไฟล์ assets ที่ขึ้นไป · binding <code>DB</code> · URL · <strong>Current Version ID</strong></p>
+    <div class="box warn"><span class="label">⚠ เปิด URL แล้วสร้าง admin ทันที</span>
+      <p>หน้าตั้งค่าครั้งแรกเปิดให้<strong>ใครก็ได้ที่รู้ URL</strong> จนกว่าจะมีผู้ใช้คนแรก — ใครถึงก่อนได้เป็น admin นี่คือความเสี่ยงด้านความปลอดภัยจริงที่ต้องปิดให้เร็วที่สุด</p>
+    </div>
+    <p>สร้าง admin บน production แล้วเปิด URL จากมือถือ ล็อกอินให้ได้</p>
+  </div></div>
+
+  <div class="step"><div class="step-num">8</div><div class="step-body">
+    <h3>Release เวอร์ชัน 2 แล้ว rollback <span class="small">· 4 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>พิสูจน์ด้วยมือว่า<strong>ทุก release ถอยกลับได้</strong> — เมื่อถอยได้ เราจึงกล้า deploy บ่อย</p>
+    </div>
+    <p>แก้ข้อความใน <code>public/index.html</code> เช่นเปลี่ยน <code>🚀 แอปของฉัน</code> เป็น <code>🚀 แอปของฉัน v2</code> แล้ว:</p>
+<pre><code>npx wrangler deploy</code></pre>
+<pre><code>npx wrangler deployments list</code></pre>
+<pre><code>npx wrangler rollback</code></pre>
+    <p>รีเฟรชหน้าเว็บ → กลับเป็นข้อความเดิม · ตรวจให้แน่ใจด้วย <code>deployments list</code> อีกครั้ง แล้ว deploy คืนเป็น v2 และ commit</p>
+<pre><code>npx wrangler deploy</code></pre>
+<pre><code>git commit -am "lab 1: v2 title"</code></pre>
+  </div></div>
+
+  <div class="step"><div class="step-num">9</div><div class="step-body">
+    <h3>ดู log ของ production แบบสด <span class="small">· 1 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>observability: รู้ว่าเกิดอะไรขึ้นบน production โดยไม่ต้องเดา</p>
+    </div>
+<pre><code>npx wrangler tail</code></pre>
+    <p>รีเฟรชหน้าเว็บจากมือถือ → เห็นคำขอวิ่งเข้ามา → <kbd>Ctrl</kbd>+<kbd>C</kbd> · (เปิด dashboard → Workers &amp; Pages → Worker ของคุณ ดู metrics และ versions ได้ด้วย)</p>
+  </div></div>
+
+  <div class="box check"><span class="label">✅ ผ่าน Lab 1b เมื่อ</span>
+    <ul>
+      <li><code>https://my-app.&lt;subdomain&gt;.workers.dev</code> เปิดจากมือถือได้ และล็อกอิน admin บน production ได้</li>
+      <li>smoke ในเครื่องผ่าน + trace ครบ</li>
+      <li>ลอง rollback สำเร็จ และมี commit อย่างน้อย 2 ครั้ง</li>
+    </ul>
+  </div>
+
+  <div class="box warn"><span class="label">🆘 ถ้าตามไม่ทัน</span>
+    <p>ขอโฟลเดอร์ <code>lab1-done</code> จากไดรฟ์ร่วมของห้อง → คัดลอกมาเป็น <code>my-app</code> → <code>npm install</code> → แก้ <code>database_id</code> ใน <code>wrangler.jsonc</code> เป็นของคุณ (จากผล <code>d1 create</code> หรือ <code>npx wrangler d1 list</code>)
+    → <code>migrations apply --local</code> และ <code>--remote</code> → deploy → สร้าง admin ทันที</p>
+  </div>
+
+  <h2 id="trouble">ปัญหาที่พบบ่อย</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>อาการ</th><th>สาเหตุ / วิธีแก้</th></tr></thead>
+    <tbody>
+      <tr><td>C3 ถาม “Do you want to add an AGENTS.md file…?”</td><td>ลืม <code>--no-agents</code> → ตอบ <strong>No</strong> (ตอบ Yes ไปแล้วให้ลบโฟลเดอร์แล้วรันใหม่)</td></tr>
+      <tr><td><code>Failed to clone remote template</code></td><td>พิมพ์ชื่อ repo ผิด หรือเครือข่ายบล็อก GitHub → ตรวจตัวสะกด / ใช้ checkpoint <code>lab1-done</code></td></tr>
+      <tr><td><code>d1 create</code> สำเร็จ แต่ <code>wrangler.jsonc</code> ไม่มี <code>d1_databases</code></td><td>คัดลอกบล็อกที่คำสั่งพิมพ์ออกมาไปวางเอง: เติม <code>,</code> หลัง <code>"observability": { "enabled": true }</code> แล้ววาง<br><code>"d1_databases": [{ "binding": "DB", "database_name": "app-db", "database_id": "…" }]</code></td></tr>
+      <tr><td><code>/api/health</code> ได้ <code>"db": "no-binding"</code></td><td>ยังไม่ได้ผูกฐานข้อมูล → ขั้น 3 (แล้วรีสตาร์ท <code>npm run dev</code>)</td></tr>
+      <tr><td><code>/api/health</code> ได้ <code>"db": "not-migrated"</code> / error <code>no such table</code></td><td>ลืม migration → <code>--local</code> สำหรับในเครื่อง หรือ <code>--remote</code> สำหรับ production</td></tr>
+      <tr><td>production ไม่ขึ้นหน้าตั้งค่าครั้งแรก แต่ขึ้นหน้าล็อกอิน</td><td>มีคนสร้าง admin ไปแล้ว — ถ้าไม่ใช่คุณ แจ้งผู้สอนทันที (รัน <code>npx wrangler d1 execute app-db --remote --command "DELETE FROM users"</code> แล้วสร้างใหม่)</td></tr>
+      <tr><td>smoke ขึ้น “ข้าม” หลายเคส</td><td>ไม่ได้บอกชื่อ/รหัส admin → ใส่ <code>SMOKE_ADMIN_USER</code> / <code>SMOKE_ADMIN_PASS</code></td></tr>
+      <tr><td>smoke: <code>ติดต่อเซิร์ฟเวอร์ไม่ได้</code></td><td>ไม่ได้เปิด <code>npm run dev</code> ไว้ใน terminal อีกหน้าต่าง</td></tr>
+      <tr><td><code>git commit</code> ขึ้น “Please tell me who you are”</td><td>ยังไม่ได้รัน <code>git config user.name/email</code> ในขั้น 6</td></tr>
+      <tr><td>port 8787 ถูกใช้อยู่</td><td>ปิด terminal เก่าที่ dev ค้าง หรือ <code>npx wrangler dev --port 8788</code></td></tr>
+      <tr><td>PowerShell: <code>npx</code> ถูกบล็อก / ตั้งตัวแปรแบบ <code>A=B cmd</code> ไม่ได้</td><td>ใช้ Git Bash · หรือ <code>npx.cmd</code> และ <code>$env:BASE_URL="..."; npm run smoke</code></td></tr>
+      <tr><td>หน้าจอไหนขอบัตรเครดิต</td><td><strong>หยุด</strong> แจ้งผู้สอน — lab นี้ไม่มีขั้นไหนต้องใช้บัตร</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="sdlc">SDLC ที่เพิ่งทำ</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>สิ่งที่ทำ</th><th>phase</th><th>บทเรียน</th></tr></thead>
+    <tbody>
+      <tr><td>Lab 1a prompt → deploy</td><td>(ข้าม Requirements/Design/Testing)</td><td>เร็วมาก แต่ไม่รู้ว่าถูกไหม — เหมาะกับต้นแบบ</td></tr>
+      <tr><td>ดึง starter + ทัวร์</td><td>Design (สถาปัตยกรรมสำเร็จรูป)</td><td>client / server / infra / data แยกกันชัด</td></tr>
+      <tr><td>d1 create + migration</td><td>Implementation (ชั้นข้อมูล)</td><td>schema มีเวอร์ชัน · local กับ remote เป็นคนละฐาน</td></tr>
+      <tr><td>smoke + trace</td><td>Testing</td><td>ทดสอบตาม AC ใน spec ไม่ใช่ตามความรู้สึก</td></tr>
+      <tr><td>deploy + สร้าง admin ทันที</td><td>Deployment</td><td>ความปลอดภัยเริ่มตั้งแต่วินาทีแรกที่ขึ้นออนไลน์</td></tr>
+      <tr><td>rollback + tail</td><td>Operations / Maintenance</td><td>ถอยได้ ดู log ได้ = กล้า release บ่อย</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- ═════════════════ FUTURE ═════════════════ -->
+  <h2 id="future">สร้าง starter นี้เองในอนาคต</h2>
+  <p>ในโปรเจกต์ของคุณมีไฟล์ <code>docs/STARTER-PROMPT.md</code> — ชุด prompt สำหรับสั่ง AI agent สร้าง starter แบบนี้ขึ้นใหม่เอง
+  (เช่น อยากเปลี่ยน stack หรืออยากเข้าใจทุกบรรทัด) เขียนแบบ <strong>spec + WBS</strong>: ส่งบริบทครั้งเดียว → สั่งทีละ task → คนรันคำสั่งเอง → ตรวจด้วย smoke/trace ทุก task</p>
+  <div class="box token"><span class="label">🪙 ใช้เมื่อมีโควต้าเหลือ ไม่ใช่ในวันอบรม</span>
+    <p>ประมาณการ ~300–600K token ถ้าทำครบ (ยังไม่ได้วัดจริง) · ใช้โมเดลเก่ง (เช่น GLM-5.3) กับ T3–T4 ที่เป็นโค้ดความปลอดภัย ข้ออื่นใช้ Flash</p>
+  </div>
+
+  <h3>ส่วนที่ 1 — บริบท (ส่งครั้งแรกครั้งเดียว)</h3>
+<pre><code>ฉันจะสร้าง "starter" สำหรับเว็บแอปบน Cloudflare ที่นำไปต่อยอดได้ทุกโจทย์ ทำทีละ task ตามที่ฉันสั่งเท่านั้น
+
+เป้าหมาย: โครงเว็บแอปที่ deploy ได้ทันที มีระบบเข้าสู่ระบบและจัดการผู้ใช้แบบง่าย
+มีเอกสารและการทดสอบพร้อมให้ต่อยอดแบบ spec-driven
+
+ข้อจำกัด:
+- Cloudflare Workers + Hono (TypeScript) + D1 (binding ชื่อ DB, ฐานข้อมูลชื่อ app-db) + Static Assets (โฟลเดอร์ public/)
+- ต้องอยู่ใน free plan ห้ามใช้บริการที่ต้องผูกบัตร (Access, R2, Email)
+- หน้าเว็บเป็น HTML/CSS/JS ธรรมดา ไม่ใช้ framework รองรับมือถือ
+- ห้ามเพิ่ม dependency นอกจาก hono โดยไม่ถาม
+- SQL ทุกคำสั่งต้องเป็น prepared statement · เปลี่ยน schema ด้วยไฟล์ migration ใหม่เท่านั้น
+- คอมเมนต์และข้อความ error เป็นภาษาไทย · API ตอบ JSON รูปแบบ { "error": "..." } พร้อม status ที่ถูกต้อง
+- route 1 เรื่อง = 1 ไฟล์ใน src/routes/
+
+กติกาการทำงาน:
+- ห้ามรัน wrangler, npm, git เอง ให้เขียนคำสั่งที่ฉันต้องรันไว้ท้ายคำตอบ
+- ถ้าข้อมูลไม่พอ ให้ถามก่อน ห้ามเดา
+- จบแต่ละ task ตอบ 3 ส่วน: ไฟล์ที่แก้ / คำสั่งที่ต้องรัน / วิธีทดสอบ</code></pre>
+
+  <h3>ส่วนที่ 2 — 👤 คนรันเองก่อนเริ่ม</h3>
+<pre><code>npm create cloudflare@latest my-app -- --category=hello-world --type=hello-world-with-assets --lang=ts --no-deploy --no-git --no-agents</code></pre>
+<pre><code>cd my-app</code></pre>
+<pre><code>npm install hono</code></pre>
+<pre><code>git init</code></pre>
+
+  <h3>ส่วนที่ 3 — task (ส่งทีละข้อ แล้ว commit หลังแต่ละข้อ)</h3>
+  <p><strong>T1 โครงแอป</strong></p>
+<pre><code>ทำ T1: แปลง src/index.ts เป็น Hono แยก route ไว้ใน src/routes/ เพิ่ม GET /api/health ตอบ { ok: true, db, time }
+โดย db บอกสถานะฐานข้อมูล ("ready" / "no-binding" / "not-migrated"), ดัก 404 และ 500 เป็น JSON,
+ตั้ง wrangler.jsonc ให้มี assets (public/) และ observability พร้อมคอมเมนต์ภาษาไทยทุกส่วน
+เสร็จเมื่อ: npm run dev แล้ว /api/health ตอบ 200 และหน้า public/index.html เรียก API นี้แสดงผลได้</code></pre>
+  <p><strong>T2 การทดสอบ</strong></p>
+<pre><code>ทำ T2: สร้าง scripts/smoke.mjs (เรียก API จริง, จำ cookie ได้แบบเบราว์เซอร์, เปลี่ยน local/production ด้วย BASE_URL,
+ชื่อเคสขึ้นต้นด้วยรหัส AC, รายงาน ผ่าน/ไม่ผ่าน/ข้าม) และ scripts/trace.mjs (ตรวจว่า AC ตัวหนาทุกข้อใน SPEC.md
+มีเคสใน smoke.mjs และทุกเคสอ้าง AC ที่มีจริง, เตือนถ้า FR ใน docs/SRS.md ไม่ถูกอ้างใน SPEC.md)
+เพิ่ม npm scripts: dev, deploy, smoke, trace</code></pre>
+  <p>👤 หลัง T2 สร้างฐานข้อมูล:</p>
+<pre><code>npx wrangler d1 create app-db --binding DB --update-config</code></pre>
+  <p><strong>T3 ฐานข้อมูลผู้ใช้ + ไลบรารี auth</strong></p>
+<pre><code>ทำ T3: migration ตาราง users (username unique, password_hash, role admin/user, created_at)
+และ sessions (token, user_id อ้าง users ลบตาม, expires_at) + src/lib/auth.ts:
+hash ด้วย PBKDF2-SHA256 100,000 รอบ + salt สุ่ม เก็บเป็น "salt:hash", session token สุ่ม 32 ไบต์ อายุ 7 วัน,
+cookie HttpOnly + SameSite=Lax (Secure เมื่อเป็น https), middleware requireAuth (ฝาก userId, username, role ใน context)
+และ requireAdmin (403 ถ้าไม่ใช่ admin)</code></pre>
+  <p>👤 หลัง T3:</p>
+<pre><code>npx wrangler d1 migrations apply app-db --local</code></pre>
+  <p><strong>T4 API ผู้ใช้</strong></p>
+<pre><code>ทำ T4: /api/auth/setup (GET บอกว่ายังไม่มีผู้ใช้ไหม, POST สร้าง admin คนแรกได้เฉพาะตอนยังไม่มีผู้ใช้ แล้วล็อกอินให้),
+login, logout, me, PUT password (เปลี่ยนรหัสของตัวเอง ต้องยืนยันรหัสเดิม)
+และ /api/users CRUD สำหรับ admin เท่านั้น (ไม่ส่ง password_hash ออกไป)
+กติกา: ล็อกอินผิดตอบข้อความเดียวกันไม่ว่าชื่อหรือรหัสผิด, admin ลบตัวเองไม่ได้, ต้องเหลือ admin อย่างน้อย 1 คน,
+admin ตั้งรหัสใหม่ให้ใครแล้ว session เดิมของคนนั้นต้องใช้ไม่ได้
+เพิ่มเคส smoke ครบทุกกติกา</code></pre>
+  <p><strong>T5 หน้าเว็บ</strong></p>
+<pre><code>ทำ T5: หน้าเดียวหลาย view สลับด้วย #hash: ตั้งค่าครั้งแรก, ล็อกอิน, หน้าหลัก (แสดง /api/health),
+จัดการผู้ใช้ (admin), เปลี่ยนรหัสผ่าน · แยกไฟล์ index.html / app.css / app.js
+ทุกหน้าใช้ fetch เรียก API แสดง error จาก API และ escape ข้อมูลผู้ใช้ก่อนแสดง (กัน XSS)</code></pre>
+  <p><strong>T6 เอกสาร</strong></p>
+<pre><code>ทำ T6: AGENTS.md (stack, โครงไฟล์, กติกาการทำงานแบบในส่วนที่ 1, ตาราง skills),
+SPEC.md (ส่วนผู้ใช้และการเข้าสู่ระบบเขียนครบเป็นตัวอย่าง: user story, AC แบบ Given/When/Then ตัวหนาพร้อมรหัส,
+data model, API contract, NFR ที่วัดได้) + template เปล่าของ TASKS.md, docs/SRS.md, docs/DESIGN.md,
+skills/add-endpoint/SKILL.md, README.md</code></pre>
+
+  <h3>ส่วนที่ 4 — 👤 ตรวจทุก task</h3>
+<pre><code>npm run dev</code></pre>
+<pre><code>npm run smoke</code></pre>
+<pre><code>npm run trace</code></pre>
+<pre><code>git add . && git commit -m "Tn: ..."</code></pre>
+</main>
+</body>
+</html>

@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Templates — Vibe Coding × SDLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body data-page="templates.html">
+<main>
+  <p class="eyebrow">อ้างอิง</p>
+  <h1>เอกสาร 7 ไฟล์ใน starter: ใครเขียน ใครอ่าน เมื่อไร</h1>
+  <p class="lede">starter มี template ของเอกสารตลอด SDLC พร้อมใช้ — ตั้งแต่ความต้องการ (SRS) การออกแบบ (DESIGN) ข้อกำหนดสำหรับ agent (SPEC) รายการงาน (TASKS)
+  ไปจนถึงกติกาและขั้นตอนของ agent (AGENTS, SKILL) แต่ละไฟล์มีหน้าที่ต่างกัน และถูกอ่านต่างจังหวะกัน</p>
+
+  <div class="meta">
+    <span class="chip">📄 template จาก starter</span>
+    <span class="chip">✅ ฉบับอ้างอิงระบบจองรถ (baseline)</span>
+  </div>
+
+  <div class="box warn"><span class="label">⚠ ฉบับอ้างอิงคือเฉลยของ Lab 2</span>
+    <p>บล็อก "ฉบับอ้างอิง" ด้านล่างคือ SRS/DESIGN/SPEC/TASKS ที่ทุกคนจะรับเป็น baseline ตอน 13:00 — ตอนเช้า<strong>เขียนของตัวเองก่อน</strong> แล้วค่อยเปิดเทียบ</p>
+  </div>
+
+  <h2 id="compare">เทียบ 7 ไฟล์ + prompt</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>ไฟล์</th><th>หน้าที่</th><th>ใครเขียน</th><th>ถูกอ่านเมื่อไร</th></tr></thead>
+    <tbody>
+      <tr><td><a href="#srs"><code>docs/SRS.md</code></a></td><td>ความต้องการฉบับเต็ม (Requirements)</td><td>คน (ร่างกับ Gemini/ChatGPT ได้ แต่คนยืนยันกับเจ้าของโจทย์)</td><td>Lab 2 เขียน · 13:00 เทียบกับฉบับอ้างอิง · Lab 4 ใช้ตรวจรับ</td></tr>
+      <tr><td><a href="#design"><code>docs/DESIGN.md</code></a></td><td>การออกแบบ (Design)</td><td>คน (ร่างกับ chat LLM)</td><td>Lab 2 ร่าง · 13:00 walkthrough ADR</td></tr>
+      <tr><td><a href="#spec"><code>SPEC.md</code></a></td><td>ข้อกำหนดฉบับย่อสำหรับ agent</td><td>คน (ย่อจาก SRS/DESIGN)</td><td>agent อ่าน<strong>ทุก task</strong> · trace อ่านทุกครั้ง</td></tr>
+      <tr><td><a href="#tasks"><code>TASKS.md</code></a></td><td>Work Breakdown Structure</td><td>คน</td><td>agent อ่านเมื่อสั่ง <code>ทำ task Tx.y ใน TASKS.md</code></td></tr>
+      <tr><td><a href="#agents"><code>AGENTS.md</code></a></td><td>คู่มือประจำโปรเจกต์ของ agent</td><td>คน (มากับ starter แล้วเติมเพิ่ม)</td><td>agent อ่านเป็น context แรกทุก session</td></tr>
+      <tr><td><a href="#skill"><code>skills/add-endpoint/SKILL.md</code></a></td><td>ขั้นตอนมาตรฐานของงานที่ทำซ้ำ</td><td>คน (ทดสอบด้วย eval ตามวงจร ADLC)</td><td>เมื่องานตรงกับ description (ลงทะเบียนในตาราง skill ของ AGENTS.md)</td></tr>
+      <tr><td><a href="#prompt"><code>docs/STARTER-PROMPT.md</code></a></td><td>prompt สร้าง starter นี้เอง</td><td>ผู้ออกแบบหลักสูตร</td><td>อ่านเองหลังจบหลักสูตร (ไม่ใช้ในวันอบรม)</td></tr>
+      <tr><td>prompt ในแชต</td><td>ชี้ว่าทำ task ไหน / ถามสั้น ๆ</td><td>คน</td><td>ครั้งเดียว หายไปเมื่อปิด session</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="flow">
+    <div class="node"><b>โจทย์</b>brief B1–B7</div><div class="arrow">→</div>
+    <div class="node"><b>SRS</b>ต้องทำอะไร</div><div class="arrow">→</div>
+    <div class="node"><b>DESIGN</b>ทำอย่างไร</div><div class="arrow">→</div>
+    <div class="node hl"><b>SPEC</b>AC ที่ตรวจได้</div><div class="arrow">→</div>
+    <div class="node"><b>TASKS</b>1 task = 1 prompt</div><div class="arrow">→</div>
+    <div class="node"><b>smoke + trace</b>พิสูจน์</div>
+  </div>
+  <div class="box theory"><span class="label">📖 AGENTS.md กับ SKILL.md ต่างกันอย่างไร</span>
+    <p><strong>AGENTS.md</strong> = กติกาที่ใช้<strong>ตลอดเวลา</strong> ถูกโหลดทุก session (สั้นเข้าไว้ เพราะกิน context ทุกครั้ง) ·
+    <strong>SKILL.md</strong> = วิธีทำงาน<strong>เฉพาะเรื่อง</strong> โหลดเมื่องานตรงกับ description เท่านั้น ·
+    <strong>SPEC.md</strong> = "อะไรคือถูก" ของระบบนี้ · <strong>TASKS.md</strong> = "ทำอะไรก่อนหลัง"</p>
+  </div>
+
+  <h2 id="srs"><code>docs/SRS.md</code> — ความต้องการฉบับเต็ม (Requirements)</h2>
+  <p>บันทึกว่าระบบ<strong>ต้องทำอะไร</strong> และ<strong>ทำไม</strong> — stakeholders, use case, FR พร้อมที่มาและความสำคัญ (MoSCoW), NFR ที่วัดได้พร้อมวิธีตรวจ, คำถามที่ถามเจ้าของโจทย์ และตารางตามรอย</p>
+  <div class="table-wrap"><table><tbody>
+    <tr><th>ใครเขียน</th><td>คน (ร่างกับ Gemini/ChatGPT ได้ แต่คนยืนยันกับเจ้าของโจทย์)</td></tr>
+    <tr><th>ถูกอ่านเมื่อไร</th><td>Lab 2 เขียน · 13:00 เทียบกับฉบับอ้างอิง · Lab 4 ใช้ตรวจรับ</td></tr>
+    <tr><th>ผลต่อ token</th><td>agent ไม่ต้องอ่านทุก task — AGENTS.md บอกให้อ่านเฉพาะเมื่อ SPEC ไม่พอ จึงไม่กิน context ประจำ</td></tr>
+  </tbody></table></div>
+  <details>
+    <summary>ฉบับ starter (template) — <code>workers-app-starter/docs/SRS.md</code> <span class="small">(64 บรรทัด)</span></summary>
+<pre data-nocopy><code># SRS — Software Requirements Specification: [ชื่อระบบ]
+
+&gt; เอกสารความต้องการฉบับเต็มสำหรับ **คน** (ผู้ใช้, เจ้าของโจทย์, ทีม) — ร่างร่วมกับ AI ได้ แต่ **คนต้องเป็นผู้ยืนยัน**
+&gt; ทุก requirement ต้องบอก **ที่มา** ได้: มาจากโจทย์ข้อไหน หรือจากคำตอบของเจ้าของโจทย์
+&gt; ข้อที่ยังไม่ได้ยืนยัน ให้ติดป้าย **[สมมติฐาน]** และใส่ไว้ใน §8 จนกว่าจะถามได้คำตอบ
+&gt;
+&gt; ฉบับย่อสำหรับ agent อยู่ที่ `SPEC.md` (AC + data model + API)
+
+## 1. บทนำ
+- **วัตถุประสงค์ของระบบ:** [ ]
+- **ขอบเขต:** ระบบทำ [ ] · ไม่ทำ [ ] (ดู §7)
+- **เอกสารอ้างอิง:** [ โจทย์จากผู้ใช้ / บันทึกการคุยกับเจ้าของโจทย์ ]
+
+## 2. ผู้มีส่วนได้ส่วนเสีย (Stakeholders) และผู้ใช้
+| กลุ่ม | บทบาท / สิ่งที่ต้องการ | ใช้ระบบไหม |
+|---|---|---|
+| [ ] | [ ] | [ ใช้ / ไม่ใช้แต่ได้รับผล ] |
+
+## 3. Use Cases
+### 3.1 รายการ use case
+| รหัส | ชื่อ | ผู้ใช้ (actor) |
+|---|---|---|
+| UC-01 | [ ] | [ ] |
+
+### 3.2 รายละเอียด use case หลัก
+**UC-01 [ชื่อ]**
+- **Actor:** [ ]
+- **เงื่อนไขก่อนเริ่ม (precondition):** [ ]
+- **ขั้นตอนหลัก (main flow):**
+  1. [ ]
+  2. [ ]
+- **ทางเลือก / กรณีผิดปกติ (alternate flows):**
+  - [ เช่น 2a. ถ้า ... ระบบจะ ... ]
+- **ผลลัพธ์ (postcondition):** [ ]
+
+## 4. Functional Requirements (FR)
+&gt; 1 ข้อ = 1 ความสามารถ · ใช้คำว่า &quot;ระบบต้อง...&quot; · ตรวจได้ (มีวิธีพิสูจน์ว่าทำแล้วหรือยัง)
+
+| รหัส | ระบบต้อง... | ที่มา | ความสำคัญ | use case |
+|---|---|---|---|---|
+| FR-[01] | [ ] | [ โจทย์ข้อ / คำตอบเจ้าของโจทย์ ] | [ ต้องมี / ควรมี ] | UC-01 |
+
+## 5. Non-functional Requirements (NFR)
+&gt; ต้อง **วัดได้** — &quot;ใช้งานง่าย&quot; ตรวจไม่ได้ · &quot;ทำรายการจองเสร็จใน 1 นาทีบนมือถือจอ 375px&quot; ตรวจได้
+
+| รหัส | ด้าน | เกณฑ์ที่วัดได้ | วิธีตรวจ | ที่มา |
+|---|---|---|---|---|
+| NFR-01 | [ ความปลอดภัย / ใช้งาน / ประสิทธิภาพ / ค่าใช้จ่าย ] | [ ] | [ ] | [ ] |
+
+## 6. ข้อจำกัดและสมมติฐานที่ยืนยันแล้ว (Constraints)
+- [ เช่น ต้องใช้ Cloudflare free plan ไม่ผูกบัตร · มีระบบผู้ใช้จาก starter อยู่แล้ว ]
+
+## 7. นอกขอบเขต (Out of Scope)
+- [ ]
+
+## 8. คำถามที่ยังเปิดอยู่ / สมมติฐานที่รอยืนยัน
+| # | คำถาม หรือ [สมมติฐาน] | ถามใคร | คำตอบ |
+|---|---|---|---|
+| Q1 | [ ] | เจ้าของโจทย์ | [ ] |
+
+## 9. ตารางตามรอย (Traceability)
+| FR | use case | AC ใน SPEC.md | เคสทดสอบ | ผล |
+|---|---|---|---|---|
+| FR-[01] | UC-01 | AC-[1.1] | smoke: &quot;AC-[1.1] ...&quot; | [ ✅ / ❌ ] |
+</code></pre>
+  </details>
+  <p class="small">🔒 ฉบับอ้างอิงระบบจองรถของไฟล์นี้จะเปิดเวลา 13:00</p>
+
+  <h2 id="design"><code>docs/DESIGN.md</code> — การออกแบบ (Design)</h2>
+  <p>ตอบว่า<strong>จะสร้างอย่างไร</strong> — สถาปัตยกรรม, ADR (ตัดสินใจอะไร เพราะอะไร ทางเลือกที่ไม่เลือก), data model, API, NFR → design, environment, ความเสี่ยง</p>
+  <div class="table-wrap"><table><tbody>
+    <tr><th>ใครเขียน</th><td>คน (ร่างกับ chat LLM)</td></tr>
+    <tr><th>ถูกอ่านเมื่อไร</th><td>Lab 2 ร่าง · 13:00 walkthrough ADR</td></tr>
+    <tr><th>ผลต่อ token</th><td>เหมือน SRS: อ่านเมื่อจำเป็น</td></tr>
+  </tbody></table></div>
+  <details>
+    <summary>ฉบับ starter (template) — <code>workers-app-starter/docs/DESIGN.md</code> <span class="small">(62 บรรทัด)</span></summary>
+<pre data-nocopy><code># DESIGN — การออกแบบระบบ: [ชื่อระบบ]
+
+&gt; ตอบคำถาม &quot;จะสร้างอย่างไร&quot; จากความต้องการใน `docs/SRS.md`
+&gt; การตัดสินใจสำคัญทุกข้อบันทึกเป็น ADR (§3) พร้อมเหตุผลและทางเลือกที่ไม่เลือก
+
+## 1. บริบทและข้อจำกัด
+- **ระบบนี้ต้องรองรับ:** [ จำนวนผู้ใช้, อุปกรณ์, ช่วงเวลาใช้งาน ]
+- **ข้อจำกัด:** [ เช่น free plan ไม่ผูกบัตร, ต้อง deploy ได้ภายใน 1 วัน ]
+
+## 2. สถาปัตยกรรม
+```
+[ผู้ใช้ / เบราว์เซอร์]
+      │  HTTPS
+      ▼
+[Cloudflare Worker]
+  ├─ Static Assets  (public/)   ← หน้าเว็บ
+  └─ Hono API       (src/)      ← /api/...
+      │
+      ▼
+[Cloudflare D1 (SQLite)]        ← ข้อมูลทั้งหมด
+```
+- **ส่วนประกอบที่มีอยู่แล้ว (จาก starter):** ระบบผู้ใช้ + เข้าสู่ระบบ + จัดการผู้ใช้
+- **ส่วนประกอบที่ต้องเพิ่ม:** [ ]
+
+## 3. การตัดสินใจทางสถาปัตยกรรม (ADR)
+### ADR-01 [หัวข้อ เช่น ที่ deploy]
+- **บริบท:** [ ปัญหา / ข้อจำกัดที่ทำให้ต้องตัดสินใจ ]
+- **ตัวเลือก:** (1) [ ] (2) [ ] (3) [ ]
+- **ตัดสินใจ:** [ ]
+- **เหตุผล:** [ ]
+- **ผลที่ตามมา:** [ ข้อดี / ข้อเสียที่ยอมรับ ]
+
+## 4. ข้อมูล (Data Model)
+### 4.1 Entity และความสัมพันธ์
+```
+[ เช่น  users 1 ── * xxx * ── 1 yyy ]
+```
+### 4.2 ตาราง
+| ตาราง | คอลัมน์ (ชนิด) | constraint | มาจาก FR |
+|---|---|---|---|
+| [ ] | [ ] | [ ] | [ ] |
+
+## 5. API
+| Method | Path | ใช้ใน use case | สิทธิ์ |
+|---|---|---|---|
+| [ ] | [ ] | [ ] | [ ] |
+
+## 6. NFR → การออกแบบ
+| NFR | แก้ด้วยอะไร |
+|---|---|
+| [ ] | [ ] |
+
+## 7. Environment และการ deploy
+| environment | ใช้ทำอะไร | ฐานข้อมูล | คำสั่ง |
+|---|---|---|---|
+| local | พัฒนา/ทดสอบ | D1 จำลองใน `.wrangler/` | `npm run dev` |
+| production | ผู้ใช้จริง | D1 บนคลาวด์ | `npx wrangler deploy` |
+
+## 8. ความเสี่ยง
+| ความเสี่ยง | ผลกระทบ | วิธีรับมือ |
+|---|---|---|
+| [ ] | [ ] | [ ] |
+</code></pre>
+  </details>
+  <p class="small">🔒 ฉบับอ้างอิงระบบจองรถของไฟล์นี้จะเปิดเวลา 13:00</p>
+
+  <h2 id="spec"><code>SPEC.md</code> — ข้อกำหนดฉบับย่อสำหรับ agent</h2>
+  <p>ส่วนที่ agent ต้องใช้จริงตอนเขียนโค้ด: คำศัพท์โดเมน, user story + AC แบบ Given/When/Then (รหัสตัวหนา), <strong>ตารางตัวอย่าง</strong>, data model, API contract, NFR, นอกขอบเขต, คำถามเปิด — <code>npm run trace</code> อ่านไฟล์นี้</p>
+  <div class="table-wrap"><table><tbody>
+    <tr><th>ใครเขียน</th><td>คน (ย่อจาก SRS/DESIGN)</td></tr>
+    <tr><th>ถูกอ่านเมื่อไร</th><td>agent อ่าน<strong>ทุก task</strong> · trace อ่านทุกครั้ง</td></tr>
+    <tr><th>ผลต่อ token</th><td>แทน prompt ยาว ๆ — เขียนครั้งเดียว ใช้ทุก task · AC ชัด = agent ไม่ต้องเดา = ไม่ต้องวนแก้</td></tr>
+  </tbody></table></div>
+  <details>
+    <summary>ฉบับ starter (template) — <code>workers-app-starter/SPEC.md</code> <span class="small">(110 บรรทัด)</span></summary>
+<pre data-nocopy><code># SPEC — [ชื่อแอป]
+
+&gt; **SPEC.md = ข้อกำหนดฉบับย่อสำหรับ agent** (ฉบับเต็มสำหรับคนอยู่ใน `docs/SRS.md` และ `docs/DESIGN.md`)
+&gt; agent อ่านไฟล์นี้แทนการแปะ prompt ยาว ๆ — spec ชัด = prompt สั้น = ประหยัด token
+&gt;
+&gt; กติกาของ AC (acceptance criteria):
+&gt; - เขียนแบบ **Given / When / Then** · 1 ข้อ = ตรวจได้ 1 เรื่อง · มีผลที่คาดหวังเป็นรูปธรรม (status, ข้อมูล)
+&gt; - รหัส AC เขียนเป็น**ตัวหนา**แบบในส่วน starter ด้านล่าง — `npm run trace` นับเฉพาะรหัสตัวหนาและตรวจว่าทุก AC มีเคสทดสอบ
+&gt; - อ้างที่มาจาก SRS ในวงเล็บ เช่น `(FR-03)` — ทำให้ตามรอยได้ว่า AC นี้มาจากความต้องการข้อไหน
+
+## 1. เป้าหมาย (สรุปจาก SRS)
+[ 2–3 บรรทัด: ระบบนี้แก้ปัญหาอะไร ให้ใคร ]
+
+## 2. คำศัพท์ของโดเมน
+&gt; นิยามคำที่อาจเข้าใจไม่ตรงกัน — ถ้าคนกับ agent เข้าใจคำเดียวกันต่างกัน ระบบจะผิดแบบเงียบ ๆ
+
+| คำ | ความหมายในระบบนี้ |
+|---|---|
+| ผู้ใช้ | บัญชีที่ล็อกอินได้ มี role เป็น `admin` หรือ `user` |
+| [ ] | [ ] |
+
+---
+
+## 3. User Stories + Acceptance Criteria
+
+### ✅ ส่วนที่ starter มีให้แล้ว (ตัวอย่าง spec ที่ตรวจสอบได้ — ห้ามลบ)
+
+#### US-0 ตรวจสถานะระบบ
+ในฐานะผู้ดูแลระบบ ฉันต้องการเช็กว่าเซิร์ฟเวอร์และฐานข้อมูลพร้อม เพื่อรู้ว่าปัญหาอยู่ที่ระบบหรือที่เครือข่าย
+- **AC-0.1** Given เซิร์ฟเวอร์ทำงานและรัน migration แล้ว When `GET /api/health` Then ได้ 200 `{ ok: true, db: &quot;ready&quot; }`
+
+#### US-A1 ตั้งค่าครั้งแรก
+ในฐานะผู้ติดตั้งระบบ ฉันต้องการสร้างผู้ดูแลระบบคนแรกจากหน้าเว็บ เพื่อเริ่มใช้งานได้โดยไม่ต้องแก้ฐานข้อมูลเอง
+- **AC-A1.1** Given ระบบยังไม่มีผู้ใช้ When `POST /api/auth/setup` ด้วยชื่อและรหัสที่ถูกกติกา Then ได้ 201, ผู้ใช้นั้นเป็น `admin` และล็อกอินอยู่ทันที
+- **AC-A1.2** Given ระบบมีผู้ใช้อย่างน้อย 1 คน When `POST /api/auth/setup` Then ได้ 409 (ตั้งค่าซ้ำไม่ได้)
+
+#### US-A2 เข้าสู่ระบบ / ออกจากระบบ
+ในฐานะผู้ใช้ ฉันต้องการเข้าสู่ระบบด้วยชื่อและรหัสผ่าน เพื่อใช้งานในนามของตัวเอง
+- **AC-A2.1** Given ชื่อและรหัสถูก When `POST /api/auth/login` Then ได้ 200 และ cookie `session` แบบ HttpOnly
+- **AC-A2.2** Given รหัสผิด หรือไม่มีชื่อนี้ When ล็อกอิน Then ได้ 401 ด้วย**ข้อความเดียวกัน**ทั้งสองกรณี
+- **AC-A2.3** Given ไม่ได้ล็อกอิน When `GET /api/auth/me` Then ได้ 401
+- **AC-A2.4** Given ล็อกอินอยู่ When `POST /api/auth/logout` Then session เดิมใช้ไม่ได้อีก (`/api/auth/me` ได้ 401)
+
+#### US-A3 เปลี่ยนรหัสผ่านของตัวเอง
+ในฐานะผู้ใช้ ฉันต้องการเปลี่ยนรหัสผ่านเอง เพื่อดูแลความปลอดภัยของบัญชี
+- **AC-A3.1** Given ใส่รหัสเดิมถูก และรหัสใหม่ยาว 8–100 ตัว When `PUT /api/auth/password` Then ได้ 200 และล็อกอินด้วยรหัสใหม่ได้
+- **AC-A3.2** Given ใส่รหัสเดิมผิด When เปลี่ยนรหัส Then ได้ 400 และรหัสไม่เปลี่ยน
+
+#### US-A4 จัดการผู้ใช้ (admin)
+ในฐานะผู้ดูแลระบบ ฉันต้องการเพิ่ม แก้ role ตั้งรหัสใหม่ และลบผู้ใช้ เพื่อควบคุมว่าใครเข้าระบบได้
+- **AC-A4.1** Given ผู้ใช้ role `user` When เรียก `/api/users` ใด ๆ Then ได้ 403
+- **AC-A4.2** Given admin When `POST /api/users` (ชื่อ, รหัส, role ไม่บังคับ) Then ได้ 201, role เริ่มต้นเป็น `user` และคำตอบไม่มี `password_hash`
+- **AC-A4.3** Given มีชื่อผู้ใช้นี้แล้ว When เพิ่มชื่อซ้ำ Then ได้ 409
+- **AC-A4.4** Given admin ตั้งรหัสใหม่ให้ผู้ใช้ X When X ใช้ session เดิม Then ได้ 401 และ X ล็อกอินด้วยรหัสใหม่ได้
+- **AC-A4.5** Given admin When ลบบัญชีตัวเอง Then ได้ 409 · When ลบผู้ใช้อื่น Then ได้ 200
+- **AC-A4.6** Given มี admin เหลือคนเดียว When เปลี่ยน role ของเขาเป็น `user` Then ได้ 409
+
+### ✍️ ส่วนของโจทย์ (เติมเอง)
+
+#### US-[n] [ ชื่อเรื่อง ] (FR-[ ])
+ในฐานะ [ ใคร ] ฉันต้องการ [ ทำอะไร ] เพื่อ [ ประโยชน์อะไร ]
+- **AC-[n].[1]** Given [ สถานะก่อน ] When [ การกระทำ ] Then [ ผลที่ตรวจได้ ]  ← เปลี่ยน [n].[1] เป็นตัวเลข เช่น 1.1
+
+#### ตารางตัวอย่าง (Specification by Example)
+&gt; ใช้กับกติกาที่มีหลายกรณี — เติม &quot;ผลที่คาดหวัง&quot; **ก่อน**เขียนโค้ด แต่ละแถวกลายเป็นเคสทดสอบ 1 เคส
+
+| # | สถานการณ์ | ข้อมูลเข้า | ผลที่คาดหวัง | AC |
+|---|---|---|---|---|
+| 1 | [ ] | [ ] | [ ] | [ ] |
+
+---
+
+## 4. Data Model
+| ตาราง | คอลัมน์ | กติกา (constraint) |
+|---|---|---|
+| users | id, username, password_hash, role, created_at | username UNIQUE · role ∈ {admin, user} · เก็บ hash ไม่เก็บรหัสจริง |
+| sessions | token, user_id, expires_at | token สุ่ม 32 ไบต์ · หมดอายุ 7 วัน · ลบผู้ใช้ = ลบ session |
+| [ ] | [ ] | [ ] |
+
+## 5. API Contract
+| Method | Path | สิทธิ์ | รับ (body) | ตอบสำเร็จ | ตอบ error |
+|---|---|---|---|---|---|
+| GET | /api/health | ทุกคน | – | 200 `{ok, db, time}` | – |
+| GET | /api/auth/setup | ทุกคน | – | 200 `{needsSetup}` | – |
+| POST | /api/auth/setup | ทุกคน (ครั้งแรก) | `{username,password}` | 201 `user` + cookie | 400, 409 |
+| POST | /api/auth/login | ทุกคน | `{username,password}` | 200 `user` + cookie | 400, 401 |
+| POST | /api/auth/logout | ทุกคน | – | 200 | – |
+| GET | /api/auth/me | ล็อกอิน | – | 200 `{id,username,role}` | 401 |
+| PUT | /api/auth/password | ล็อกอิน | `{current_password,new_password}` | 200 | 400, 401 |
+| GET | /api/users | admin | – | 200 `[user]` | 401, 403 |
+| POST | /api/users | admin | `{username,password,role?}` | 201 `user` | 400, 401, 403, 409 |
+| PUT | /api/users/:id | admin | `{role?,password?}` | 200 `user` | 400, 401, 403, 404, 409 |
+| DELETE | /api/users/:id | admin | – | 200 | 401, 403, 404, 409 |
+| [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
+
+## 6. Non-functional Requirements (ต้องวัดได้)
+| รหัส | เรื่อง | เกณฑ์ที่วัดได้ | ตรวจอย่างไร |
+|---|---|---|---|
+| NFR-S1 | ความปลอดภัย | รหัสผ่านเก็บเป็น PBKDF2 + salt ไม่มีรหัสจริงในฐานข้อมูล | `d1 execute ... &quot;SELECT password_hash FROM users&quot;` |
+| NFR-S2 | ความปลอดภัย | cookie session เป็น HttpOnly | AC-A2.1 + F12 → Application → Cookies |
+| NFR-C1 | ค่าใช้จ่าย | ใช้เฉพาะ Cloudflare free plan ไม่ผูกบัตร | ตรวจ dashboard |
+| [ ] | [ ] | [ ] | [ ] |
+
+## 7. นอกขอบเขต (Out of Scope)
+- รีเซ็ตรหัสผ่านทางอีเมล · จำกัดจำนวนครั้งที่ล็อกอินผิด · สมัครสมาชิกเอง (admin เป็นคนเพิ่มผู้ใช้)
+- [ ]
+
+## 8. คำถามที่ยังเปิดอยู่
+&gt; สิ่งที่ยังไม่รู้ ห้ามให้ agent เดา — ถามเจ้าของโจทย์ แล้วย้ายคำตอบไปเป็น AC
+- [ ]
+</code></pre>
+  </details>
+  <p class="small">🔒 ฉบับอ้างอิงระบบจองรถของไฟล์นี้จะเปิดเวลา 13:00</p>
+
+  <h2 id="tasks"><code>TASKS.md</code> — Work Breakdown Structure</h2>
+  <p>แตกงานเป็น task ที่ <strong>1 task = 1 prompt</strong> แก้ 1–3 ไฟล์ ผูกกับ AC และรู้ว่าต้องทำอะไรก่อน — รวมงานของคน (migration, smoke, commit) คั่นไว้ด้วย</p>
+  <div class="table-wrap"><table><tbody>
+    <tr><th>ใครเขียน</th><td>คน</td></tr>
+    <tr><th>ถูกอ่านเมื่อไร</th><td>agent อ่านเมื่อสั่ง <code>ทำ task Tx.y ใน TASKS.md</code></td></tr>
+    <tr><th>ผลต่อ token</th><td>prompt เหลือ 1 บรรทัด · งานเล็กจึงตรวจง่ายและพังน้อย</td></tr>
+  </tbody></table></div>
+  <details>
+    <summary>ฉบับ starter (template) — <code>workers-app-starter/TASKS.md</code> <span class="small">(24 บรรทัด)</span></summary>
+<pre data-nocopy><code># TASKS — Work Breakdown Structure (WBS)
+
+&gt; แตกงานจาก SPEC.md เป็น task เล็ก ๆ ที่ **1 task = 1 prompt ให้ agent**
+&gt;
+&gt; task ที่ดี:
+&gt; - เสร็จได้ใน 1 prompt (แก้ 1–3 ไฟล์)
+&gt; - ตรวจได้ — ผูกกับ AC ใน SPEC.md
+&gt; - รู้ว่าต้องทำอะไรก่อน (depends on)
+&gt;
+&gt; สั่ง agent ทีละ task: `ทำ task T1.1 ใน TASKS.md`
+
+## Epic 0: Starter (มีให้แล้ว)
+- [x] **T0.1** โครง Worker + Hono + หน้าเว็บ + `/api/health` — AC-0.1
+- [x] **T0.2** ผู้ใช้ + เข้าสู่ระบบ + จัดการผู้ใช้ (admin) — AC-A1.1 – AC-A4.6
+- [x] **T0.3** smoke test + traceability check (`npm run smoke`, `npm run trace`)
+
+## Epic 1: [ ชื่อเรื่องของโจทย์ ]
+- [ ] **T1.1** [ ทำอะไร ] — ไฟล์: [ ] — depends: [ ] — AC: [ ]
+- [ ] **T1.2** [ ]
+
+## 👤 งานของคน (ไม่ใช่งานของ agent)
+- [ ] รัน migration (`npx wrangler d1 migrations apply app-db --local` / `--remote`)
+- [ ] รัน `npm run smoke` + `npm run trace` และทดสอบในเบราว์เซอร์
+- [ ] commit + deploy
+</code></pre>
+  </details>
+  <p class="small">🔒 ฉบับอ้างอิงระบบจองรถของไฟล์นี้จะเปิดเวลา 13:00</p>
+
+  <h2 id="agents"><code>AGENTS.md</code> — คู่มือประจำโปรเจกต์ของ agent</h2>
+  <p>กติกาที่ต้องบอก agent <strong>ทุกครั้ง</strong>: stack, โครงไฟล์, ทำทีละ task, ห้ามรัน wrangler/npm/git, ถามก่อนเดา, กติกาของโค้ด และตาราง skill</p>
+  <div class="table-wrap"><table><tbody>
+    <tr><th>ใครเขียน</th><td>คน (มากับ starter แล้วเติมเพิ่ม)</td></tr>
+    <tr><th>ถูกอ่านเมื่อไร</th><td>agent อ่านเป็น context แรกทุก session</td></tr>
+    <tr><th>ผลต่อ token</th><td>ไม่ต้องพิมพ์กติกาซ้ำในทุก prompt · กัน agent ทำเกินซึ่งเปลือง token</td></tr>
+  </tbody></table></div>
+  <details>
+    <summary>ฉบับ starter (template) — <code>workers-app-starter/AGENTS.md</code> <span class="small">(54 บรรทัด)</span></summary>
+<pre data-nocopy><code># AGENTS.md — คู่มือประจำโปรเจกต์สำหรับ AI agent
+
+&gt; ไฟล์นี้ถูกอ่านเป็น context แรกทุกครั้งที่เปิด session ใหม่
+&gt; เขียนสิ่งที่ &quot;ต้องบอก agent ทุกครั้ง&quot; ไว้ที่นี่ แทนการพิมพ์ซ้ำในทุก prompt
+
+## โปรเจกต์นี้คืออะไร
+- ข้อกำหนดสำหรับลงมือทำ: `SPEC.md` (AC, data model, API contract) — **อ่านก่อนทุก task**
+- รายการงาน: `TASKS.md` (WBS)
+- เอกสารฉบับเต็มสำหรับคน: `docs/SRS.md`, `docs/DESIGN.md` — อ่านเฉพาะเมื่อ SPEC.md ไม่พอ
+
+## Stack
+- Cloudflare Workers + Hono (TypeScript) — API อยู่ใน `src/`
+- หน้าเว็บ: HTML + CSS + JavaScript ธรรมดา ไม่ใช้ framework — อยู่ใน `public/`
+- ฐานข้อมูล: Cloudflare D1 (SQLite) binding ชื่อ `DB` ฐานข้อมูลชื่อ `app-db` — schema อยู่ใน `migrations/`
+- ทดสอบ: `scripts/smoke.mjs` (เรียก API จริง) + `scripts/trace.mjs` (ตรวจว่าทุก AC มีเคสทดสอบ)
+
+## โครงไฟล์
+```
+src/index.ts             จุดรวม route ทั้งหมด
+src/routes/&lt;เรื่อง&gt;.ts     1 เรื่อง = 1 ไฟล์
+src/routes/users.ts      ⭐ ตัวอย่าง CRUD มาตรฐาน — route ใหม่ให้เขียนตามแบบนี้
+src/lib/auth.ts          hash รหัสผ่าน, session, middleware requireAuth / requireAdmin
+src/types.ts             ชนิดของ bindings และค่าใน context (userId, username, role)
+public/index.html        หน้าเว็บ (หลาย view สลับด้วย #hash)
+public/app.js            โค้ดฝั่ง client — หน้าใหม่เพิ่มใน VIEWS
+migrations/NNNN_*.sql    การเปลี่ยน schema แต่ละครั้ง (เรียงตามเลข)
+scripts/smoke.mjs        smoke test (ชื่อเคสขึ้นต้นด้วยรหัส AC)
+skills/                  ขั้นตอนมาตรฐานสำหรับงานที่ทำซ้ำ
+```
+
+## กติกาการทำงาน (สำคัญ)
+1. **ทำทีละ 1 task จาก TASKS.md** ตามที่ผู้ใช้สั่งเท่านั้น ห้ามทำ task อื่นล่วงหน้า
+2. **ห้ามรันคำสั่งเหล่านี้เอง:** `wrangler` ทุกคำสั่ง, `npm install`, `git` — เขียนคำสั่งที่ผู้ใช้ต้องรันไว้ท้ายคำตอบ ผู้ใช้จะรันเองแล้วแปะผลกลับมาถ้ามีปัญหา
+3. อ่านเฉพาะไฟล์ที่เกี่ยวกับ task — ห้ามอ่าน `node_modules/`, `.wrangler/`, `package-lock.json`
+4. ถ้า SPEC.md ไม่ได้บอก (เช่น ไม่รู้ว่าควรตอบ status อะไร) **ให้ถามก่อน ห้ามเดา**
+5. จบ task ทุกครั้ง ตอบสั้น ๆ 3 ส่วน: **ไฟล์ที่แก้**, **คำสั่งที่ผู้ใช้ต้องรัน**, **วิธีทดสอบ** และเปลี่ยนสถานะ task ใน TASKS.md เป็น `[x]`
+6. ห้ามเพิ่ม dependency ใหม่ โดยไม่ถามก่อน
+
+## กติกาของโค้ด
+- ตอบและเขียนคอมเมนต์เป็นภาษาไทย
+- SQL ทุกคำสั่งต้องเป็น prepared statement (`.prepare(...).bind(...)`) ห้ามต่อ string
+- เปลี่ยน schema = สร้างไฟล์ migration ใหม่เท่านั้น **ห้ามแก้ไฟล์ migration ที่มีอยู่แล้ว**
+- route ที่ต้องล็อกอินใช้ `requireAuth` จาก `src/lib/auth.ts` · ข้อมูลที่เป็นของผู้ใช้ต้องกรองด้วย `c.get(&quot;userId&quot;)` เสมอ
+- API ตอบ JSON เสมอ — error ใช้รูปแบบ `{ &quot;error&quot;: &quot;ข้อความภาษาไทย&quot; }` พร้อม status ที่ถูกต้อง (400, 401, 403, 404, 409)
+- เวลาในระบบเก็บเป็นข้อความ `YYYY-MM-DDTHH:MM` (เวลาท้องถิ่น) ยกเว้นที่ระบุไว้ใน SPEC.md
+- หน้าเว็บ: แสดงข้อมูลผู้ใช้ผ่าน `esc()` เสมอ (กัน XSS)
+- ทุก AC ใหม่ต้องมีเคสใน `scripts/smoke.mjs` ชื่อเคสขึ้นต้นด้วยรหัส AC
+
+## Skills (ขั้นตอนมาตรฐาน)
+ก่อนทำงานประเภทต่อไปนี้ ให้อ่านไฟล์ skill ที่ระบุและทำตามขั้นตอนในนั้น:
+
+| งาน | อ่านไฟล์ |
+|---|---|
+| เพิ่ม/แก้ API endpoint หรือเปลี่ยน schema | `skills/add-endpoint/SKILL.md` |
+</code></pre>
+  </details>
+
+  <h2 id="skill"><code>skills/add-endpoint/SKILL.md</code> — ขั้นตอนมาตรฐานของงานที่ทำซ้ำ</h2>
+  <p>วิธีทำงานเฉพาะเรื่องแบบทีละขั้น + สิ่งที่ห้ามทำ + เช็กลิสต์ก่อนบอกว่าเสร็จ — frontmatter <code>name</code> / <code>description</code> บอก agent ว่าควรหยิบมาใช้เมื่อไร</p>
+  <div class="table-wrap"><table><tbody>
+    <tr><th>ใครเขียน</th><td>คน (ทดสอบด้วย eval ตามวงจร ADLC)</td></tr>
+    <tr><th>ถูกอ่านเมื่อไร</th><td>เมื่องานตรงกับ description (ลงทะเบียนในตาราง skill ของ AGENTS.md)</td></tr>
+    <tr><th>ผลต่อ token</th><td>โหลดเฉพาะตอนจำเป็น (progressive disclosure) · งานซ้ำออกมาเหมือนกันทุกครั้ง</td></tr>
+  </tbody></table></div>
+  <details>
+    <summary>ฉบับ starter (template) — <code>workers-app-starter/skills/add-endpoint/SKILL.md</code> <span class="small">(38 บรรทัด)</span></summary>
+<pre data-nocopy><code>---
+name: add-endpoint
+description: ใช้เมื่อต้องเพิ่มหรือแก้ API endpoint ของโปรเจกต์นี้ (route ใหม่, ตารางใหม่, หรือเปลี่ยน schema) ตาม task ใน TASKS.md
+---
+
+# add-endpoint — เพิ่ม API endpoint แบบมาตรฐานของโปรเจกต์
+
+## ใช้เมื่อไร
+- task ใน TASKS.md ที่ต้องสร้างหรือแก้ endpoint ใต้ `/api/...`
+- task ที่ต้องเพิ่มตารางหรือคอลัมน์ในฐานข้อมูล
+
+## ข้อมูลที่ต้องมีก่อนเริ่ม
+- task ID (เช่น T1.2) และ AC ที่ผูกไว้ใน SPEC.md
+- ถ้าข้อมูลใน SPEC ไม่พอ (เช่น ไม่รู้ว่า error ควรเป็น status อะไร) **ให้ถามก่อน อย่าเดา**
+
+## ขั้นตอน
+1. อ่าน AC ของ task ใน `SPEC.md` §3 และแถวของ endpoint ใน §5 (API Contract)
+2. ถ้าต้องเปลี่ยน schema:
+   - สร้างไฟล์ใหม่ `migrations/NNNN_&lt;ชื่อ&gt;.sql` (NNNN = เลขถัดจากไฟล์ล่าสุด) — **ห้ามแก้ไฟล์ migration เดิม**
+   - อัปเดตตาราง §4 Data Model ใน SPEC.md ให้ตรง
+3. เขียน route ใน `src/routes/&lt;เรื่อง&gt;.ts` โดย**เลียนแบบโครงของ `src/routes/users.ts`** แล้วผูกใน `src/index.ts`
+   - ต้องล็อกอิน → `xxx.use(&quot;*&quot;, requireAuth)` · เฉพาะ admin → เพิ่ม `requireAdmin`
+   - ตรวจ input ทุกช่อง → ผิดตอบ 400 `{ error: &quot;ข้อความไทย&quot; }`
+   - SQL ใช้ `.prepare(...).bind(...)` เท่านั้น · ข้อมูลของผู้ใช้กรองด้วย `c.get(&quot;userId&quot;)`
+4. เพิ่มเคสใน `scripts/smoke.mjs` อย่างน้อย 1 เคสต่อ 1 AC (ชื่อเคสขึ้นต้นด้วยรหัส AC เช่น `&quot;AC-2.2 ...&quot;`) ใช้ `makeUser()` เมื่อต้องการผู้ใช้ทดสอบ
+5. เปลี่ยนสถานะ task ใน TASKS.md เป็น `[x]`
+
+## ห้ามทำ
+- ห้ามรัน `wrangler` / `npm` / `git` เอง
+- ห้ามแก้ไฟล์นอกเหนือจาก: migrations/, src/, public/ (ถ้า task บอก), scripts/smoke.mjs, SPEC.md §4, TASKS.md
+- ห้ามแก้ `src/lib/auth.ts` และ `src/routes/auth.ts` ถ้า task ไม่ได้สั่ง
+- ห้ามทำ task ถัดไปต่อเอง
+
+## เช็กลิสต์ก่อนบอกว่าเสร็จ
+- [ ] ทุก AC ของ task มีเคสใน smoke.mjs
+- [ ] ไม่มี SQL ที่ต่อ string
+- [ ] error ทุกแบบตอบ JSON + status ตาม API Contract
+- [ ] ตอบผู้ใช้ 3 ส่วน: ไฟล์ที่แก้ / คำสั่งที่ต้องรัน (เช่น `npx wrangler d1 migrations apply app-db --local`, `npm run smoke`, `npm run trace`) / วิธีทดสอบในเบราว์เซอร์
+</code></pre>
+  </details>
+
+  <h2 id="prompt"><code>docs/STARTER-PROMPT.md</code> — prompt สร้าง starter นี้เอง</h2>
+  <p>บริบท + 6 task + คำสั่งที่คนรันคั่น สำหรับสร้าง starter แบบนี้ขึ้นใหม่ด้วย agent ในวันที่มีโควต้า — เขียนแบบ spec + WBS เป็นตัวอย่างของสิ่งที่สอนทั้งวัน</p>
+  <div class="table-wrap"><table><tbody>
+    <tr><th>ใครเขียน</th><td>ผู้ออกแบบหลักสูตร</td></tr>
+    <tr><th>ถูกอ่านเมื่อไร</th><td>อ่านเองหลังจบหลักสูตร (ไม่ใช้ในวันอบรม)</td></tr>
+    <tr><th>ผลต่อ token</th><td>ประมาณ 300–600K token ถ้าทำเองทั้งหมด (ยังไม่ได้วัด)</td></tr>
+  </tbody></table></div>
+  <details>
+    <summary>ฉบับ starter (template) — <code>workers-app-starter/docs/STARTER-PROMPT.md</code> <span class="small">(111 บรรทัด)</span></summary>
+<pre data-nocopy><code># STARTER-PROMPT — สร้าง starter นี้เองด้วย AI agent
+
+&gt; ใช้เมื่อต้องการสร้าง starter แบบนี้ขึ้นใหม่เอง (เช่น เปลี่ยน stack หรืออยากเข้าใจทุกบรรทัด)
+&gt; เขียนแบบ **spec + WBS**: ส่งบริบทครั้งเดียว → สั่งทีละ task → คนรันคำสั่งเอง → ตรวจด้วย smoke/trace ทุก task
+&gt;
+&gt; 🪙 ประมาณการ token ถ้าทำครบ: ~300–600K (ยังไม่ได้วัดจริง) · แนะนำโมเดลเก่ง (เช่น GLM-5.3) สำหรับ T3–T4 ที่เป็นโค้ดความปลอดภัย ข้ออื่นใช้โมเดลเบาได้
+
+---
+
+## ส่วนที่ 1 — บริบท (ส่งครั้งแรกครั้งเดียว หรือบันทึกเป็นไฟล์ให้ agent อ่าน)
+
+```
+ฉันจะสร้าง &quot;starter&quot; สำหรับเว็บแอปบน Cloudflare ที่นำไปต่อยอดได้ทุกโจทย์ ทำทีละ task ตามที่ฉันสั่งเท่านั้น
+
+เป้าหมาย: โครงเว็บแอปที่ deploy ได้ทันที มีระบบเข้าสู่ระบบและจัดการผู้ใช้แบบง่าย
+มีเอกสารและการทดสอบพร้อมให้ต่อยอดแบบ spec-driven
+
+ข้อจำกัด:
+- Cloudflare Workers + Hono (TypeScript) + D1 (binding ชื่อ DB, ฐานข้อมูลชื่อ app-db) + Static Assets (โฟลเดอร์ public/)
+- ต้องอยู่ใน free plan ห้ามใช้บริการที่ต้องผูกบัตร (Access, R2, Email)
+- หน้าเว็บเป็น HTML/CSS/JS ธรรมดา ไม่ใช้ framework รองรับมือถือ
+- ห้ามเพิ่ม dependency นอกจาก hono โดยไม่ถาม
+- SQL ทุกคำสั่งต้องเป็น prepared statement · เปลี่ยน schema ด้วยไฟล์ migration ใหม่เท่านั้น
+- คอมเมนต์และข้อความ error เป็นภาษาไทย · API ตอบ JSON รูปแบบ { &quot;error&quot;: &quot;...&quot; } พร้อม status ที่ถูกต้อง
+- route 1 เรื่อง = 1 ไฟล์ใน src/routes/
+
+กติกาการทำงาน:
+- ห้ามรัน wrangler, npm, git เอง ให้เขียนคำสั่งที่ฉันต้องรันไว้ท้ายคำตอบ
+- ถ้าข้อมูลไม่พอ ให้ถามก่อน ห้ามเดา
+- จบแต่ละ task ตอบ 3 ส่วน: ไฟล์ที่แก้ / คำสั่งที่ต้องรัน / วิธีทดสอบ
+```
+
+## ส่วนที่ 2 — 👤 คนรันเองก่อนเริ่ม
+
+```bash
+npm create cloudflare@latest my-app -- --category=hello-world --type=hello-world-with-assets --lang=ts --no-deploy --no-git --no-agents
+cd my-app
+npm install hono
+git init
+```
+
+## ส่วนที่ 3 — task (ส่งให้ agent ทีละข้อ แล้ว commit หลังแต่ละข้อ)
+
+**T1 โครงแอป**
+```
+ทำ T1: แปลง src/index.ts เป็น Hono แยก route ไว้ใน src/routes/ เพิ่ม GET /api/health ตอบ { ok: true, db, time }
+โดย db บอกสถานะฐานข้อมูล (&quot;ready&quot; / &quot;no-binding&quot; / &quot;not-migrated&quot;), ดัก 404 และ 500 เป็น JSON,
+ตั้ง wrangler.jsonc ให้มี assets (public/) และ observability พร้อมคอมเมนต์ภาษาไทยทุกส่วน
+เสร็จเมื่อ: npm run dev แล้ว /api/health ตอบ 200 และหน้า public/index.html เรียก API นี้แสดงผลได้
+```
+
+**T2 การทดสอบ**
+```
+ทำ T2: สร้าง scripts/smoke.mjs (เรียก API จริง, จำ cookie ได้แบบเบราว์เซอร์, เปลี่ยน local/production ด้วย BASE_URL,
+ชื่อเคสขึ้นต้นด้วยรหัส AC, รายงาน ผ่าน/ไม่ผ่าน/ข้าม) และ scripts/trace.mjs (ตรวจว่า AC ตัวหนาทุกข้อใน SPEC.md
+มีเคสใน smoke.mjs และทุกเคสอ้าง AC ที่มีจริง, เตือนถ้า FR ใน docs/SRS.md ไม่ถูกอ้างใน SPEC.md)
+เพิ่ม npm scripts: dev, deploy, smoke, trace
+```
+
+👤 หลัง T2 สร้างฐานข้อมูล:
+```bash
+npx wrangler d1 create app-db --binding DB --update-config
+```
+
+**T3 ฐานข้อมูลผู้ใช้ + ไลบรารี auth**
+```
+ทำ T3: migration ตาราง users (username unique, password_hash, role admin/user, created_at)
+และ sessions (token, user_id อ้าง users ลบตาม, expires_at) + src/lib/auth.ts:
+hash ด้วย PBKDF2-SHA256 100,000 รอบ + salt สุ่ม เก็บเป็น &quot;salt:hash&quot;, session token สุ่ม 32 ไบต์ อายุ 7 วัน,
+cookie HttpOnly + SameSite=Lax (Secure เมื่อเป็น https), middleware requireAuth (ฝาก userId, username, role ใน context)
+และ requireAdmin (403 ถ้าไม่ใช่ admin)
+```
+
+👤 หลัง T3:
+```bash
+npx wrangler d1 migrations apply app-db --local
+```
+
+**T4 API ผู้ใช้**
+```
+ทำ T4: /api/auth/setup (GET บอกว่ายังไม่มีผู้ใช้ไหม, POST สร้าง admin คนแรกได้เฉพาะตอนยังไม่มีผู้ใช้ แล้วล็อกอินให้),
+login, logout, me, PUT password (เปลี่ยนรหัสของตัวเอง ต้องยืนยันรหัสเดิม)
+และ /api/users CRUD สำหรับ admin เท่านั้น (ไม่ส่ง password_hash ออกไป)
+กติกา: ล็อกอินผิดตอบข้อความเดียวกันไม่ว่าชื่อหรือรหัสผิด, admin ลบตัวเองไม่ได้, ต้องเหลือ admin อย่างน้อย 1 คน,
+admin ตั้งรหัสใหม่ให้ใครแล้ว session เดิมของคนนั้นต้องใช้ไม่ได้
+เพิ่มเคส smoke ครบทุกกติกา
+```
+
+**T5 หน้าเว็บ**
+```
+ทำ T5: หน้าเดียวหลาย view สลับด้วย #hash: ตั้งค่าครั้งแรก, ล็อกอิน, หน้าหลัก (แสดง /api/health),
+จัดการผู้ใช้ (admin), เปลี่ยนรหัสผ่าน · แยกไฟล์ index.html / app.css / app.js
+ทุกหน้าใช้ fetch เรียก API แสดง error จาก API และ escape ข้อมูลผู้ใช้ก่อนแสดง (กัน XSS)
+```
+
+**T6 เอกสาร**
+```
+ทำ T6: AGENTS.md (stack, โครงไฟล์, กติกาการทำงานแบบในส่วนที่ 1, ตาราง skills),
+SPEC.md (ส่วนผู้ใช้และการเข้าสู่ระบบเขียนครบเป็นตัวอย่าง: user story, AC แบบ Given/When/Then ตัวหนาพร้อมรหัส,
+data model, API contract, NFR ที่วัดได้) + template เปล่าของ TASKS.md, docs/SRS.md, docs/DESIGN.md,
+skills/add-endpoint/SKILL.md, README.md
+```
+
+## ส่วนที่ 4 — 👤 ตรวจทุก task
+
+```bash
+npm run dev
+npm run smoke
+npm run trace
+git add . &amp;&amp; git commit -m &quot;Tn: ...&quot;
+```
+</code></pre>
+  </details>
+
+  <h2 id="tokens">ทำไมไฟล์เหล่านี้ประหยัด token</h2>
+  <ul>
+    <li><strong>เขียนครั้งเดียว ใช้ทุก task</strong> — แทนการพิมพ์ spec และกติกาซ้ำในทุก prompt</li>
+    <li><strong>AC ชัด + ตารางตัวอย่าง</strong> — agent ไม่ต้องเดา จึงไม่ต้องวนแก้หลายรอบ</li>
+    <li><strong>แยกฉบับคน (SRS/DESIGN) กับฉบับ agent (SPEC)</strong> — agent อ่านเฉพาะส่วนที่จำเป็น context จึงเล็ก</li>
+    <li><strong>skill โหลดเมื่อจำเป็น</strong> — ไม่กิน context ในงานที่ไม่เกี่ยว</li>
+    <li><strong>trace ตรวจแทนการถาม agent</strong> — "ครบทุก AC หรือยัง" ตอบได้ด้วยสคริปต์ ไม่ใช้ token</li>
+  </ul>
+</main>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ติดตั้ง &amp; สมัคร — Vibe Coding × SDLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body data-page="setup.html">
+<main>
+  <p class="eyebrow">เครื่องในห้อง Lab · Windows</p>
+  <h1>เตรียมเครื่องและบัญชี</h1>
+  <p class="lede">ทุกคนใช้<strong>เครื่อง Windows ในห้อง Lab เท่านั้น</strong> ไม่ใช้เครื่องส่วนตัว
+  หน้านี้แบ่งเป็น 3 ส่วน: ผู้ดูแลเตรียมเครื่อง (ก่อนวันอบรม) → ผู้เรียนสมัครบัญชี → ผู้เรียนตั้งค่าบนเครื่อง Lab (เช้าวันอบรม) และปิดท้ายด้วยการออกจากระบบเมื่อเลิกเรียน</p>
+
+  <div class="meta">
+    <span class="chip">🪟 Windows 10/11 เท่านั้น</span>
+    <span class="chip">🏫 ใช้เฉพาะเครื่องในห้อง Lab</span>
+    <span class="chip">💳 ไม่ต้องใช้บัตรเครดิตทุกขั้น</span>
+  </div>
+
+  <div class="toc">
+    <b>ในหน้านี้</b>
+    <ol>
+      <li><a href="#overview">ภาพรวม: ใครทำอะไร เมื่อไร</a></li>
+      <li><a href="#staff">PART A — เตรียมเครื่อง Lab (ผู้สอน / IT)</a></li>
+      <li><a href="#accounts">PART B — สมัครบัญชี (ผู้เรียน)</a></li>
+      <li><a href="#morning">PART C — ตั้งค่าบนเครื่อง Lab เช้าวันอบรม (ผู้เรียน)</a></li>
+      <li><a href="#signout">PART D — ออกจากระบบเมื่อเลิกเรียน (ผู้เรียน)</a></li>
+      <li><a href="#problems">ปัญหาที่พบบ่อย</a></li>
+      <li><a href="#terminal">Git Bash กับ PowerShell: คำสั่งที่ต่างกัน</a></li>
+    </ol>
+  </div>
+
+  <div class="box warn">
+    <span class="label">⚠ กติกาข้อเดียวที่ต้องจำ: ไม่ใส่บัตรเครดิต</span>
+    <p>ทุกบริการในหลักสูตรนี้ใช้ได้ฟรีโดยไม่ต้องผูกบัตร <strong>ถ้าหน้าจอไหนขอบัตรเครดิตหรือวิธีชำระเงิน ให้หยุดตรงนั้น</strong> แล้วแจ้งผู้สอน
+    แปลว่ากำลังเปิดบริการที่อยู่นอกขอบเขตหลักสูตร (เช่น Zero Trust, R2) ไม่ใช่สิ่งที่ต้องทำ</p>
+  </div>
+
+  <h2 id="overview">ภาพรวม: ใครทำอะไร เมื่อไร</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>ส่วน</th><th>ใครทำ</th><th>เมื่อไร</th><th>ทำอะไร</th></tr></thead>
+    <tbody>
+      <tr><td><a href="#staff">A</a></td><td>ผู้สอน / IT ห้อง Lab</td><td>ไม่น้อยกว่า 1 สัปดาห์ก่อน</td><td>ติดตั้ง Node.js, Git, VS Code, ZCode บนทุกเครื่อง · เปิดเครือข่ายที่จำเป็น · ทดสอบ 1 เครื่องครบทั้งวัน</td></tr>
+      <tr><td><a href="#accounts">B</a></td><td>ผู้เรียน</td><td>ก่อนวันอบรม (ผ่านเว็บเบราว์เซอร์ มือถือก็ได้) หรือช่วง 09:00–09:20</td><td>สมัคร Z.ai, Cloudflare และ Gemini หรือ ChatGPT · ยืนยันอีเมล</td></tr>
+      <tr><td><a href="#morning">C</a></td><td>ผู้เรียน</td><td>09:00–09:20 บนเครื่อง Lab</td><td>ล็อกอิน ZCode · <code>npx wrangler login</code> · ตรวจความพร้อม</td></tr>
+      <tr><td><a href="#signout">D</a></td><td>ผู้เรียน</td><td>15:55 ก่อนออกจากห้อง</td><td>ออกจากระบบทุกบริการ เพราะเครื่องเป็นของส่วนกลาง</td></tr>
+    </tbody>
+  </table></div>
+  <div class="box why">
+    <span class="label">ทำไมต้องแยกแบบนี้</span>
+    <p>ซอฟต์แวร์ติดตั้งครั้งเดียวต่อเครื่อง (งานของผู้ดูแล) ส่วนบัญชีเป็นของแต่ละคน (งานของผู้เรียน)
+    เมื่อทุกเครื่องเหมือนกัน ปัญหา “เครื่องฉันไม่เหมือนเพื่อน” จะหายไปเกือบทั้งหมด — นี่คือแนวคิดเดียวกับ <strong>environment ที่ควบคุมได้</strong> ใน SDLC</p>
+  </div>
+
+  <!-- ═════════════════════════ PART A ═════════════════════════ -->
+  <h2 id="staff">PART A — เตรียมเครื่อง Lab (ผู้สอน / IT)</h2>
+  <p>ผู้เรียน<strong>ไม่ต้องทำส่วนนี้</strong> — เป็นสเปกสำหรับผู้ดูแลห้อง Lab</p>
+
+  <h3>A1. ซอฟต์แวร์ที่ต้องติดตั้งทุกเครื่อง</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>ซอฟต์แวร์</th><th>เวอร์ชัน</th><th>ใช้ทำอะไร</th><th>หมายเหตุการติดตั้ง</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Node.js</strong></td><td>LTS (20 ขึ้นไป)</td><td>รัน <code>npm</code> และ <code>npx wrangler</code></td><td>ตัวติดตั้ง <code>.msi</code> จาก nodejs.org · ค่าเริ่มต้นทั้งหมด (รวม Add to PATH)</td></tr>
+      <tr><td><strong>Git for Windows</strong></td><td>ล่าสุด</td><td>checkpoint ทุก task + ได้ <strong>Git Bash</strong></td><td>ค่าเริ่มต้นทั้งหมด · คงตัวเลือก “Git Bash Here”</td></tr>
+      <tr><td><strong>VS Code</strong></td><td>ล่าสุด</td><td>อ่านโค้ดและ diff</td><td>ติ๊ก “Add to PATH” และ “Open with Code”</td></tr>
+      <tr><td><strong>ZCode</strong></td><td>ล่าสุด</td><td>AI coding agent</td><td>จากหน้าดาวน์โหลดของ Z.ai · <strong>ไม่ต้องล็อกอิน</strong> (ผู้เรียนล็อกอินบัญชีตัวเองวันอบรม)</td></tr>
+      <tr><td>เบราว์เซอร์ (Chrome / Edge)</td><td>ล่าสุด</td><td>ทดสอบแอป + F12 ดู cookie · สมัคร/ล็อกอินบริการ</td><td>–</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">ไม่ต้องติดตั้ง <code>wrangler</code> แยก — แต่ละโปรเจกต์ติดตั้งเองใน <code>node_modules</code> และเรียกผ่าน <code>npx</code> · <code>curl</code> มีใน Windows 10/11 อยู่แล้ว
+  · ผู้เรียน<strong>ไม่ต้องมีสิทธิ์ administrator</strong> ทุกคำสั่งในหลักสูตรติดตั้งลงโฟลเดอร์โปรเจกต์หรือโฟลเดอร์ผู้ใช้</p>
+
+  <h3>A2. เครือข่ายที่ต้องเปิด</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>ปลายทาง</th><th>ใช้ตอน</th></tr></thead>
+    <tbody>
+      <tr><td><code>registry.npmjs.org</code></td><td>ติดตั้ง dependency (<code>npm create cloudflare</code>, <code>npm install</code>)</td></tr>
+      <tr><td><code>github.com</code>, <code>codeload.github.com</code></td><td>C3 ดึง starter จาก <code>werapango/workers-app-starter</code></td></tr>
+      <tr><td><code>dash.cloudflare.com</code>, <code>api.cloudflare.com</code></td><td>สมัคร/ล็อกอิน, <code>wrangler login</code>, deploy, D1</td></tr>
+      <tr><td><code>*.workers.dev</code></td><td>เปิดแอปที่ deploy แล้ว</td></tr>
+      <tr><td><code>z.ai</code> และโดเมนที่ ZCode ใช้</td><td>ล็อกอินและเรียกโมเดล</td></tr>
+      <tr><td><code>gemini.google.com</code>, <code>accounts.google.com</code>, <code>chatgpt.com</code></td><td>Lab 2: เขียน SRS และร่าง design ด้วย chat LLM ผ่านเบราว์เซอร์</td></tr>
+      <tr><td><code>localhost</code> บนเครื่องตัวเอง</td><td><code>wrangler login</code> ส่งผลกลับมาที่ localhost · <code>wrangler dev</code> ใช้พอร์ต 8787 — โปรแกรมความปลอดภัยต้องไม่บล็อก</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>A3. ทดสอบเครื่องต้นแบบ 1 เครื่อง</h3>
+  <div class="box intent">
+    <span class="label">🎯 เจตนา</span>
+    <p>ยืนยันว่า image ของห้องใช้ได้จริงก่อนโคลนไปทุกเครื่อง — ทำด้วย<strong>บัญชีทดสอบ</strong>ของผู้สอน (ไม่ใช่บัญชีผู้เรียน)</p>
+  </div>
+  <p>เปิด <strong>Git Bash</strong> แล้วรันทีละบรรทัด:</p>
+  <pre><code>node -v</code></pre>
+  <pre><code>git --version</code></pre>
+  <pre><code>code --version</code></pre>
+  <pre><code>npm create cloudflare@latest my-app -- --template=werapango/workers-app-starter --no-deploy --no-git --no-agents</code></pre>
+  <pre><code>cd my-app</code></pre>
+  <pre><code>npm run dev</code></pre>
+  <p>เปิด <a href="http://localhost:8787" target="_blank" rel="noopener">http://localhost:8787</a> ต้องเห็นหน้า "แอปของฉัน" และ <code>/api/health</code> ตอบ <code>"ok": true</code> (ช่วงนี้ <code>db</code> เป็น <code>"no-binding"</code> เพราะยังไม่สร้างฐานข้อมูล — ปกติ) → <kbd>Ctrl</kbd>+<kbd>C</kbd> → แล้วทดสอบ login และ deploy ด้วยบัญชีทดสอบ:</p>
+  <pre><code>npx wrangler login</code></pre>
+  <pre><code>npx wrangler deploy</code></pre>
+  <pre><code>npx wrangler delete</code></pre>
+  <pre><code>npx wrangler logout</code></pre>
+  <div class="box check"><span class="label">✅ ผ่านเมื่อ</span><p>ทุกคำสั่งทำงาน · เปิด URL <code>workers.dev</code> ได้ · login ไม่ค้างหลังกด Allow · logout แล้ว <code>npx wrangler whoami</code> บอกว่ายังไม่ได้ล็อกอิน</p></div>
+
+  <div class="box token">
+    <span class="label">⚡ ทางลัด: อุ่น npm cache</span>
+    <p>การรันคำสั่ง C3 ข้างบนหนึ่งครั้งบนเครื่องต้นแบบ ทำให้แพ็กเกจถูกเก็บใน npm cache ของ image
+    วันอบรมทั้งห้องจะติดตั้งเร็วขึ้นและไม่แย่งแบนด์วิดท์พร้อมกัน (ถ้าเครื่องใช้ระบบคืนค่าอัตโนมัติ ให้ทำก่อนบันทึก image)</p>
+  </div>
+
+  <div class="box warn">
+    <span class="label">⚠ ถ้าเครื่องคืนค่าอัตโนมัติเมื่อรีสตาร์ท (Deep Freeze ฯลฯ)</span>
+    <p>งานของผู้เรียนจะหายเมื่อรีสตาร์ท — แจ้งผู้เรียนว่า<strong>ห้ามรีสตาร์ทเครื่องระหว่างวัน</strong> หรือกำหนดโฟลเดอร์/ไดรฟ์ที่ไม่ถูกคืนค่าให้เก็บงาน
+    (โค้ดที่ deploy แล้วยังอยู่บน Cloudflare แต่ซอร์สโค้ดอยู่บนเครื่อง)</p>
+  </div>
+
+  <!-- ═════════════════════════ PART B ═════════════════════════ -->
+  <h2 id="accounts">PART B — สมัครบัญชี (ผู้เรียน)</h2>
+  <p>ทำผ่าน<strong>เว็บเบราว์เซอร์</strong>อย่างเดียว ไม่ต้องติดตั้งอะไร — ทำล่วงหน้าจากมือถือได้ เพื่อประหยัดเวลาช่วงเช้า ถ้ายังไม่ได้ทำ ทำบนเครื่อง Lab ตอน 09:00</p>
+
+  <h3>B1. บัญชี Z.ai</h3>
+  <div class="box intent">
+    <span class="label">🎯 เจตนา</span>
+    <p>รับโควต้าฟรีของ ZCode (GLM-5.3 ~3M + Flash ~5M token) — บัญชีเป็นของคุณ ส่วนโปรแกรม ZCode ติดตั้งไว้บนเครื่อง Lab แล้ว</p>
+  </div>
+  <ol>
+    <li>สมัครบัญชีที่เว็บ <strong>z.ai</strong> (อีเมลหรือ Google)</li>
+    <li>ยืนยันอีเมล (ถ้ามี)</li>
+  </ol>
+  <div class="box check"><span class="label">✅ ผ่านเมื่อ</span><p>ล็อกอินหน้าเว็บ z.ai ได้</p></div>
+  <div class="box token">
+    <span class="label">🪙 อย่าเพิ่งใช้โควต้า</span>
+    <p>ไม่ต้องลองสั่งงานล่วงหน้า เก็บโควต้าไว้ใช้วันอบรม (ทั้งวันใช้ประมาณ 0.4–0.7M)</p>
+  </div>
+
+  <h3>B2. บัญชี Cloudflare (Free)</h3>
+  <div class="box intent">
+    <span class="label">🎯 เจตนา</span>
+    <p>บัญชีที่แอปของคุณจะไปอยู่ — สมัครไว้ก่อนเพื่อไม่ต้องรอสมัครพร้อมกันทั้งห้อง และอีเมลยืนยันมีเวลามาถึง</p>
+  </div>
+  <ol>
+    <li>เปิด <a href="https://dash.cloudflare.com/sign-up" target="_blank" rel="noopener">dash.cloudflare.com/sign-up</a> → สมัครด้วยอีเมล</li>
+    <li><strong>ยืนยันอีเมล</strong> (คลิกลิงก์ในอีเมลที่ Cloudflare ส่งมา — ถ้ายังไม่ยืนยัน บางคำสั่งจะใช้ไม่ได้)</li>
+    <li>ถ้ามีหน้าให้เลือกแผน เลือก <strong>Free</strong> · ถ้าถามว่าจะเพิ่มเว็บไซต์/โดเมน ให้ข้าม (เราใช้ <code>workers.dev</code> ฟรี ไม่ต้องมีโดเมน)</li>
+  </ol>
+  <div class="box warn">
+    <span class="label">⚠ ถ้าหน้าจอขอบัตรเครดิต</span>
+    <p>หยุด ไม่ต้องกรอก กลับไปหน้า dashboard หลัก — การสมัครบัญชีและการใช้ Workers/D1 ไม่ต้องใช้บัตร</p>
+  </div>
+  <div class="box check"><span class="label">✅ ผ่านเมื่อ</span><p>เข้าหน้า dashboard ของ Cloudflare ได้ และยืนยันอีเมลแล้ว — <strong>จำอีเมลและรหัสผ่าน</strong>ไว้ใช้ล็อกอินบนเครื่อง Lab</p></div>
+
+    <h3>B3. บัญชี Gemini หรือ ChatGPT (เลือกอย่างใดอย่างหนึ่ง)</h3>
+  <div class="box intent">
+    <span class="label">🎯 เจตนา</span>
+    <p>ใช้ใน Lab 2 ช่วยร่างเอกสารความต้องการ (SRS) และการออกแบบ ผ่านหน้าเว็บ — ฟรี ไม่ใช้โควต้า ZCode เก็บโควต้า ZCode ไว้เขียนโค้ดตอนบ่าย</p>
+  </div>
+  <ul>
+    <li><strong>Gemini:</strong> <a href="https://gemini.google.com" target="_blank" rel="noopener">gemini.google.com</a> ล็อกอินด้วยบัญชี Google</li>
+    <li><strong>ChatGPT:</strong> <a href="https://chatgpt.com" target="_blank" rel="noopener">chatgpt.com</a> สมัครด้วยอีเมลหรือบัญชี Google</li>
+  </ul>
+  <div class="box warn"><span class="label">⚠ ใช้แผนฟรีเท่านั้น</span>
+    <p>ไม่ต้องสมัครแผนเสียเงินหรือกรอกบัตร · ห้ามใส่ข้อมูลส่วนตัวหรือข้อมูลจริงของหน่วยงานลงใน prompt — วันนี้ใช้แค่โจทย์สมมติของหลักสูตร</p>
+  </div>
+  <div class="box check"><span class="label">✅ ผ่านเมื่อ</span><p>เปิดหน้าแชตและพิมพ์ข้อความได้ — <strong>จำรหัสผ่าน</strong>ไว้ล็อกอินบนเครื่อง Lab</p></div>
+
+<!-- ═════════════════════════ PART C ═════════════════════════ -->
+  <h2 id="morning">PART C — ตั้งค่าบนเครื่อง Lab เช้าวันอบรม (ผู้เรียน)</h2>
+  <p>ทำช่วง 09:00–09:20 ผู้สอนจะเดินตรวจทีละเครื่อง</p>
+
+  <div class="step"><div class="step-num">1</div><div class="step-body">
+    <h3>เปิด Git Bash</h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>terminal คือหน้าต่างที่เราพิมพ์คำสั่ง Cloudflare เองตลอดวัน <strong>Git Bash</strong> พิมพ์ได้ตรงกับเอกสาร lab ทุกตัวอักษร</p>
+    </div>
+    <p>กด Start → พิมพ์ <code>Git Bash</code> → Enter (หัวบรรทัดมีคำว่า <code>MINGW64</code>) แล้วตรวจเครื่องมือ:</p>
+    <pre><code>node -v</code></pre>
+    <pre><code>git --version</code></pre>
+    <div class="box check"><span class="label">✅ ผ่านเมื่อ</span><p>Node ได้ <code>v20</code> ขึ้นไป และ Git ขึ้นเลขเวอร์ชัน (ถ้าไม่ขึ้น แจ้งผู้สอน — เป็นปัญหาของเครื่อง ไม่ใช่ของคุณ)</p></div>
+  </div></div>
+
+  <div class="step"><div class="step-num">2</div><div class="step-body">
+    <h3>ล็อกอิน ZCode</h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>ผูก ZCode บนเครื่องนี้กับบัญชี Z.ai ของคุณ เพื่อใช้โควต้าของตัวเอง</p>
+    </div>
+    <ol>
+      <li>เปิด <strong>ZCode</strong> → ล็อกอินด้วยบัญชี Z.ai ของคุณ (ถ้าเห็นบัญชีคนอื่นค้างอยู่ ให้ออกจากระบบก่อน)</li>
+      <li>หา <strong>ที่เลือกโมเดล</strong> (ต้องเห็นทั้ง GLM-5.3 และ Flash) และ <strong>หน้าดูโควต้าที่เหลือ</strong> — จำตำแหน่งไว้</li>
+    </ol>
+    <div class="box check"><span class="label">✅ ผ่านเมื่อ</span><p>เห็นชื่อบัญชีของคุณ เลือกโมเดล Flash ได้ และเห็นโควต้าคงเหลือ</p></div>
+  </div></div>
+
+  <div class="step"><div class="step-num">3</div><div class="step-body">
+    <h3>เชื่อมเครื่องกับบัญชี Cloudflare</h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p><code>wrangler</code> คือเครื่องมือ command line ของ Cloudflare — <code>login</code> ให้สิทธิ์เครื่องนี้ deploy ไปยังบัญชีของคุณ
+      สิทธิ์นี้ถูกเก็บไว้บนเครื่อง จึงต้อง <code>logout</code> ตอนเลิกเรียน (<a href="#signout">PART D</a>)</p>
+    </div>
+    <p>ก่อนรันคำสั่ง <strong>ล็อกอิน dash.cloudflare.com ในเบราว์เซอร์ด้วยบัญชีของคุณ</strong> (ถ้ามีบัญชีคนอื่นค้างอยู่ ให้ออกจากระบบก่อน)</p>
+    <pre><code>npx wrangler login</code></pre>
+    <ol>
+      <li>ถ้า npx ถามว่าจะติดตั้ง wrangler ไหม → พิมพ์ <code>y</code></li>
+      <li>เบราว์เซอร์เปิดหน้า Cloudflare → ตรวจว่าเป็นอีเมลของคุณ → กด <strong>Allow</strong></li>
+      <li>กลับมาที่ Git Bash จะขึ้นว่า login สำเร็จ</li>
+    </ol>
+    <pre><code>npx wrangler whoami</code></pre>
+    <div class="box check"><span class="label">✅ ผ่านเมื่อ</span><p><code>whoami</code> แสดง<strong>อีเมลของคุณ</strong> — ถ้าเป็นอีเมลคนอื่น ห้าม deploy ให้ <code>npx wrangler logout</code> แล้ว login ใหม่</p></div>
+  </div></div>
+
+  <div class="box theory">
+    <span class="label">📖 เรื่อง subdomain <code>workers.dev</code></span>
+    <p>บัญชีใหม่จะถูกให้ตั้งชื่อ subdomain ตอน <strong>deploy ครั้งแรกใน Lab 1</strong> (เช่น <code>somchai-dev</code> → URL เป็น <code>https://my-app.somchai-dev.workers.dev</code>)
+    เตรียมชื่อภาษาอังกฤษตัวเล็กสั้น ๆ ไว้ 1 ชื่อ</p>
+  </div>
+
+  <h3>เช็กลิสต์ก่อนเริ่ม Lab 1</h3>
+  <ul class="checklist">
+    <li>Git Bash เปิดได้ · <code>node -v</code> ได้ v20 ขึ้นไป</li>
+    <li>ZCode ล็อกอินด้วยบัญชีของฉัน เห็นโมเดล Flash / GLM-5.3 และโควต้า</li>
+    <li>Cloudflare ยืนยันอีเมลแล้ว และไม่ได้ผูกบัตร</li>
+    <li><code>npx wrangler whoami</code> แสดงอีเมลของฉัน</li>
+    <li>ล็อกอิน Gemini หรือ ChatGPT ในเบราว์เซอร์ได้ (ใช้ใน Lab 2)</li>
+    <li>เตรียมชื่อ subdomain <code>workers.dev</code> ไว้แล้ว</li>
+  </ul>
+  <p class="small">การตั้งชื่อ/อีเมลให้ Git ทำใน Lab 1 หลัง <code>git init</code> แบบ<strong>เฉพาะโปรเจกต์</strong> (ไม่ใช้ <code>--global</code>) เพื่อไม่ให้ชื่อของคุณติดอยู่กับเครื่องส่วนกลาง</p>
+
+  <!-- ═════════════════════════ PART D ═════════════════════════ -->
+  <h2 id="signout">PART D — ออกจากระบบเมื่อเลิกเรียน (ผู้เรียน)</h2>
+  <div class="box intent">
+    <span class="label">🎯 เจตนา</span>
+    <p>เครื่อง Lab เป็นของส่วนกลาง ถ้าไม่ออกจากระบบ คนที่ใช้เครื่องต่อจะ <strong>deploy ทับแอปของคุณ ลบฐานข้อมูล หรือใช้โควต้า AI ของคุณได้</strong>
+    — นี่คือเรื่อง security เดียวกับที่เรียนใน Lab 4 แต่เป็นฝั่งผู้ใช้</p>
+  </div>
+  <pre><code>npx wrangler logout</code></pre>
+  <pre><code>npx wrangler whoami</code></pre>
+  <ul class="checklist">
+    <li><code>npx wrangler whoami</code> บอกว่ายังไม่ได้ล็อกอิน (not authenticated)</li>
+    <li>ZCode → ออกจากระบบ (log out)</li>
+    <li>เบราว์เซอร์: ออกจากระบบ dash.cloudflare.com, z.ai และ Gemini / ChatGPT (รวมบัญชี Google) · ปิดหน้าต่างทั้งหมด</li>
+    <li>ถ้าเบราว์เซอร์ถามให้จำรหัสผ่าน ตอบ <strong>ไม่</strong> ตั้งแต่แรก</li>
+  </ul>
+  <div class="box check"><span class="label">✅ ผ่านเมื่อ</span><p>ไม่มีบริการไหนบนเครื่องที่ยังล็อกอินเป็นคุณ — แอปที่ deploy แล้วยังเปิดได้ตามปกติจาก URL ของคุณ</p></div>
+  <p class="small">ซอร์สโค้ดอยู่ในโฟลเดอร์ <code>my-app</code> บนเครื่อง Lab ถ้าต้องการเก็บไว้ ให้ทำตามนโยบายของห้อง Lab (ถามผู้สอน)</p>
+
+  <!-- ═════════════════════════ PROBLEMS ═════════════════════════ -->
+  <h2 id="problems">ปัญหาที่พบบ่อย</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>อาการ</th><th>สาเหตุ / วิธีแก้</th></tr></thead>
+    <tbody>
+      <tr><td><code>node</code> / <code>git</code> / <code>code</code> “is not recognized”</td><td>เครื่องติดตั้งไม่ครบ หรือ PATH ยังไม่รีเฟรช — ปิด terminal เปิดใหม่ ยังไม่หายแจ้งผู้สอน (อย่ารีสตาร์ทถ้าเครื่องคืนค่าอัตโนมัติ)</td></tr>
+      <tr><td>ZCode / Cloudflare ล็อกอินค้างเป็นบัญชีคนอื่น</td><td>ออกจากระบบก่อนแล้วล็อกอินบัญชีของคุณ · ใน terminal ใช้ <code>npx wrangler logout</code> แล้ว <code>npx wrangler login</code></td></tr>
+      <tr><td><code>wrangler login</code> เปิดเบราว์เซอร์แล้วเป็นบัญชีอื่น</td><td>ออกจากระบบ Cloudflare ในเบราว์เซอร์ หรือใช้หน้าต่าง InPrivate/Incognito ล็อกอินบัญชีที่ถูกก่อน แล้วรันใหม่</td></tr>
+      <tr><td>กด Allow แล้ว terminal ค้างไม่จบ</td><td>เครือข่าย/โปรแกรมความปลอดภัยบล็อกการส่งผลกลับไป <code>localhost</code> — แจ้งผู้สอน (ดู PART A2)</td></tr>
+      <tr><td>PowerShell บอกว่า “running scripts is disabled” ตอนรัน <code>npx</code></td><td>ใช้ <strong>Git Bash</strong> แทน หรือพิมพ์ <code>npx.cmd</code> แทน <code>npx</code> — ไม่ต้องเปลี่ยน execution policy</td></tr>
+      <tr><td>ใน PowerShell พิมพ์ <code>curl</code> แล้วผลแปลก ๆ</td><td>พิมพ์ <code>curl.exe</code> แทน หรือใช้ Git Bash</td></tr>
+      <tr><td>npm ขึ้นคำเตือน <code>install-scripts ... esbuild ... workerd</code></td><td>ไม่ต้องทำอะไร — ทดสอบแล้วว่าไม่กระทบการใช้งาน</td></tr>
+      <tr><td>ติดตั้ง dependency ช้ามากทั้งห้อง</td><td>ทุกคนดาวน์โหลดพร้อมกัน — รอได้ หรือผู้สอนแจก checkpoint <code>lab1-done</code> ที่มี <code>node_modules</code> ในโฟลเดอร์ร่วม</td></tr>
+      <tr><td>port 8787 ถูกใช้อยู่</td><td>ปิด terminal เก่าที่ยังรัน dev ค้าง หรือใช้ <code>npx wrangler dev --port 8788</code></td></tr>
+      <tr><td><code>git commit</code> ขึ้น “Please tell me who you are”</td><td>ยังไม่ได้ตั้งชื่อ/อีเมลของโปรเจกต์ — ดู Lab 1 ขั้น Git</td></tr>
+      <tr><td>เครื่องรีสตาร์ทแล้วงานหาย</td><td>เครื่องคืนค่าอัตโนมัติ — ขอ checkpoint จากผู้สอน แล้ว <code>npx wrangler login</code> ใหม่</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- ═════════════════════════ TERMINAL ═════════════════════════ -->
+  <h2 id="terminal">Git Bash กับ PowerShell: คำสั่งที่ต่างกัน</h2>
+  <p>เอกสาร lab เขียนสำหรับ <strong>Git Bash</strong> ถ้าใช้ PowerShell มีแค่ 3 จุดที่ต่าง นอกนั้นเหมือนกันทุกคำสั่ง (<code>git</code>, <code>npm</code>, <code>npx wrangler</code>, <code>node</code>)</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>ทำอะไร</th><th>Git Bash (แนะนำ)</th><th>PowerShell</th></tr></thead>
+    <tbody>
+      <tr><td>เรียก curl</td><td><code>curl ...</code></td><td><code>curl.exe ...</code></td></tr>
+      <tr><td>ตั้งตัวแปรชั่วคราวแล้วรันคำสั่ง</td><td><code>BASE_URL=https://... npm run smoke</code></td><td><code>$env:BASE_URL="https://..."; npm run smoke</code></td></tr>
+      <tr><td>ถ้า <code>npx</code> ถูกบล็อกด้วย execution policy</td><td>–</td><td><code>npx.cmd ...</code></td></tr>
+      <tr><td>เปิดโฟลเดอร์ปัจจุบันใน VS Code</td><td colspan="2"><code>code .</code></td></tr>
+      <tr><td>หยุดโปรแกรมที่รันอยู่ (เช่น dev server)</td><td colspan="2"><kbd>Ctrl</kbd>+<kbd>C</kbd></td></tr>
+    </tbody>
+  </table></div>
+</main>
+</body>
+</html>

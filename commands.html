@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>คำสั่งที่ใช้ทั้งวัน — Vibe Coding × SDLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body data-page="commands.html">
+<main>
+  <p class="eyebrow">อ้างอิง</p>
+  <h1>คำสั่งที่ใช้ทั้งวัน จัดตาม phase ของ SDLC</h1>
+  <p class="lede">ทุกคำสั่งในหน้านี้ <strong>คนพิมพ์เองใน Git Bash</strong> — agent มีหน้าที่บอกว่าต้องรันอะไร แต่ไม่รันเอง
+  ชื่อที่ใช้ทั้งวัน: โฟลเดอร์ <code>my-app</code> · ฐานข้อมูล <code>app-db</code> · binding <code>DB</code></p>
+
+  <div class="box warn">
+    <span class="label">⚠ ทำไม agent ห้ามรันคำสั่งเหล่านี้</span>
+    <p><code>AGENTS.md</code> กติกาข้อ 2 ห้าม agent รัน <code>wrangler</code>, <code>npm install</code>, <code>git</code> เพราะ
+    (1) คำสั่งพวกนี้<strong>กระทบของจริง</strong> เช่น deploy ทับ production หรือรัน migration กับฐานข้อมูลบนคลาวด์ — คนต้องเป็นผู้ตัดสินใจ
+    (2) ผลลัพธ์ของคำสั่งยาวมาก ถ้า agent อ่านเองจะ<strong>เปลือง token</strong> และ (3) คนที่พิมพ์คำสั่งเองจะ<strong>เข้าใจระบบ</strong>ของตัวเอง</p>
+  </div>
+
+  <div class="toc">
+    <b>ในหน้านี้</b>
+    <ol>
+      <li><a href="#setup">เตรียมเครื่อง / บัญชี</a></li>
+      <li><a href="#scaffold">สร้างโปรเจกต์</a></li>
+      <li><a href="#dev">พัฒนาในเครื่อง (local)</a></li>
+      <li><a href="#db">ฐานข้อมูลและ migration</a></li>
+      <li><a href="#test">ทดสอบ</a></li>
+      <li><a href="#release">Deploy / release</a></li>
+      <li><a href="#observe">ดู log และถอยกลับ</a></li>
+      <li><a href="#git">Git</a></li>
+      <li><a href="#env">local กับ remote ต่างกันตรงไหน</a></li>
+    </ol>
+  </div>
+
+  <h2 id="setup">เตรียมเครื่อง / บัญชี</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>คำสั่ง</th><th>ทำอะไร</th><th>ใช้เมื่อไร</th><th>กระทบอะไร</th></tr></thead>
+    <tbody>
+      <tr><td><code>node -v</code> · <code>git --version</code></td><td>ตรวจว่าเครื่องมือพร้อม</td><td>09:00</td><td>อ่านอย่างเดียว</td></tr>
+      <tr><td><code>npx wrangler login</code></td><td>ให้สิทธิ์เครื่องนี้จัดการบัญชี Cloudflare ของคุณ (OAuth)</td><td>เช้าวันอบรม บนเครื่อง Lab</td><td>เก็บ token ไว้ในเครื่อง — <strong>ต้อง logout ก่อนเลิก</strong></td></tr>
+      <tr><td><code>npx wrangler whoami</code></td><td>ดูว่าเครื่องล็อกอินเป็นบัญชีไหน</td><td>ก่อน deploy ครั้งแรก / สงสัยว่าบัญชีผิด</td><td>อ่านอย่างเดียว</td></tr>
+      <tr><td><code>npx wrangler logout</code></td><td>ลบสิทธิ์บัญชีคุณออกจากเครื่อง</td><td>ก่อนออกจากห้อง Lab ทุกครั้ง</td><td>แอปที่ deploy แล้วยังทำงานปกติ</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="scaffold">สร้างโปรเจกต์</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>คำสั่ง</th><th>ทำอะไร</th><th>ใช้เมื่อไร</th><th>กระทบอะไร</th></tr></thead>
+    <tbody>
+      <tr><td><code>npx wrangler deploy --assets ./site --name hello-ชื่อคุณ --compatibility-date 2025-11-01</code></td><td>deploy โฟลเดอร์หน้าเว็บไฟล์เดียวขึ้นคลาวด์ โดยไม่ต้องมีโปรเจกต์หรือ config</td><td>Lab 1a warm-up</td><td>สร้าง Worker ชื่อ <code>hello-…</code> บนบัญชีคุณ · ครั้งแรกจะให้ตั้ง subdomain <code>workers.dev</code></td></tr>
+      <tr><td><code>npx wrangler delete hello-ชื่อคุณ</code></td><td>ลบ Worker ทดลอง</td><td>หลัง warm-up (ไม่บังคับ)</td><td>URL นั้นใช้ไม่ได้อีก</td></tr>
+      <tr><td><code>npm create cloudflare@latest my-app -- --template=werapango/workers-app-starter --no-deploy --no-git --no-agents</code></td><td>ดึง starter กลางจาก GitHub + ติดตั้ง dependency</td><td>Lab 1b</td><td>สร้างโฟลเดอร์ <code>my-app</code> · C3 ตั้งชื่อ Worker ตามชื่อโฟลเดอร์ · <code>--no-agents</code> กัน C3 เขียน AGENTS.md ทับ</td></tr>
+      <tr><td><code>npm install</code></td><td>ติดตั้ง dependency ตาม <code>package.json</code></td><td>หลังคัดลอก checkpoint มา</td><td>เครื่องเท่านั้น (<code>node_modules/</code>)</td></tr>
+      <tr><td><code>code .</code></td><td>เปิดโฟลเดอร์ใน VS Code</td><td>ทุกครั้งที่อยากอ่านโค้ด</td><td>–</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="dev">พัฒนาในเครื่อง (local)</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>คำสั่ง</th><th>ทำอะไร</th><th>ใช้เมื่อไร</th><th>กระทบอะไร</th></tr></thead>
+    <tbody>
+      <tr><td><code>npm run dev</code> (= <code>npx wrangler dev</code>)</td><td>รันเซิร์ฟเวอร์จำลองที่ http://localhost:8787 แก้ไฟล์แล้วโหลดใหม่เอง</td><td>ตลอดการพัฒนา (เปิดค้างไว้อีกหน้าต่าง)</td><td>เครื่องเท่านั้น · ใช้ฐานข้อมูล local · หยุดด้วย <kbd>Ctrl</kbd>+<kbd>C</kbd></td></tr>
+      <tr><td><code>npx wrangler dev --port 8788</code></td><td>รันที่ port อื่น</td><td>port 8787 ชน</td><td>เครื่องเท่านั้น</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="db">ฐานข้อมูลและ migration</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>คำสั่ง</th><th>ทำอะไร</th><th>ใช้เมื่อไร</th><th>กระทบอะไร</th></tr></thead>
+    <tbody>
+      <tr><td><code>npx wrangler d1 create app-db --binding DB --update-config</code></td><td>สร้างฐานข้อมูล D1 บนคลาวด์ + เพิ่ม <code>d1_databases</code> ใน <code>wrangler.jsonc</code> ให้เอง</td><td>Lab 1b (ครั้งเดียว)</td><td>สร้างฐานข้อมูลบนบัญชีคุณ (free plan)</td></tr>
+      <tr><td><code>npx wrangler d1 list</code></td><td>ดูรายชื่อฐานข้อมูลและ <code>database_id</code></td><td>ต้องการ id ไปใส่ wrangler.jsonc (เช่น หลังคัดลอก checkpoint)</td><td>อ่านอย่างเดียว</td></tr>
+      <tr><td><code>npx wrangler d1 migrations create app-db ชื่อ</code></td><td>สร้างไฟล์ <code>migrations/NNNN_ชื่อ.sql</code> เปล่าที่เลขถัดไป</td><td>เมื่อจะเปลี่ยน schema เอง (agent มักสร้างไฟล์ให้แล้ว)</td><td>สร้างไฟล์ในเครื่อง</td></tr>
+      <tr><td><code>npx wrangler d1 migrations apply app-db --local</code></td><td>รัน migration ที่ยังไม่เคยรันกับฐานข้อมูล<strong>ในเครื่อง</strong></td><td>หลังทุก task ที่มี migration ใหม่</td><td>ฐานข้อมูลใน <code>.wrangler/</code> · ถามยืนยัน ตอบ <code>y</code></td></tr>
+      <tr><td><code>npx wrangler d1 migrations apply app-db --remote</code></td><td>รัน migration กับฐานข้อมูล<strong>บนคลาวด์</strong></td><td>ก่อน deploy ทุกครั้งที่มี migration ใหม่</td><td><strong>production</strong> — migration เดินหน้าอย่างเดียว ย้อนไม่ได้</td></tr>
+      <tr><td><code>npx wrangler d1 migrations list app-db --local</code></td><td>ดู migration ที่ยังไม่ได้รัน</td><td>สงสัยว่ารันครบหรือยัง</td><td>อ่านอย่างเดียว</td></tr>
+      <tr><td><code>npx wrangler d1 execute app-db --local --command "SELECT …"</code></td><td>รัน SQL ตรง ๆ กับฐานข้อมูลในเครื่อง</td><td>ตรวจข้อมูล</td><td>ระวัง: ถ้าเป็น <code>UPDATE/DELETE</code> ข้อมูลเปลี่ยนจริง</td></tr>
+      <tr><td><code>npx wrangler d1 execute app-db --remote --command "SELECT username, role, password_hash FROM users"</code></td><td>ดูข้อมูลบน production</td><td>Lab 4 เช็กลิสต์ข้อ 2 (inspection)</td><td><strong>production</strong> — ใช้ SELECT เท่านั้น</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="test">ทดสอบ</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>คำสั่ง</th><th>ทำอะไร</th><th>ใช้เมื่อไร</th><th>กระทบอะไร</th></tr></thead>
+    <tbody>
+      <tr><td><code>npm run smoke</code></td><td>เรียก API จริงที่ localhost แล้วเช็กผลตาม AC (ต้องเปิด <code>npm run dev</code> ไว้)</td><td>หลังทุก task</td><td>สร้างผู้ใช้/ข้อมูลชั่วคราวแล้วลบทิ้งเอง · ถ้าฐานข้อมูลว่างจะสร้าง admin <code>admin</code> / <code>admin-pass-1234</code></td></tr>
+      <tr><td><code>SMOKE_ADMIN_USER=admin SMOKE_ADMIN_PASS=รหัสของคุณ npm run smoke</code></td><td>บอก smoke test ว่า admin ของคุณคือใคร</td><td>เมื่อสร้าง admin เองแล้ว (ไม่บอก = เคสที่ต้องใช้ admin จะถูกข้าม)</td><td>เหมือนข้างบน</td></tr>
+      <tr><td><code>BASE_URL=https://my-app.….workers.dev SMOKE_ADMIN_USER=… SMOKE_ADMIN_PASS=… npm run smoke</code></td><td>รัน smoke test ชุดเดียวกันกับ <strong>production</strong></td><td>หลัง deploy</td><td>สร้างแล้วลบข้อมูลชั่วคราวบน production</td></tr>
+      <tr><td><code>npm run trace</code></td><td>ตรวจว่า AC ทุกข้อใน SPEC.md มีเคสใน smoke และ FR ทุกข้อใน docs/SRS.md ถูกอ้างใน SPEC</td><td>หลังแก้ spec หรือหลังทุก task</td><td>อ่านไฟล์อย่างเดียว ไม่ต้องเปิด dev</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">PowerShell: <code>$env:BASE_URL="https://..."; $env:SMOKE_ADMIN_USER="admin"; $env:SMOKE_ADMIN_PASS="..."; npm run smoke</code></p>
+
+  <h2 id="release">Deploy / release</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>คำสั่ง</th><th>ทำอะไร</th><th>ใช้เมื่อไร</th><th>กระทบอะไร</th></tr></thead>
+    <tbody>
+      <tr><td><code>npx wrangler deploy</code></td><td>bundle โค้ด + อัปโหลดหน้าเว็บ ขึ้น Cloudflare ได้เวอร์ชันใหม่</td><td>จบ Lab 1b · จบ Lab 3 · หลังแก้ใน Lab 4</td><td><strong>production</strong> ผู้ใช้เห็นทันที</td></tr>
+      <tr><td><code>git tag v1.0</code></td><td>ติดป้ายเวอร์ชันให้ commit ที่ผ่านการตรวจรับ</td><td>Lab 4</td><td>เครื่องเท่านั้น</td></tr>
+    </tbody>
+  </table></div>
+  <div class="box intent"><span class="label">🎯 ลำดับ release ที่ถูกต้อง</span>
+    <p><code>npm run smoke</code> + <code>npm run trace</code> ผ่านใน local → <code>git commit</code> → <code>d1 migrations apply app-db --remote</code> → <code>wrangler deploy</code> → smoke กับ production
+    — migration ต้องมาก่อน deploy ไม่งั้นโค้ดใหม่จะหาตารางไม่เจอ</p>
+  </div>
+
+  <h2 id="observe">ดู log และถอยกลับ</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>คำสั่ง</th><th>ทำอะไร</th><th>ใช้เมื่อไร</th><th>กระทบอะไร</th></tr></thead>
+    <tbody>
+      <tr><td><code>npx wrangler tail</code></td><td>ดู log ของ production แบบสด (request, error, <code>console.log</code>)</td><td>หาสาเหตุ error บน production</td><td>อ่านอย่างเดียว · หยุดด้วย <kbd>Ctrl</kbd>+<kbd>C</kbd></td></tr>
+      <tr><td><code>npx wrangler deployments list</code></td><td>ดูประวัติเวอร์ชันที่ deploy</td><td>ก่อน rollback</td><td>อ่านอย่างเดียว</td></tr>
+      <tr><td><code>npx wrangler rollback</code></td><td>ย้อนโค้ดไปเวอร์ชันก่อนหน้า</td><td>deploy แล้วพัง</td><td><strong>production</strong> · ย้อนเฉพาะโค้ด <strong>ไม่ย้อนฐานข้อมูล</strong></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="git">Git</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>คำสั่ง</th><th>ทำอะไร</th><th>ใช้เมื่อไร</th></tr></thead>
+    <tbody>
+      <tr><td><code>git init</code></td><td>เริ่มเก็บประวัติในโฟลเดอร์นี้</td><td>Lab 1b ครั้งเดียว</td></tr>
+      <tr><td><code>git config user.name "ชื่อ"</code> · <code>git config user.email "อีเมล"</code></td><td>ตั้งชื่อผู้ commit <strong>เฉพาะโปรเจกต์นี้</strong> (ไม่ใช้ <code>--global</code> เพราะเครื่องส่วนกลาง)</td><td>หลัง <code>git init</code></td></tr>
+      <tr><td><code>git status</code></td><td>ดูว่ามีไฟล์ไหนเปลี่ยน</td><td>ก่อน commit</td></tr>
+      <tr><td><code>git diff</code></td><td>ดูทีละบรรทัดว่าเปลี่ยนอะไร — code review ยุค agent</td><td>หลังทุก task · หลังคัดลอก baseline (เทียบ spec)</td></tr>
+      <tr><td><code>git add . &amp;&amp; git commit -m "ข้อความ"</code></td><td>บันทึก checkpoint</td><td>หลังทุก task ที่ตรวจผ่าน</td></tr>
+      <tr><td><code>git restore .</code></td><td>ทิ้งการแก้ไขที่ยังไม่ commit ทั้งหมด</td><td>agent ทำพังหรือทำเกิน task</td></tr>
+      <tr><td><code>git log --oneline --decorate</code></td><td>ดูประวัติ commit และ tag</td><td>retro</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="env">local กับ remote ต่างกันตรงไหน</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>local</th><th>remote (production)</th></tr></thead>
+    <tbody>
+      <tr><td>URL</td><td>http://localhost:8787</td><td>https://my-app.ชื่อsubdomain.workers.dev</td></tr>
+      <tr><td>ฐานข้อมูล</td><td>ไฟล์ใน <code>.wrangler/</code> บนเครื่อง</td><td>D1 บนคลาวด์</td></tr>
+      <tr><td>migration</td><td><code>--local</code></td><td><code>--remote</code></td></tr>
+      <tr><td>บัญชี admin</td><td>สร้างครั้งหนึ่ง</td><td>สร้าง<strong>อีกครั้ง</strong> ทันทีหลัง deploy ครั้งแรก</td></tr>
+      <tr><td>cookie</td><td>ไม่มี Secure (http)</td><td>HttpOnly + Secure (https)</td></tr>
+      <tr><td>พังแล้ว</td><td>แก้แล้วรีเฟรช</td><td><code>wrangler rollback</code> (โค้ด) · ข้อมูลย้อนไม่ได้</td></tr>
+    </tbody>
+  </table></div>
+</main>
+</body>
+</html>

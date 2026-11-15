@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ภาพรวมหลักสูตร — Vibe Coding × SDLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body data-page="index.html">
+<main>
+  <p class="eyebrow">หลักสูตร 1 วัน · 09:00–16:00 · ห้อง Lab (Windows)</p>
+  <h1>พัฒนาซอฟต์แวร์ให้เป็นระบบ ในยุคที่ AI ช่วยเขียนโค้ด</h1>
+  <p class="lede">เดินตาม <strong>SDLC</strong> ตั้งแต่ความต้องการของผู้ใช้จนขึ้นใช้งานจริงบน Cloudflare —
+  เขียน <strong>Spec ที่ตรวจสอบได้</strong> แตกงานเป็น <strong>WBS</strong> และใช้ <strong>Agent &amp; Skill</strong> อย่างมีวินัย
+  โดยใช้ token ของ AI ให้น้อยที่สุด</p>
+
+  <div class="meta">
+    <span class="chip">⏱ เรียนสุทธิ 5.5 ชม.</span>
+    <span class="chip">🌅 เช้า: ฝึกเอง</span>
+    <span class="chip">🤝 บ่าย: spec กลาง</span>
+    <span class="chip">💳 0 บาท · ไม่ใช้บัตรเครดิต</span>
+    <span class="chip">🎯 ผลลัพธ์: ระบบจองรถออนไลน์ของตัวเอง</span>
+  </div>
+
+  <div class="toc">
+    <b>ในหน้านี้</b>
+    <ol>
+      <li><a href="#idea">แนวคิดของวัน: เช้าฝึกเอง บ่ายใช้ spec กลาง</a></li>
+      <li><a href="#objectives">จุดประสงค์การเรียนรู้</a></li>
+      <li><a href="#day">ภาพรวมวัน</a></li>
+      <li><a href="#principles">หลักการ 5 ข้อ</a></li>
+      <li><a href="#token">งบ token</a></li>
+      <li><a href="#tools">เครื่องมือ</a></li>
+      <li><a href="#files">เอกสารและโค้ดประกอบ</a></li>
+    </ol>
+  </div>
+
+  <h2 id="idea">แนวคิดของวัน: เช้าฝึกเอง บ่ายใช้ spec กลาง</h2>
+  <div class="flow">
+    <div class="node"><b>Lab 1</b>vibe warm-up → starter → deploy · รู้จักแพลตฟอร์ม</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Lab 2</b>เขียน SRS + ร่าง design เองกับ Gemini/ChatGPT</div>
+    <div class="arrow">→</div>
+    <div class="node hl"><b>13:00 Baseline</b>เทียบกับ spec อ้างอิง แล้วรับเป็นฉบับเดียวกัน</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Lab 3</b>ZCode สร้าง MVP ทีละ task</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Lab 4</b>verify · release · ตรวจรับกับ "ผู้ใช้"</div>
+  </div>
+  <p><strong>ช่วงเช้า</strong> ผู้เรียนเป็นเจ้าของงานเอง: ได้ฝึกถามความต้องการจากเจ้าของโจทย์ (ผู้สอนรับบท) และเขียน SRS จริง
+  <strong>ตอน 13:00</strong> ทุกคนเทียบงานของตัวเองกับ spec อ้างอิงด้วย <code>git diff</code> แล้วรับเป็น <strong>baseline</strong> —
+  แบบเดียวกับที่ทีมจริงต้องตกลง spec ฉบับเดียวก่อนเริ่มสร้าง <strong>ช่วงบ่าย</strong> ทุกคนจึงไปพร้อมกัน ผู้สอนช่วยได้ทั่วถึง</p>
+  <div class="box theory">
+    <span class="label">📖 แนวคิดหลัก</span>
+    <p>ยุคที่ AI เขียนโค้ดแทน คอขวดย้ายไปอยู่ที่ <strong>“บอกให้ชัดว่าต้องการอะไร”</strong> และ <strong>“พิสูจน์ว่าที่ได้มาถูกจริง”</strong>
+    — วันนี้จึงฝึกทั้ง <strong>validation</strong> (สร้างของที่ใช่: spec ตรงความต้องการจริงไหม) และ <strong>verification</strong> (สร้างถูกวิธี: โค้ดตรง spec ไหม)</p>
+  </div>
+
+  <h2 id="objectives">จุดประสงค์การเรียนรู้</h2>
+  <ol>
+    <li><strong>อธิบาย SDLC</strong> และบอกได้ว่าแต่ละ phase ผลิตอะไร AI เข้ามาช่วยหรือเปลี่ยนอะไร</li>
+    <li><strong>หาความต้องการจริง</strong>: ระบุ stakeholder ถามเจ้าของโจทย์ เขียน use case, user story, FR/NFR ที่<strong>มีที่มาและวัดได้</strong></li>
+    <li><strong>เขียน Spec ที่ตรวจสอบได้</strong>: acceptance criteria แบบ Given/When/Then ตารางตัวอย่าง และตามรอย requirement → test ด้วย <code>npm run trace</code></li>
+    <li><strong>ออกแบบเบื้องต้น</strong>: สถาปัตยกรรม ที่ deploy tech stack ข้อมูล API และบันทึกเหตุผลเป็น ADR</li>
+    <li><strong>แตกงานเป็น WBS</strong> และใช้ <strong>Agent &amp; Skill</strong> ให้ทำงานทีละ task อย่างมีวินัย (เข้าใจ ADLC)</li>
+    <li><strong>ใช้คำสั่ง Cloudflare เอง</strong> ตั้งแต่สร้างโปรเจกต์ ฐานข้อมูล migration deploy rollback จนตรวจ log</li>
+  </ol>
+
+  <h2 id="day">ภาพรวมวัน</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>เวลา</th><th>ช่วง</th><th>ผลลัพธ์ในมือผู้เรียน</th></tr></thead>
+    <tbody>
+      <tr><td>09:00–09:20</td><td>เปิด + <a href="setup.html#morning">ตั้งค่าเครื่อง Lab</a></td><td>ล็อกอิน ZCode และ Cloudflare บนเครื่อง Lab</td></tr>
+      <tr><td>09:20–09:40</td><td><a href="theory-1-sdlc.html">ทฤษฎี 1 · Vibe coding กับ SDLC</a></td><td>แผนที่ของทั้งวัน</td></tr>
+      <tr><td>09:40–10:35</td><td><a href="lab-1.html">Lab 1 · Vibe warm-up + Starter</a></td><td>URL จริง 2 ตัว · ฐานข้อมูล D1 · admin คนแรก · ลอง rollback</td></tr>
+      <tr><td>10:50–11:15</td><td><a href="theory-2-requirements.html">ทฤษฎี 2 · Requirements &amp; Design</a></td><td>รู้วิธีเขียน requirement ที่ตรวจสอบได้</td></tr>
+      <tr><td>11:15–12:00</td><td><a href="lab-2.html">Lab 2 · SRS + design กับ Gemini/ChatGPT</a> (<a href="brief.html">โจทย์</a>)</td><td>SRS และ DESIGN ฉบับของตัวเอง</td></tr>
+      <tr><td>13:00–13:30</td><td><a href="baseline.html">Spec Review + Baseline</a></td><td>รู้ว่าตกหล่น/แต่งเพิ่มอะไร · spec กลางในโปรเจกต์</td></tr>
+      <tr><td>13:30–14:40</td><td><a href="theory-3-agent-skill.html">ทฤษฎี 3 · WBS, Agent &amp; Skill</a> → <a href="lab-3.html">Lab 3 · ZCode สร้าง MVP</a></td><td>ระบบจองรถที่กันเวลาซ้อน ผ่าน smoke + trace</td></tr>
+      <tr><td>14:55–15:45</td><td><a href="theory-4-verify-release.html">ทฤษฎี 4 · Verify &amp; Release</a> → <a href="lab-4.html">Lab 4 · ตรวจรับ</a></td><td>release v1.0 · ผลตรวจรับเทียบโจทย์ต้นฉบับ</td></tr>
+      <tr><td>15:45–16:00</td><td>Retro + <a href="setup.html#signout">ออกจากระบบ</a></td><td>เส้นทางต่อยอด</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">ละเอียดรายช่วง: <a href="schedule.html">ตารางเวลา</a></p>
+
+  <h2 id="principles">หลักการ 5 ข้อ</h2>
+  <div class="grid">
+    <div class="card"><h4>1 · คำสั่ง Cloudflare คนพิมพ์เอง</h4><p>สร้างโปรเจกต์ ฐานข้อมูล migration deploy rollback — agent ห้ามรันคำสั่งแทน (เขียนไว้ใน AGENTS.md)</p></div>
+    <div class="card"><h4>2 · ทุก requirement มีที่มา</h4><p>มาจากโจทย์หรือคำตอบของเจ้าของโจทย์ ข้อที่ AI เดาเองติดป้าย [สมมติฐาน] จนกว่าจะยืนยัน</p></div>
+    <div class="card"><h4>3 · ทุก AC ตรวจได้</h4><p>Given/When/Then มีผลลัพธ์เป็นรูปธรรม ทุก AC มี smoke test — <code>npm run trace</code> เป็นคนตัดสิน</p></div>
+    <div class="card"><h4>4 · 1 task = 1 prompt</h4><p>สั่ง agent ทีละ task จาก TASKS.md เช่น <code>ทำ task T1.1 ใน TASKS.md</code> แล้วคนตรวจ diff ก่อน commit</p></div>
+    <div class="card"><h4>5 · Deploy เร็ว ถอยได้</h4><p>ได้ URL จริงตั้งแต่ชั่วโมงแรก และรู้วิธี rollback ก่อนจะต้องใช้จริง</p></div>
+  </div>
+
+  <h2 id="token">งบ token</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>ช่วง</th><th>เครื่องมือ AI</th><th>ZCode ที่ใช้ (ประมาณการ)</th></tr></thead>
+    <tbody>
+      <tr><td>Lab 1a vibe warm-up</td><td>ZCode Flash</td><td>~20–50K</td></tr>
+      <tr><td>Lab 1b starter</td><td>– (คนพิมพ์คำสั่ง)</td><td>0</td></tr>
+      <tr><td>Lab 2 SRS + design</td><td>Gemini / ChatGPT (ฟรี ผ่านเบราว์เซอร์)</td><td>0</td></tr>
+      <tr><td>Lab 3 สร้าง MVP 6 task</td><td>ZCode Flash (GLM-5.3 เมื่อติดเท่านั้น)</td><td>~200–400K</td></tr>
+      <tr><td>Lab 4 ตรวจรับ</td><td>ZCode เฉพาะตอนแก้บั๊ก</td><td>~0–50K</td></tr>
+      <tr><td colspan="2"><strong>รวมต่อคน</strong> (โควต้าฟรี GLM-5.3 ~3M + Flash ~5M)</td><td><strong>~0.3–0.5M</strong></td></tr>
+    </tbody>
+  </table></div>
+  <div class="box warn"><span class="label">⚠ ตัวเลขเป็นประมาณการ</span><p>ยังไม่ได้วัดจากห้องจริง — ผู้สอนควรจดตอนซ้อมแล้วแก้ตารางนี้</p></div>
+
+  <h2 id="tools">เครื่องมือ</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>เครื่องมือ</th><th>ใช้ทำอะไร</th><th>ค่าใช้จ่าย</th></tr></thead>
+    <tbody>
+      <tr><td>ZCode (Z.ai)</td><td>AI coding agent — warm-up และสร้าง MVP ทีละ task</td><td>โควต้าฟรี</td></tr>
+      <tr><td>Gemini หรือ ChatGPT</td><td>ร่าง SRS และ design ผ่าน prompt</td><td>ฟรี</td></tr>
+      <tr><td>Node.js, Git, VS Code</td><td>รันเครื่องมือ · checkpoint · อ่านโค้ดและ diff</td><td>ฟรี (ติดตั้งในเครื่อง Lab แล้ว)</td></tr>
+      <tr><td>Cloudflare Workers + D1</td><td>รันแอป + ฐานข้อมูลบนคลาวด์</td><td>Free plan ไม่ผูกบัตร</td></tr>
+    </tbody>
+  </table></div>
+  <div class="box warn">
+    <span class="label">⚠ กติกาบัตรเครดิต และเครื่องส่วนกลาง</span>
+    <p>ถ้าหน้าจอไหนขอบัตรเครดิต ให้หยุดแล้วแจ้งผู้สอน · ใช้เครื่องในห้อง Lab เท่านั้น และ<strong>ออกจากระบบทุกบริการก่อนกลับ</strong> (<a href="setup.html#signout">PART D</a>)</p>
+  </div>
+
+  <h2 id="files">เอกสารและโค้ดประกอบ</h2>
+  <div class="grid">
+    <a class="card" href="setup.html"><span class="kicker">ผู้ดูแลห้อง Lab + ผู้เรียน</span><h4>เตรียมเครื่องและบัญชี</h4><p>สเปกเครื่อง · สมัครบัญชี · ตั้งค่าเช้าวันอบรม · ออกจากระบบ</p></a>
+    <a class="card" href="brief.html"><span class="kicker">ผู้เรียน · Lab 2</span><h4>โจทย์จากผู้ใช้</h4><p>บันทึกจากหัวหน้างานยานพาหนะ</p></a>
+    <a class="card" href="baseline.html"><span class="kicker">ผู้เรียน · 13:00</span><h4>Spec อ้างอิง + Baseline</h4><p>เทียบ spec ด้วย git diff แล้วรับเป็นฉบับกลาง</p></a>
+    <a class="card" href="templates.html"><span class="kicker">อ้างอิง</span><h4>Templates</h4><p>SRS · DESIGN · SPEC · TASKS · AGENTS · SKILL · STARTER-PROMPT</p></a>
+    <a class="card" href="commands.html"><span class="kicker">อ้างอิง</span><h4>คำสั่ง</h4><p>wrangler / git / npm จัดตาม phase ของ SDLC</p></a>
+  </div>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>โค้ด</th><th>สำหรับ</th><th>มีอะไร</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://github.com/werapango/workers-app-starter">github.com/werapango/workers-app-starter</a><br><span class="small">(ในเครื่อง: <code>workers-app-starter/</code>)</span></td><td>ผู้เรียน</td><td>starter กลางที่ไม่ผูกโจทย์: Workers + Hono + D1, ระบบผู้ใช้/ล็อกอิน/จัดการผู้ใช้, smoke + trace, template เอกสาร SDLC, skill และ prompt สร้าง starter เอง</td></tr>
+    </tbody>
+  </table></div>
+</main>
+</body>
+</html>

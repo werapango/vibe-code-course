@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ทฤษฎี 3 WBS, Agent &amp; Skill — Vibe Coding × SDLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body data-page="theory-3-agent-skill.html">
+<main>
+  <p class="eyebrow">ทฤษฎี 3 · 13:30–13:45 · 15 นาที</p>
+  <h1>WBS, Agent &amp; Skill</h1>
+  <p class="lede">ได้ baseline spec แล้ว ขั้นต่อไปคือแตกงานให้ agent ทำทีละชิ้น และให้ agent มี “คู่มือ” ที่ถูกต้องในมือ
+  ช่วงนี้สั้น — เน้นสิ่งที่ต้องใช้ทันทีใน Lab 3</p>
+
+  <div class="meta">
+    <span class="chip">📖 บรรยาย 15 นาที</span>
+    <span class="chip">🧭 Implementation planning · ADLC</span>
+    <span class="chip">📄 TASKS.md · AGENTS.md · skills/</span>
+  </div>
+
+  <div class="toc">
+    <b>ในหน้านี้</b>
+    <ol>
+      <li><a href="#wbs">WBS: จาก SPEC สู่ TASKS</a></li>
+      <li><a href="#agent">Agent ทำงานอย่างไร</a></li>
+      <li><a href="#files">AGENTS.md · SKILL.md · SPEC.md · prompt ต่างกันอย่างไร</a></li>
+      <li><a href="#guard">Guardrails: ทำไม agent ห้ามรันคำสั่ง</a></li>
+      <li><a href="#adlc">ADLC: วงจรการพัฒนา agent/skill</a></li>
+      <li><a href="#discuss">คำถามชวนคุย</a></li>
+      <li><a href="#lab">เชื่อมกับ Lab</a></li>
+    </ol>
+  </div>
+
+  <h2 id="wbs">WBS: จาก SPEC สู่ TASKS</h2>
+  <p><strong>WBS</strong> (Work Breakdown Structure) คือการแตกงานเป็นลำดับชั้น <strong>Epic → Task</strong> จนชิ้นเล็กพอให้ทำและตรวจได้ทีละชิ้น ตัวอย่างจาก <code>TASKS.md</code> ของ baseline:</p>
+  <pre data-nocopy><code>## Epic 1: รถส่วนกลาง (US-1)
+- [ ] T1.1 migration 0002_cars.sql + API src/routes/cars.ts + เคส smoke — AC-1.1 – AC-1.6
+- [ ] 👤 migrations apply --local → npm run smoke → npm run trace → commit
+- [ ] T1.2 หน้าเว็บ "รถ" ใน public/ — depends: T1.1
+
+## Epic 2: การจอง (US-2, US-3, US-4)
+- [ ] T2.1 migration 0003_bookings.sql + POST /api/bookings + smoke ตามตารางตัวอย่าง #1–#8
+- [ ] T2.2 GET การจองของฉัน + DELETE ของฉัน — depends: T2.1
+- [ ] T2.3 GET /api/cars/:id/schedule — depends: T2.1
+- [ ] T2.4 หน้าเว็บจองรถ + การจองของฉัน — depends: T2.2, T2.3</code></pre>
+  <div class="table-wrap"><table>
+    <thead><tr><th>หลัก</th><th>ความหมาย</th><th>ในหลักสูตร</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1 task = 1 prompt</strong></td><td>แก้ 1–3 ไฟล์ จบในรอบเดียว</td><td>สั่ง <code>ทำ task T1.1 ใน TASKS.md</code> — prompt สั้น เพราะรายละเอียดอยู่ใน SPEC</td></tr>
+      <tr><td><strong>กฎ 100%</strong></td><td>task ทั้งหมดรวมกัน = ขอบเขตทั้งหมดพอดี ไม่ขาดไม่เกิน</td><td>AC ทุกข้อของ Release 1 ต้องมี task รับผิดชอบ · ไม่มี task ที่ทำ FR “ยังไม่ทำ”</td></tr>
+      <tr><td><strong>ตรวจได้</strong></td><td>ทุก task ผูกกับ AC</td><td>จบ task = smoke + trace บอกผลได้ทันที</td></tr>
+      <tr><td><strong>รู้ลำดับ</strong></td><td>depends on</td><td>ต้องมีตาราง cars ก่อน bookings · API ก่อนหน้าเว็บ</td></tr>
+      <tr><td><strong>งานของคนคั่น</strong></td><td>👤 ระหว่าง task</td><td>migration, smoke, trace, อ่าน <code>git diff</code>, commit — agent ไม่ทำแทน</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="agent">Agent ทำงานอย่างไร</h2>
+  <div class="flow">
+    <div class="node"><b>LLM</b>สมองที่คิดและเขียน</div><div class="arrow">+</div>
+    <div class="node"><b>Tools</b>อ่าน/แก้ไฟล์, รันคำสั่ง</div><div class="arrow">+</div>
+    <div class="node"><b>Loop</b>วางแผน → ลงมือ → ดูผล → ซ้ำ</div><div class="arrow">+</div>
+    <div class="node hl"><b>Context</b>ทุกอย่างที่มันอ่านใน session นี้</div>
+  </div>
+  <p>นึกถึง Lab 1a: ZCode <strong>วางแผน</strong> → <strong>สร้างไฟล์</strong> → <strong>ตรวจ/สรุป</strong> — นั่นคือ agent loop
+  สิ่งสำคัญคือ agent <strong>ไม่มีความจำข้าม session</strong> มันรู้แค่สิ่งที่อยู่ใน context ตอนนั้น</p>
+  <div class="box token">
+    <span class="label">🪙 context = เงิน</span>
+    <p>ทุกไฟล์ที่ agent อ่าน ทุกข้อความใน session ทุกผลลัพธ์ของคำสั่ง ถูกนับเป็น token <strong>ทุกรอบ</strong>ของ loop
+    session ยาว + log ยาว + ไฟล์ไม่เกี่ยว = จ่ายแพงขึ้นเรื่อย ๆ · จึงมีกติกา: 1 task ต่อ prompt, จบ lab เปิด session ใหม่, แปะเฉพาะบรรทัด error ที่เกี่ยว</p>
+  </div>
+
+  <h2 id="files">AGENTS.md · SKILL.md · SPEC.md · prompt ต่างกันอย่างไร</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>AGENTS.md</th><th>SKILL.md</th><th>SPEC.md</th><th>prompt</th></tr></thead>
+    <tbody>
+      <tr><td>คืออะไร</td><td>กติกาถาวรของโปรเจกต์</td><td>ขั้นตอนมาตรฐานของงานที่ทำซ้ำ</td><td>ความต้องการที่ตรวจได้</td><td>คำสั่งเฉพาะครั้ง</td></tr>
+      <tr><td>agent อ่านเมื่อไร</td><td>ทุก session (ก่อนอย่างอื่น)</td><td>เฉพาะเมื่องานตรงกับ skill</td><td>ทุก task</td><td>ครั้งเดียว</td></tr>
+      <tr><td>ตัวอย่าง</td><td>ห้ามรัน wrangler · SQL ต้อง prepared · ตอบภาษาไทย</td><td><code>add-endpoint</code>: migration → route ตามแบบ users.ts → smoke → TASKS</td><td>AC-2.2 + ตารางตัวอย่างเวลาซ้อน</td><td><code>ทำ task T2.1 ใน TASKS.md</code></td></tr>
+      <tr><td>ใครเขียน</td><td>ทีม (มีใน starter)</td><td>ทีม (มีใน starter)</td><td>baseline (13:00)</td><td>คุณ</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Progressive disclosure</strong>: skill เปิดเผยตัวเองเป็นชั้น ๆ — agent เห็นแค่ <code>name</code> + <code>description</code> ก่อน
+  แล้วค่อยอ่านเนื้อหาเต็มเมื่องานตรงกัน ทำให้มี skill ได้หลายตัวโดยไม่เปลือง context:</p>
+  <pre data-nocopy><code>---
+name: add-endpoint
+description: ใช้เมื่อต้องเพิ่มหรือแก้ API endpoint ของโปรเจกต์นี้ (route ใหม่, ตารางใหม่, หรือเปลี่ยน schema) ตาม task ใน TASKS.md
+---
+# add-endpoint — เพิ่ม API endpoint แบบมาตรฐานของโปรเจกต์
+## ขั้นตอน
+1. อ่าน AC ของ task ใน SPEC.md §3 และแถวของ endpoint ใน §5
+2. เปลี่ยน schema = ไฟล์ migration ใหม่เท่านั้น
+3. เขียน route โดยเลียนแบบโครงของ src/routes/users.ts
+4. เพิ่มเคสใน scripts/smoke.mjs อย่างน้อย 1 เคสต่อ 1 AC
+...</code></pre>
+  <p class="small">skill นี้อยู่ใน starter แล้ว และลงทะเบียนในตาราง Skills ของ <code>AGENTS.md</code> · ZCode รองรับมาตรฐาน SKILL.md แบบ native หรือไม่ยังไม่ได้ยืนยัน หลักสูตรจึงอ้าง skill ผ่าน AGENTS.md ซึ่งใช้ได้กับทุก agent</p>
+  <div class="box why">
+    <span class="label">⭐ ตัวอย่างโค้ดในโปรเจกต์ = context ที่ดีที่สุด</span>
+    <p><code>src/routes/users.ts</code> ของ starter คือแบบอย่าง CRUD มาตรฐาน — พอสั่งให้ทำ CRUD รถ agent เลียนแบบรูปแบบเดิม
+    ได้โค้ดสม่ำเสมอ ตรวจง่าย และ prompt สั้น</p>
+  </div>
+
+  <h2 id="guard">Guardrails: ทำไม agent ห้ามรันคำสั่ง</h2>
+  <p><code>AGENTS.md</code> ของ starter เขียนไว้ว่า <strong>ห้ามรัน <code>wrangler</code>, <code>npm install</code>, <code>git</code> เอง</strong> ให้เขียนคำสั่งไว้ท้ายคำตอบแทน เหตุผล 3 ข้อ:</p>
+  <ol>
+    <li><strong>ความปลอดภัย</strong> — <code>migrations apply --remote</code>, <code>deploy</code>, <code>d1 execute</code> แตะข้อมูลจริง การตัดสินใจนี้ต้องเป็นของคน</li>
+    <li><strong>token</strong> — ผลของคำสั่ง (log ติดตั้ง, ตาราง migration) ยาวมาก ถ้า agent รันเองจะไหลเข้า context ทุกรอบ</li>
+    <li><strong>ความเข้าใจ</strong> — คนที่รันคำสั่งเองรู้ว่าระบบอยู่ในสถานะไหน (local/remote, migrate แล้วหรือยัง)</li>
+  </ol>
+
+  <h2 id="adlc">ADLC: วงจรการพัฒนา agent/skill</h2>
+  <p>คำว่า <strong>ADLC</strong> ใช้เรียก “Agent Development Life Cycle” — ยังไม่มีมาตรฐานเดียว แต่แนวคิดหลักคือ: AGENTS.md และ skill ก็เป็น “ซอฟต์แวร์” ที่ต้องพัฒนาเป็นวงจรเหมือนกัน</p>
+  <div class="flow">
+    <div class="node"><b>Define</b>agent/skill นี้ทำงานอะไร</div><div class="arrow">→</div>
+    <div class="node"><b>Design</b>คำสั่ง เครื่องมือ ข้อห้าม</div><div class="arrow">→</div>
+    <div class="node"><b>Build</b>เขียน AGENTS.md / SKILL.md</div><div class="arrow">→</div>
+    <div class="node hl"><b>Eval</b>ลองเคสตัวอย่าง ดูว่าทำตามไหม</div><div class="arrow">→</div>
+    <div class="node"><b>Deploy</b>ใช้กับงานจริง</div><div class="arrow">→</div>
+    <div class="node"><b>Improve</b>ปรับจากที่พลาด</div>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>SDLC (ตัวแอป)</th><th>ADLC (agent/skill)</th></tr></thead>
+    <tbody>
+      <tr><td>สิ่งที่สร้าง</td><td>โค้ดใน src/, public/</td><td>AGENTS.md, SKILL.md</td></tr>
+      <tr><td>ความต้องการ</td><td>SRS / SPEC</td><td>agent ต้องทำงานแบบไหน ห้ามอะไร</td></tr>
+      <tr><td>การตรวจ</td><td><strong>test</strong> — ผลเหมือนเดิมทุกครั้ง</td><td><strong>eval</strong> — ลองหลายเคส ดูอัตราที่ทำถูก (ผลไม่แน่นอน)</td></tr>
+      <tr><td>เมื่อพลาด</td><td>แก้โค้ด</td><td>แก้คำสั่ง/description/ตัวอย่าง</td></tr>
+    </tbody>
+  </table></div>
+  <div class="box theory">
+    <span class="label">📖 แนวคิดหลัก</span>
+    <p>agent ไม่ได้ “ฉลาดขึ้นเอง” — มันทำได้ดีเท่ากับ <strong>spec + กติกา + ตัวอย่าง</strong> ที่เราให้
+    งานของคนในยุค agent คือดูแลสามอย่างนี้ให้ถูกและสั้น แล้ว<strong>ตรวจผลทุกครั้ง</strong></p>
+  </div>
+
+  <h2 id="discuss">คำถามชวนคุย</h2>
+  <ol>
+    <li>ถ้า agent ทำ task T2.1 แล้ว “แถม” ทำหน้าเว็บให้ด้วย ดีหรือไม่ดี? จะแก้ที่ไฟล์ไหนเพื่อไม่ให้เกิดอีก?</li>
+    <li>กติกาไหนควรอยู่ใน AGENTS.md และอะไรควรแยกเป็น skill? ใช้อะไรตัดสิน?</li>
+    <li>เราจะ eval skill <code>add-endpoint</code> อย่างไร ถ้าผลของ agent ไม่เหมือนเดิมทุกครั้ง?</li>
+  </ol>
+
+  <h2 id="lab">เชื่อมกับ Lab</h2>
+  <p><a href="lab-3.html">Lab 3</a> (55 นาที): เปิด session ใหม่ของ ZCode → สั่งทีละ task ตั้งแต่ T1.1 ถึง T2.4 → ระหว่าง task คุณรัน migration, smoke, trace และอ่าน <code>git diff</code> เอง
+  → release ขึ้น production · ตามไม่ทันขอ checkpoint <code>build-cars</code> หรือ <code>final</code></p>
+
+  <div class="box check">
+    <span class="label">✅ สรุป 3 บรรทัด</span>
+    <ul>
+      <li>WBS แตก SPEC เป็น task ที่ 1 task = 1 prompt ตรวจได้ด้วย AC และมีงานของคนคั่นทุก task</li>
+      <li>agent = LLM + tools + loop + context · ไม่มีความจำข้าม session · context ทุกบรรทัดคือ token</li>
+      <li>AGENTS.md = กติกาถาวร · SKILL.md = ขั้นตอนเมื่อจำเป็น · SPEC = สิ่งที่ต้องได้ — และพัฒนาเป็นวงจร ADLC ที่ตรวจด้วย eval</li>
+    </ul>
+  </div>
+
+  <details>
+    <summary>บันทึกผู้สอน</summary>
+    <ul>
+      <li>15 นาทีเท่านั้น — ใช้ตาราง 4 ไฟล์เป็นแกน ข้าม ADLC ให้เหลือ 2 นาทีถ้าเวลาเกิน</li>
+      <li>เปิด <code>TASKS.md</code> ของ baseline บนจอ ชี้ว่าแต่ละ task ผูก AC ไหน และงาน 👤 อยู่ตรงไหน</li>
+      <li>ย้ำ: เปิด session ใหม่ก่อนเริ่ม Lab 3 (agent จะอ่าน AGENTS.md + SPEC ใหม่ตั้งแต่ต้น)</li>
+    </ul>
+  </details>
+</main>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>โจทย์จากผู้ใช้ — ระบบจองรถส่วนกลาง</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+  <style>
+    .memo { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; margin: 0 0 20px; }
+    .memo .head { border-bottom: 1px dashed var(--line); padding-bottom: 10px; margin-bottom: 14px; font-size: 15px; color: var(--ink-2); }
+    .memo .head div { margin: 2px 0; }
+    .memo p { margin: 0 0 14px; }
+    .bref { font-family: var(--mono); font-size: 12px; color: var(--muted); background: var(--surface-2); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; margin-left: 4px; white-space: nowrap; }
+  </style>
+</head>
+<body data-page="brief.html">
+<main>
+  <p class="eyebrow">โจทย์ · ใช้ใน Lab 2</p>
+  <h1>โจทย์จากผู้ใช้: ระบบจองรถส่วนกลาง</h1>
+  <p class="lede">บันทึกจริงจากเจ้าของโจทย์มักเขียนด้วยภาษาพูด ปนปัญหา ความต้องการ และความหวังไว้ด้วยกัน — และ<strong>มีจุดกำกวมเสมอ</strong>
+  งานของเราคือเปลี่ยนบันทึกนี้ให้เป็นความต้องการที่ตรวจสอบได้ โดยไม่เดาแทนเจ้าของโจทย์</p>
+
+  <div class="box intent">
+    <span class="label">🎯 วิธีใช้โจทย์นี้</span>
+    <ul>
+      <li>อ่านให้จบ 1 รอบ แล้วอ่านอีกรอบโดย<strong>ขีดเส้นใต้คำที่ตีความได้หลายแบบ</strong></li>
+      <li>ตัวเลข <span class="bref">B1</span>–<span class="bref">B7</span> คือเลขย่อหน้า — ใช้อ้าง “ที่มา” ของ requirement ใน SRS</li>
+      <li>สิ่งที่บันทึกไม่ได้บอก <strong>ห้ามเดา</strong> → ถามเจ้าของโจทย์ (ผู้สอน) หรือติดป้าย <strong>[สมมติฐาน]</strong></li>
+      <li>เจ้าของโจทย์ตอบคำถามได้ในช่วง Lab 2 เท่านั้น — เลือกถามข้อที่สำคัญที่สุด</li>
+    </ul>
+  </div>
+
+  <div class="memo">
+    <div class="head">
+      <div><strong>เรื่อง:</strong> ขอให้ช่วยทำระบบจองรถส่วนกลาง</div>
+      <div><strong>จาก:</strong> หัวหน้างานยานพาหนะ</div>
+      <div><strong>ถึง:</strong> ทีมพัฒนาระบบ</div>
+    </div>
+
+    <p>สวัสดีค่ะ ตอนนี้หน่วยงานเรามีรถส่วนกลางอยู่ 5 คัน เป็นรถตู้ 2 คัน กระบะ 1 คัน และรถเก๋งอีก 2 คัน
+    ที่ผ่านมาพนักงานจองรถกันในกลุ่ม LINE แล้วงานยานพาหนะก็จดลงสมุดที่โต๊ะอีกที<span class="bref">B1</span></p>
+
+    <p>ปัญหาคือจองชนกันบ่อยมากค่ะ ข้อความในกลุ่มไหลไปเร็ว บางทีสองคนจองรถคันเดียวกันวันเดียวกันโดยไม่รู้ตัว
+    แล้วทุกคนก็ต้องโทรมาถามที่โต๊ะว่าคันไหนว่าง วันหนึ่งรับสายเรื่องนี้หลายสิบรอบ
+    มีครั้งหนึ่งไปกันหลายคนแต่จองรถเก๋งไว้ ปรากฏว่านั่งไม่พอ ต้องวุ่นหาอีกคันกันตอนเช้า<span class="bref">B2</span></p>
+
+    <p>อยากได้ระบบที่พนักงานจองรถเองได้ทางมือถือเลยค่ะ เข้าไปแล้วดูได้ว่ารถว่างไหม
+    ที่สำคัญคือห้ามจองชนกัน และถ้าไม่ได้ไปแล้วก็ให้ยกเลิกเองได้ จะได้คืนรถให้คนอื่น<span class="bref">B3</span></p>
+
+    <p>ส่วนข้อมูลรถ งานยานพาหนะจะเป็นคนดูแลเองค่ะ เวลามีรถใหม่ก็เพิ่มเข้าไป เปลี่ยนป้ายทะเบียนก็แก้ได้ รถเก่าที่ปลดแล้วก็เอาออก
+    แล้วก็จะเป็นคนสร้างบัญชีให้พนักงานแต่ละคนด้วย<span class="bref">B4</span></p>
+
+    <p>อีกเรื่องที่กังวลคือ ไม่อยากให้ใครไปยกเลิกหรือแก้การจองของคนอื่นได้ เคยมีคนลบข้อความจองของเพื่อนในกลุ่มแล้วเถียงกันใหญ่โต<span class="bref">B5</span></p>
+
+    <p>อยากให้จองล่วงหน้าได้ด้วยนะคะ เพราะบางงานรู้ตั้งแต่ต้นเดือน
+    แล้วในอนาคตหัวหน้าฝ่ายอาจอยากให้มีการอนุมัติก่อนถึงจะใช้รถได้ อันนี้ยังไม่แน่ใจ<span class="bref">B6</span></p>
+
+    <p>เรื่องงบประมาณ ตอนนี้ไม่มีเลยค่ะ ถ้าใช้ของฟรีได้ยิ่งดี ขอบคุณมากค่ะ<span class="bref">B7</span></p>
+  </div>
+
+  <div class="box theory">
+    <span class="label">📖 คิดก่อนเปิด AI</span>
+    <p>ลองตอบในใจ 3 ข้อ: ใครบ้างได้ผลจากระบบนี้ (ไม่ใช่แค่คนที่ใช้งาน) · ประโยคไหนเป็น “ความต้องการ” และประโยคไหนเป็นแค่ “ปัญหา” หรือ “ความหวัง” ·
+    คำไหนที่ถ้าคุณกับเพื่อนตีความต่างกัน จะสร้างระบบออกมาคนละแบบ</p>
+  </div>
+
+  <p class="small">ไปต่อที่ <a href="lab-2.html">Lab 2 — เขียน SRS และร่าง design</a></p>
+</main>
+</body>
+</html>
