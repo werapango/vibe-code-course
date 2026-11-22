@@ -12,6 +12,7 @@ const PAGES = [
   ]},
   { group: "เช้า", items: [
     ["theory-1-sdlc.html", "ทฤษฎี 1 · Vibe coding กับ SDLC"],
+    ["cloudflare.html", "Cloudflare ที่ใช้วันนี้"],
     ["lab-1.html", "Lab 1 · Warm-up + Starter"],
     ["theory-2-requirements.html", "ทฤษฎี 2 · Requirements & Design"],
     ["lab-2.html", "Lab 2 · SRS + Design"],
@@ -34,7 +35,7 @@ const PAGES = [
 // ลำดับการอ่าน (ปุ่มถัดไปข้ามหน้า) = ตามตารางสอนจริง
 const READING_ORDER = [
   "index.html", "setup.html", "schedule.html",
-  "theory-1-sdlc.html", "lab-1.html",
+  "theory-1-sdlc.html", "cloudflare.html", "lab-1.html",
   "theory-2-requirements.html", "lab-2.html", "brief.html",
   "baseline.html", "theory-3-agent-skill.html", "lab-3.html",
   "theory-4-verify-release.html", "lab-4.html",

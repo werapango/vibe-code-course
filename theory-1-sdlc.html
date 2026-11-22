@@ -109,6 +109,7 @@
     <li><strong>local</strong> = <code>npm run dev</code> บนเครื่องเรา ฐานข้อมูลจำลองใน <code>.wrangler/</code> · <strong>production</strong> = <code>wrangler deploy</code> ขึ้น Cloudflare ฐานข้อมูลจริงอีกก้อน — สองที่นี้แยกกัน ต้อง migrate ทั้งคู่</li>
   </ul>
   <p class="small">ไม่ต้องจำตอนนี้ — Lab 1b จะให้เห็นของจริงทั้งหมด (F12 → Network, <code>/api/health</code>, local vs production, rollback)</p>
+  <div class="box theory"><span class="label">☁️ แต่ละกล่องคือบริการไหนของ Cloudflare</span><p>Worker = <b>Workers</b> · ไฟล์หน้าเว็บ = <b>Static Assets</b> · ฐานข้อมูล = <b>D1</b> · URL = <b>workers.dev</b> · สั่งทั้งหมดด้วย <b>wrangler</b> — อธิบายละเอียด พร้อมโควตาฟรีและสิ่งที่ไม่ต้องกด ใน <a href="cloudflare.html">Cloudflare ที่ใช้ในหลักสูตร</a></p></div>
 
   <h2 id="day">วันนี้เดินวงจรอย่างไร</h2>
   <div class="table-wrap"><table>

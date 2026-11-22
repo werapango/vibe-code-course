@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cloudflare ที่ใช้ในหลักสูตร — Vibe Coding × SDLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body data-page="cloudflare.html">
+<main>
+  <p class="eyebrow">อ้างอิง · อ่านคู่กับทฤษฎี 1 และ Lab 1</p>
+  <h1>Cloudflare ที่ใช้ในหลักสูตร</h1>
+  <p class="lede">แอปที่ทุกคนสร้างวันนี้รันบน Cloudflare ทั้งหมด หน้านี้อธิบายว่าแต่ละบริการคืออะไร อยู่ตรงไหนในโปรเจกต์
+  ใช้คำสั่งอะไร ใช้ฟรีได้แค่ไหน และอะไรที่<strong>ไม่ต้องกด</strong> เพื่อให้รู้ว่าคำสั่งที่พิมพ์ใน Lab ไปทำอะไรกับระบบจริง</p>
+
+  <div class="meta">
+    <span class="chip">☁️ Workers · Static Assets · D1</span>
+    <span class="chip">🧰 wrangler CLI</span>
+    <span class="chip">💳 Free plan ไม่ต้องผูกบัตร</span>
+    <span class="chip">📅 ตัวเลขจากเอกสาร Cloudflare ณ พ.ย. 2026</span>
+  </div>
+
+  <div class="box intent">
+    <span class="label">🎯 อ่านหน้านี้เพื่อตอบ 3 คำถาม</span>
+    <ol>
+      <li>เมื่อมีคนเปิด URL <code>workers.dev</code> ของเรา คำขอวิ่งผ่านอะไรบ้าง?</li>
+      <li>ไฟล์ไหนในโปรเจกต์ผูกกับบริการไหนของ Cloudflare?</li>
+      <li>ทั้งห้องใช้พร้อมกันแล้วโควตาฟรีพอไหม ถ้าเกินจะเกิดอะไร?</li>
+    </ol>
+  </div>
+
+  <h2 id="what">Cloudflare คืออะไร</h2>
+  <p>Cloudflare เริ่มจากเป็น<strong>เครือข่ายส่งเนื้อหา (CDN) และป้องกันเว็บ</strong>ที่มีศูนย์ข้อมูลกระจายอยู่ทั่วโลก
+  ต่อมาเปิดให้นักพัฒนา<strong>รันโค้ดของตัวเองบนเครือข่ายนั้น</strong>ได้ด้วย เรียกรวม ๆ ว่า Developer Platform
+  ซึ่งเป็นส่วนที่หลักสูตรนี้ใช้</p>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>เรื่อง</th><th>เช่าเครื่อง (VPS / server)</th><th>Cloudflare Workers (serverless)</th></tr></thead>
+    <tbody>
+      <tr><td>ต้องดูแลอะไร</td><td>ระบบปฏิบัติการ อัปเดต ความปลอดภัย พอร์ต SSL</td><td>เฉพาะโค้ดของเรา — แพลตฟอร์มดูแลที่เหลือ</td></tr>
+      <tr><td>โค้ดรันเมื่อไร</td><td>เปิดเครื่องรอไว้ตลอด 24 ชม.</td><td>รันเฉพาะตอนมีคำขอเข้ามา</td></tr>
+      <tr><td>รันที่ไหน</td><td>เครื่องเดียว ที่เดียว</td><td>ศูนย์ข้อมูลที่ใกล้ผู้ใช้ (edge)</td></tr>
+      <tr><td>HTTPS</td><td>ตั้งค่าใบรับรองเอง</td><td>ได้อัตโนมัติ</td></tr>
+      <tr><td>ค่าใช้จ่ายเริ่มต้น</td><td>จ่ายรายเดือนแม้ไม่มีคนใช้</td><td>Free plan ใช้ได้โดยไม่ผูกบัตร (มีโควตาต่อวัน)</td></tr>
+      <tr><td>ข้อจำกัด</td><td>ทำอะไรก็ได้บนเครื่อง</td><td>มีเพดาน CPU ต่อคำขอ · ไม่มี filesystem ถาวร · ต้องใช้บริการของแพลตฟอร์มเก็บข้อมูล</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box theory">
+    <span class="label">📖 ทำไมหลักสูตรเลือก Cloudflare (ย่อจาก ADR-01)</span>
+    <p>ข้อจำกัดของเราคือ <strong>ไม่ใช้บัตรเครดิต</strong> และ<strong>ใช้เครื่อง Lab ที่ไม่มีสิทธิ์ admin</strong>
+    Workers + D1 ให้ทั้ง server ฐานข้อมูล HTTPS และ URL สาธารณะในแผนฟรี สั่งทุกอย่างผ่าน <code>npx wrangler</code> ได้โดยไม่ต้องติดตั้งอะไรเพิ่ม
+    และได้ URL จริงตั้งแต่ชั่วโมงแรก — ตรงกับหลักการ “deploy เร็ว ถอยได้”</p>
+  </div>
+
+  <h2 id="map">แผนที่: บริการ ↔ ไฟล์ในโปรเจกต์ ↔ คำสั่ง</h2>
+  <div class="flow">
+    <div class="node"><b>เบราว์เซอร์</b>เปิด https://my-app.&lt;ชื่อ&gt;.workers.dev</div>
+    <span class="arrow">→</span>
+    <div class="node"><b>Static Assets</b>มีไฟล์ตรงกับ path ไหม? มี → ส่งไฟล์จาก <code>public/</code> เลย</div>
+    <span class="arrow">→</span>
+    <div class="node hl"><b>Worker</b>ไม่มีไฟล์ (เช่น <code>/api/...</code>) → รัน <code>src/index.ts</code> (Hono)</div>
+    <span class="arrow">→</span>
+    <div class="node"><b>D1</b>Worker เรียก <code>c.env.DB</code> อ่าน/เขียนตาราง</div>
+  </div>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>บริการ</th><th>ทำอะไรในแอปเรา</th><th>อยู่ตรงไหนในโปรเจกต์</th><th>คำสั่งที่ใช้</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Workers</strong></td><td>API ฝั่งเซิร์ฟเวอร์: ล็อกอิน ผู้ใช้ รถ การจอง</td><td><code>src/</code> · <code>"main"</code> ใน wrangler.jsonc</td><td><code>npm run dev</code> · <code>npx wrangler deploy</code></td></tr>
+      <tr><td><strong>Static Assets</strong></td><td>หน้าเว็บ HTML/CSS/JS</td><td><code>public/</code> · <code>"assets"</code></td><td>ไปพร้อม deploy</td></tr>
+      <tr><td><strong>D1</strong></td><td>ฐานข้อมูล users, sessions, cars, bookings</td><td><code>migrations/</code> · <code>"d1_databases"</code></td><td><code>d1 create</code> · <code>d1 migrations apply</code> · <code>d1 execute</code></td></tr>
+      <tr><td><strong>workers.dev</strong></td><td>URL สาธารณะ + HTTPS ฟรี</td><td><code>"name"</code> = ส่วนหน้าของ URL</td><td>ตั้งชื่อ subdomain ตอน deploy ครั้งแรก</td></tr>
+      <tr><td><strong>Versions</strong></td><td>เก็บทุกเวอร์ชันที่ deploy · ถอยกลับได้</td><td>—</td><td><code>deployments list</code> · <code>rollback</code></td></tr>
+      <tr><td><strong>Observability</strong></td><td>ดู log และ error ของ production</td><td><code>"observability"</code></td><td><code>npx wrangler tail</code> · Dashboard</td></tr>
+      <tr><td><strong>wrangler</strong></td><td>CLI ที่ใช้สั่งทุกอย่างข้างบน</td><td><code>wrangler.jsonc</code> · ใน <code>node_modules</code></td><td><code>npx wrangler …</code></td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">ไฟล์ <code>wrangler.jsonc</code> คือ “สัญญา” ระหว่างโปรเจกต์กับ Cloudflare — ทุกบริการที่ใช้ต้องประกาศไว้ที่นี่ จึงอ่านไฟล์เดียวแล้วรู้ว่าแอปพึ่งอะไรบ้าง</p>
+
+  <h2 id="workers">Workers: โค้ดที่รันเมื่อมีคำขอ</h2>
+  <p>Worker คือโค้ด JavaScript/TypeScript ที่ Cloudflare รันทุกครั้งที่มี HTTP request เข้ามา
+  รับ request แล้วต้องคืน response — ไม่มีเครื่องที่เปิดรอไว้ ไม่มีโปรแกรมที่ต้อง restart</p>
+<pre><code><span class="c">// src/index.ts (ย่อ) — Hono ช่วยแยก request ไปตาม path</span>
+const app = new Hono&lt;AppEnv&gt;();
+app.route("/api/health", health);
+app.route("/api/auth", auth);
+app.route("/api/users", users);
+export default app;   <span class="c">// Cloudflare เรียก app.fetch(request, env) ให้ทุกคำขอ</span></code></pre>
+  <div class="table-wrap"><table>
+    <thead><tr><th>ลักษณะ</th><th>ผลต่อการเขียนโค้ด</th></tr></thead>
+    <tbody>
+      <tr><td>CPU 10 ms ต่อคำขอ (Free)</td><td>นับเฉพาะเวลาที่ CPU คำนวณจริง เวลารอฐานข้อมูลไม่นับ · งานที่หนักที่สุดของ starter คือ hash รหัสผ่านตอนล็อกอิน (PBKDF2 100,000 รอบ ค่าสูงสุดที่ Workers รองรับ) — ถ้าล็อกอินบน production ได้ error 1102 แปลว่าเกินเพดาน CPU</td></tr>
+      <tr><td>ไม่มีตัวแปรที่อยู่ข้ามคำขอแน่นอน</td><td>ห้ามเก็บ session หรือข้อมูลไว้ในตัวแปร global — ต้องเก็บใน D1</td></tr>
+      <tr><td>ไม่มี filesystem</td><td>อ่าน/เขียนไฟล์แบบ Node.js ไม่ได้ · ไฟล์หน้าเว็บมาจาก Static Assets</td></tr>
+      <tr><td>Web API มาตรฐาน</td><td>ใช้ <code>fetch</code>, <code>crypto.subtle</code>, <code>Request</code>/<code>Response</code> เหมือนในเบราว์เซอร์</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="assets">Static Assets: หน้าเว็บที่ส่งตรงจาก edge</h2>
+  <p>ไฟล์ในโฟลเดอร์ <code>public/</code> ถูกอัปโหลดไปพร้อม <code>wrangler deploy</code>
+  ถ้า path ที่ขอตรงกับไฟล์ (เช่น <code>/</code> → <code>index.html</code>, <code>/app.js</code>) Cloudflare ส่งไฟล์ให้เลย<strong>โดยไม่รัน Worker</strong>
+  ถ้าไม่ตรงกับไฟล์ใด (เช่น <code>/api/users</code>) จึงส่งต่อให้ Worker</p>
+<pre><code><span class="c">// wrangler.jsonc</span>
+"main": "src/index.ts",
+"assets": { "directory": "./public" }</code></pre>
+  <div class="box check">
+    <span class="label">✅ ข้อดีที่วัดได้</span>
+    <p>คำขอไฟล์ static <strong>ฟรีและไม่จำกัดจำนวน</strong> และไม่นับรวมในโควตา 100,000 คำขอต่อวันของ Worker
+    — โควตาถูกใช้เฉพาะคำขอ API จริง ๆ · ข้อจำกัด: ไฟล์ละไม่เกิน 25 MiB และไม่เกิน 20,000 ไฟล์ต่อเวอร์ชัน</p>
+  </div>
+
+  <h2 id="d1">D1: ฐานข้อมูล SQLite บน Cloudflare</h2>
+  <p>D1 เป็นฐานข้อมูลแบบ <strong>SQLite</strong> ที่ Cloudflare ดูแลให้ เขียน SQL ปกติ (<code>SELECT</code>, <code>INSERT</code>, <code>JOIN</code>)
+  และมี <strong>2 ชุดเสมอ</strong>: ชุดจำลองบนเครื่องเรา กับชุดจริงบน Cloudflare</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>Local (<code>--local</code>)</th><th>Remote (<code>--remote</code>)</th></tr></thead>
+    <tbody>
+      <tr><td>อยู่ที่ไหน</td><td>ไฟล์ใน <code>.wrangler/state/</code> บนเครื่อง</td><td>บน Cloudflare</td></tr>
+      <tr><td>ใช้กับ</td><td><code>npm run dev</code> · <code>npm run smoke</code></td><td>แอปบน workers.dev</td></tr>
+      <tr><td>ลบทิ้งแล้ว</td><td>สร้างใหม่ได้ด้วย migration</td><td>ข้อมูลผู้ใช้จริงหาย — ระวัง</td></tr>
+    </tbody>
+  </table></div>
+<pre><code>npx wrangler d1 create app-db --binding DB --update-config   <span class="c"># สร้างฐานข้อมูล + เขียน d1_databases ลง wrangler.jsonc</span>
+npx wrangler d1 migrations apply app-db --local               <span class="c"># สร้างตารางในเครื่อง</span>
+npx wrangler d1 migrations apply app-db --remote              <span class="c"># สร้างตารางบน production</span>
+npx wrangler d1 execute app-db --remote --command "SELECT username, role FROM users"</code></pre>
+  <div class="box theory">
+    <span class="label">📖 Migration = ประวัติการเปลี่ยนโครงสร้างฐานข้อมูล</span>
+    <p>ไฟล์ใน <code>migrations/</code> ถูกรันตามลำดับเลข และ D1 จดไว้ว่ารันไฟล์ไหนไปแล้ว — รันซ้ำก็ไม่ทำซ้ำ
+    เปลี่ยนโครงสร้างต้อง<strong>เพิ่มไฟล์ใหม่</strong>เสมอ ห้ามแก้ไฟล์เก่าที่รันบน remote ไปแล้ว</p>
+  </div>
+  <div class="box warn">
+    <span class="label">⚠ rollback โค้ด ≠ rollback ฐานข้อมูล</span>
+    <p><code>wrangler rollback</code> ย้อนเฉพาะโค้ด · ถ้าต้องย้อนข้อมูลจริง D1 มี <strong>Time Travel</strong> ย้อนฐานข้อมูลไปจุดเวลาใดก็ได้ในช่วง 7 วัน (Free)
+    ด้วย <code>npx wrangler d1 time-travel restore</code> — เป็นทางหนีไฟ ไม่ใช่เครื่องมือประจำวัน</p>
+  </div>
+
+  <h2 id="binding">Binding: Worker คุยกับ D1 โดยไม่มีรหัสผ่าน</h2>
+  <p>ฐานข้อมูลทั่วไปต้องมี connection string ที่มีรหัสผ่าน ซึ่งเสี่ยงหลุด
+  Cloudflare ใช้ <strong>binding</strong> แทน: ประกาศใน wrangler.jsonc ว่าชื่อ <code>DB</code> ผูกกับฐานข้อมูลไหน
+  แล้วในโค้ดเรียก <code>c.env.DB</code> ได้เลย ไม่มีรหัสผ่านในโค้ดหรือใน git</p>
+<pre><code><span class="c">// wrangler.jsonc — d1 create --update-config เขียนให้</span>
+"d1_databases": [{ "binding": "DB", "database_name": "app-db", "database_id": "…" }]
+
+<span class="c">// src/routes/users.ts — ใช้ผ่าน binding เสมอ และใช้ ? กัน SQL injection</span>
+const row = await c.env.DB.prepare("SELECT id, username, role FROM users WHERE id = ?").bind(id).first();</code></pre>
+  <p class="small"><code>/api/health</code> ของ starter บอกสถานะ binding ได้ 3 แบบ: <code>no-binding</code> (ยังไม่ได้ d1 create) → <code>not-migrated</code> (ยังไม่มีตาราง) → <code>ready</code></p>
+
+  <h2 id="deploy">workers.dev, Versions และ rollback</h2>
+  <ul>
+    <li><strong>workers.dev</strong> — ทุกบัญชีได้ subdomain ฟรี 1 ชื่อ (ตั้งตอน deploy ครั้งแรก หรือใน Dashboard)
+    แต่ละ Worker ได้ URL <code>https://&lt;ชื่อ Worker&gt;.&lt;subdomain&gt;.workers.dev</code> พร้อม HTTPS
+    — Cloudflare ระบุว่าเหมาะกับงานส่วนตัวหรือโปรเจกต์ทดลอง ระบบจริงขององค์กรควรใช้โดเมนของตัวเอง</li>
+    <li><strong>Versions</strong> — ทุก <code>wrangler deploy</code> สร้างเวอร์ชันใหม่ เวอร์ชันเก่าเก็บไว้ (Free: 30 วัน)</li>
+    <li><strong>rollback</strong> — สลับกลับไปใช้เวอร์ชันก่อนได้ทันทีโดยไม่ต้อง build ใหม่</li>
+  </ul>
+<pre><code>npx wrangler deployments list   <span class="c"># ดูประวัติการ deploy</span>
+npx wrangler rollback           <span class="c"># กลับไปเวอร์ชันก่อนหน้า</span>
+npx wrangler delete             <span class="c"># ลบ Worker ทั้งตัว (ใช้ตอนเก็บกวาด)</span></code></pre>
+
+  <h2 id="logs">Observability: รู้ว่า production เกิดอะไรขึ้น</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>เครื่องมือ</th><th>ใช้เมื่อ</th><th>หมายเหตุ</th></tr></thead>
+    <tbody>
+      <tr><td><code>npx wrangler tail</code></td><td>ดู log สด ๆ ขณะลองใช้แอป</td><td>เห็น <code>console.log</code> และ error ทันที · Ctrl+C เพื่อหยุด</td></tr>
+      <tr><td>Workers Logs (Dashboard)</td><td>ย้อนดู log ที่ผ่านมา</td><td>เปิดด้วย <code>"observability": { "enabled": true }</code> ซึ่ง starter เปิดไว้แล้ว · Free: 200,000 events/วัน เก็บย้อนหลังประมาณ 3 วัน</td></tr>
+      <tr><td>Dashboard → Workers &amp; Pages → Metrics</td><td>ดูจำนวนคำขอ error และ CPU</td><td>ใช้ดูว่าใกล้โควตาหรือยัง</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="wrangler">wrangler กับ Dashboard</h2>
+  <div class="grid">
+    <div class="card"><h4>wrangler (CLI)</h4><p>ทุกอย่างที่ทำซ้ำได้และควรอยู่ในเอกสาร: สร้าง D1, migration, deploy, rollback, tail · คำสั่งเหมือนกันทุกเครื่อง จึงเขียนลง Lab ได้ตรงตัว</p></div>
+    <div class="card"><h4>Dashboard (เว็บ)</h4><p>ดูภาพรวมและตั้งค่าที่ทำครั้งเดียว: subdomain, metrics, logs, ดูข้อมูลใน D1 · ใช้ดู ไม่ใช้เป็นทางหลักในการเปลี่ยนระบบ</p></div>
+  </div>
+  <div class="box warn">
+    <span class="label">🔐 wrangler login เก็บสิทธิ์ไว้บนเครื่อง</span>
+    <p><code>npx wrangler login</code> ขอสิทธิ์ผ่านหน้าเว็บ (OAuth) แล้วเก็บ token ไว้ในโฟลเดอร์ผู้ใช้
+    ใครใช้เครื่องต่อจะ deploy หรือลบฐานข้อมูลในบัญชีเราได้ — เครื่องส่วนกลางต้อง <code>npx wrangler logout</code> ทุกครั้งก่อนกลับ
+    · ถ้าห้องบล็อก localhost ใช้ <code>npx wrangler login --device</code> แทน</p>
+  </div>
+
+  <h2 id="quota">โควตา Free plan: พอไหม เกินแล้วเป็นอย่างไร</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>บริการ</th><th>Free plan</th><th>วันอบรมใช้ประมาณ (ต่อคน)</th></tr></thead>
+    <tbody>
+      <tr><td>Workers requests</td><td>100,000 / วัน</td><td>หลักร้อย (smoke 1 รอบเป็นหลักสิบถึงร้อยคำขอ)</td></tr>
+      <tr><td>Workers CPU</td><td>10 ms / คำขอ</td><td>ล็อกอินหนักที่สุด (hash รหัสผ่าน)</td></tr>
+      <tr><td>Workers ต่อบัญชี</td><td>100</td><td>2 ตัว (hello + my-app)</td></tr>
+      <tr><td>Static Assets</td><td>ไม่จำกัด · ฟรี</td><td>—</td></tr>
+      <tr><td>D1 rows read</td><td>5 ล้าน / วัน</td><td>หลักพัน</td></tr>
+      <tr><td>D1 rows written</td><td>100,000 / วัน</td><td>หลักร้อย</td></tr>
+      <tr><td>D1 storage</td><td>500 MB ต่อฐานข้อมูล · 5 GB รวม · 10 ฐานข้อมูล</td><td>ไม่ถึง 1 MB</td></tr>
+      <tr><td>Workers Logs</td><td>200,000 events / วัน</td><td>หลักร้อย</td></tr>
+    </tbody>
+  </table></div>
+  <div class="box token">
+    <span class="label">🪙 สรุป: ทั้งห้องไม่แย่งโควตากัน</span>
+    <p>โควตานับ<strong>ต่อบัญชี</strong> ทุกคนสมัครบัญชีของตัวเอง จึงไม่มีใครใช้โควตาของคนอื่น
+    และการใช้จริงทั้งวันต่ำกว่าเพดานหลายร้อยเท่า · โควตารายวันรีเซ็ตเวลา 00:00 UTC = <strong>07:00 เวลาไทย</strong></p>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>ถ้าเกิน…</th><th>ผลที่เกิด</th></tr></thead>
+    <tbody>
+      <tr><td>Workers requests เกิน 100,000/วัน</td><td>คำขอที่ต้องรัน Worker ได้หน้า error 1027 จนรีเซ็ต · <strong>ไม่มีการเก็บเงิน</strong> เพราะไม่ได้ผูกบัตร</td></tr>
+      <tr><td>CPU เกิน 10 ms</td><td>คำขอนั้นล้ม (error) — ต้องแก้โค้ดให้เบาลง</td></tr>
+      <tr><td>D1 เกินโควตารายวัน</td><td>คำสั่ง SQL ประเภทนั้นล้มจนรีเซ็ต</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="avoid">บริการที่วันนี้ไม่ใช้ และไม่ต้องกด</h2>
+  <p>Dashboard มีบริการอีกมาก บางตัวขอให้ผูกวิธีชำระเงินก่อนเปิดใช้ ถ้าเจอหน้าขอบัตร <strong>หยุดแล้วแจ้งผู้สอน</strong></p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>บริการ</th><th>คืออะไร</th><th>ทำไมวันนี้ไม่ใช้</th></tr></thead>
+    <tbody>
+      <tr><td>Workers Paid</td><td>แผนเสียเงิน โควตาสูงขึ้น</td><td>แผนฟรีเกินพอ</td></tr>
+      <tr><td>R2</td><td>เก็บไฟล์ขนาดใหญ่ (object storage)</td><td>แอปไม่มีอัปโหลดไฟล์</td></tr>
+      <tr><td>KV · Durable Objects · Queues</td><td>ที่เก็บข้อมูลแบบอื่น / งานคิว</td><td>D1 พอสำหรับข้อมูลแบบตาราง</td></tr>
+      <tr><td>Zero Trust / Access</td><td>ล็อกอินระดับองค์กรหน้าแอป</td><td>เราเขียน auth ง่าย ๆ เองเพื่อเรียนรู้</td></tr>
+      <tr><td>โดเมนของตัวเอง (Custom domain)</td><td>ใช้ชื่อเว็บของเราแทน workers.dev</td><td>ต้องมีโดเมน · workers.dev พอสำหรับการเรียน</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="check">ทบทวน + เชื่อมกับ Lab</h2>
+  <ol>
+    <li>เปิด <code>/app.css</code> กับเปิด <code>/api/health</code> — อันไหนนับโควตา Worker? เพราะอะไร?</li>
+    <li>ถ้าลืม <code>d1 migrations apply --remote</code> แต่ deploy แล้ว <code>/api/health</code> บน production จะตอบอะไร?</li>
+    <li>ทำไม starter ไม่เก็บ session ไว้ในตัวแปรใน <code>src/</code> แต่เก็บในตาราง <code>sessions</code>?</li>
+    <li>deploy เวอร์ชันที่มี migration ลบคอลัมน์ แล้ว rollback — ทำไมแอปอาจยังพัง?</li>
+  </ol>
+  <p class="small">ได้ลงมือจริงใน <a href="lab-1.html#b">Lab 1b</a> (D1, deploy, rollback, tail) และ <a href="lab-3.html">Lab 3</a> (migration ใหม่ + release) ·
+  คำสั่งทั้งหมดอยู่ใน <a href="commands.html">หน้าคำสั่ง</a> ·
+  ตัวเลขโควตาจากเอกสาร Cloudflare (Workers limits/pricing, D1 limits, Static Assets billing, Workers Logs) ณ พ.ย. 2026 — ตรวจซ้ำที่ developers.cloudflare.com ก่อนรุ่นถัดไป</p>
+</main>
+</body>
+</html>
