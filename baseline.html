@@ -65,7 +65,10 @@
   <div class="step"><div class="step-num">2</div><div class="step-body">
     <h3>คัดลอก 4 ไฟล์จาก <code>baseline-pack</code></h3>
     <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span><p>วาง spec อ้างอิงทับไฟล์เดิมในโปรเจกต์ <code>my-app</code> — ชื่อไฟล์และตำแหน่งต้องตรงกัน</p></div>
-    <p>เปิดโฟลเดอร์ <code>baseline-pack</code> ในไดรฟ์ร่วมของห้อง (ผู้สอนจะบอกตำแหน่ง) แล้วคัดลอกด้วย File Explorer:</p>
+    <p>ใน terminal (PowerShell หรือ Git Bash) ที่โฟลเดอร์ <code>my-app</code> วางคำสั่งนี้ — ดาวน์โหลดเฉลย 4 ไฟล์จากเว็บนี้มาทับไฟล์เดิมทันที:</p>
+<pre><code>curl.exe -fsSL --create-dirs -o SPEC.md https://werapango.github.io/vibe-code-course/baseline-pack/SPEC.md -o TASKS.md https://werapango.github.io/vibe-code-course/baseline-pack/TASKS.md -o docs/SRS.md https://werapango.github.io/vibe-code-course/baseline-pack/docs/SRS.md -o docs/DESIGN.md https://werapango.github.io/vibe-code-course/baseline-pack/docs/DESIGN.md</code></pre>
+    <p>ตรวจว่าได้ครบ: <code>git status</code> ต้องเห็นไฟล์ที่เปลี่ยน (modified) และ <code>npm run trace</code> ขึ้น <code>AC ทั้งหมด 33 · มีเคสทดสอบ 15 · ขาด 18 · อ้างผิด 0</code> (ขาด 18 เป็นเรื่องปกติ คือ AC ของระบบจองรถที่จะเขียนเคสทดสอบใน Lab 3–4)</p>
+    <p>ไฟล์ที่ได้ (ดูบนเว็บได้ที่ <a href="baseline-pack/SPEC.md">SPEC.md</a> · <a href="baseline-pack/TASKS.md">TASKS.md</a> · <a href="baseline-pack/docs/SRS.md">SRS.md</a> · <a href="baseline-pack/docs/DESIGN.md">DESIGN.md</a>):</p>
     <div class="table-wrap"><table>
       <thead><tr><th>จาก baseline-pack</th><th>ไปที่ my-app</th><th>คืออะไร</th></tr></thead>
       <tbody>
@@ -75,7 +78,7 @@
         <tr><td><code>TASKS.md</code></td><td><code>TASKS.md</code></td><td>รายการงานย่อย (WBS) ที่จะทำช่วงบ่าย</td></tr>
       </tbody>
     </table></div>
-    <p class="small">ไม่มีไดรฟ์ร่วม? ขอโฟลเดอร์สำรอง (checkpoint) ชื่อ <code>baseline</code> จากผู้สอน แล้วคัดลอก 4 ไฟล์เดียวกันจากในนั้น หรือคัดลอกจากเนื้อหาด้านล่างของหน้านี้</p>
+    <p class="small">คำสั่งไม่ทำงาน (เน็ตห้องบล็อก)? คัดลอก 4 ไฟล์เดียวกันจากโฟลเดอร์ <code>baseline-pack</code> ในไดรฟ์ร่วมของห้อง (ผู้สอนจะบอกตำแหน่ง) หรือเปิดลิงก์ด้านบน แล้ว Ctrl+A, Ctrl+C ไปวางทับทีละไฟล์</p>
   </div></div>
 
   <h2 id="compare">เทียบด้วย git diff + ตาราง 4 ช่อง (10 นาที)</h2>
@@ -96,8 +99,8 @@
     <div class="table-wrap"><table>
       <thead><tr><th>ช่อง</th><th>ความหมาย</th><th>คำถามนำ</th><th>ของฉัน (จดอย่างน้อยช่องละ 1)</th></tr></thead>
       <tbody>
-        <tr><td>✅ ตรงกัน</td><td>requirement ที่เราเขียนไว้ถูก</td><td>ข้อไหนที่เราได้มาจากการถามเจ้าของโจทย์?</td><td></td></tr>
-        <tr><td>❌ ตกหล่น</td><td>ฉบับอ้างอิงมี แต่ของเราไม่มี</td><td>กรณี “ต่อคิวพอดี” · “คนเกินที่นั่ง” · “ห้ามจองย้อนหลัง” · “เห็นแค่ช่วงเวลาไม่เห็นชื่อ” — เรามีครบไหม? ถ้าไม่ถามจะสร้างผิดอย่างไร?</td><td></td></tr>
+        <tr><td>✅ ตรงกัน</td><td>requirement ที่เราเขียนไว้ถูก</td><td>คำตอบ Q1–Q12 ข้อไหนที่ AI เขียนลง SRS ถูกต้อง?</td><td></td></tr>
+        <tr><td>❌ ตกหล่น</td><td>ฉบับอ้างอิงมี แต่ของเราไม่มี</td><td>ทุกคนได้คำตอบครบ 12 ข้อ แต่ SRS ที่ AI เขียนใส่ครบไหม? ดูกรณี “ต่อคิวพอดี” (Q1) · “คนเกินที่นั่ง” (Q5) · “ห้ามจองย้อนหลัง” (Q2) · “เห็นแค่ช่วงเวลาไม่เห็นชื่อ” (Q6) — ถ้าหล่นไป ระบบจะสร้างผิดอย่างไร?</td><td></td></tr>
         <tr><td>⚠ แต่งเพิ่ม</td><td>อยู่ในของเรา แต่ไม่มีที่มาในโจทย์หรือคำตอบ</td><td>AI เพิ่มอะไรเอง? (แจ้งเตือน LINE, รายงานสถิติ, OTP…) เราสังเกตเห็นไหมว่าข้อนั้นไม่มีที่มา?</td><td></td></tr>
         <tr><td>💡 ดีกว่า</td><td>ไอเดียดีที่ฉบับอ้างอิงไม่มี</td><td>มีอะไรที่เจ้าของโจทย์น่าจะอยากได้? ให้จดไว้ใน backlog เพื่อเสนอในรอบหน้า</td><td></td></tr>
       </tbody>
