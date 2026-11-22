@@ -107,7 +107,11 @@ nav.steps {
 .course-nav a { display: block; padding: 3px 24px 3px 32px; color: var(--ink-2); }
 .course-nav a[aria-current="page"] { color: var(--brand); font-weight: 600; background: #e8f0fe; }
 .sidebar-overlay { position: fixed; inset: 0; background: rgba(32, 33, 36, .4); z-index: 89; display: none; }
-body.sidebar-open .sidebar-overlay { display: block; }
+/* จอกว้าง: ปุ่ม ☰ ซ่อน/แสดงแถบขั้นตอน (ไม่มีพื้นหลังมืด) */
+@media (min-width: 921px) {
+  body.drawer-hidden nav.steps { display: none; }
+  body.drawer-hidden #controls { left: 0; }
+}
 
 /* ───── การ์ดขั้นตอน ───── */
 section.cpage { display: none; }
@@ -222,6 +226,7 @@ kbd { font-family: var(--mono); font-size: .85em; padding: 1px 6px; border: 1px 
     height: 100vh; height: 100dvh; transition: left .25s; z-index: 95;
   }
   body.sidebar-open nav.steps { left: 0; box-shadow: 4px 0 20px rgba(0, 0, 0, .2); }
+  body.sidebar-open .sidebar-overlay { display: block; }
   main { padding: 16px 12px 120px; }
   section.cpage.active { padding: 16px; }
   section.cpage > h2:first-of-type, h1 { font-size: 24px; }
@@ -239,3 +244,9 @@ kbd { font-family: var(--mono); font-size: .85em; padding: 1px 6px; border: 1px 
   pre { white-space: pre-wrap; }
   h2 { break-after: avoid; }
 }
+
+/* ป้ายบอกว่ากำลังดูเว็บไหน */
+.site-badge { font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 12px; white-space: nowrap; }
+.site-badge.instructor { background: #fce8e6; color: #c5221f; }
+.site-badge.student { background: #e8f0fe; color: #185abc; }
+@media (max-width: 920px) { .site-badge { display: none; } }

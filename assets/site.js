@@ -3,6 +3,9 @@
 // เนื้อหาใน <main> ถูกแบ่งเป็น "ขั้นตอน" ตามหัวข้อ <h2> (ส่วนก่อน <h2> แรก = ขั้นตอนภาพรวม)
 
 const COURSE = "Vibe Coding × SDLC";
+// "instructor" = เว็บผู้สอน (docs/ ในเครื่อง) · build-public.py เปลี่ยนเป็น "student"
+const SITE = "student";
+const HOME = "index.html";
 
 const PAGES = [
   { group: "เริ่มต้น", items: [
@@ -13,6 +16,7 @@ const PAGES = [
   { group: "เช้า", items: [
     ["theory-1-sdlc.html", "ทฤษฎี 1 · Vibe coding กับ SDLC"],
     ["cloudflare.html", "Cloudflare ที่ใช้วันนี้"],
+    ["zcode.html", "ZCode เบื้องต้น"],
     ["lab-1.html", "Lab 1 · Warm-up + Starter"],
     ["theory-2-requirements.html", "ทฤษฎี 2 · Requirements & Design"],
     ["lab-2.html", "Lab 2 · SRS + Design"],
@@ -26,7 +30,6 @@ const PAGES = [
     ["lab-4.html", "Lab 4 · ตรวจรับ"],
   ]},
   { group: "อ้างอิง", items: [
-    ["lab-install.html", "ติดตั้งห้อง Lab"],
     ["templates.html", "Templates"],
     ["commands.html", "คำสั่ง"],
   ]},
@@ -35,11 +38,11 @@ const PAGES = [
 // ลำดับการอ่าน (ปุ่มถัดไปข้ามหน้า) = ตามตารางสอนจริง
 const READING_ORDER = [
   "index.html", "setup.html", "schedule.html",
-  "theory-1-sdlc.html", "cloudflare.html", "lab-1.html",
+  "theory-1-sdlc.html", "cloudflare.html", "zcode.html", "lab-1.html",
   "theory-2-requirements.html", "lab-2.html", "brief.html",
   "baseline.html", "theory-3-agent-skill.html", "lab-3.html",
   "theory-4-verify-release.html", "lab-4.html",
-  "lab-install.html", "templates.html", "commands.html",
+  "templates.html", "commands.html",
 ];
 
 const titleOf = (file) => {
@@ -87,8 +90,9 @@ function buildShell(current, sections) {
     <button class="menu-btn" id="btnToc" aria-label="เปิดรายการขั้นตอน">
       <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
     </button>
-    <h3 class="title"><a href="index.html" class="course">${COURSE}</a><span class="course"> · </span>${esc(titleOf(current))}</h3>
+    <h3 class="title"><a href="${HOME}" class="course">${COURSE}</a><span class="course"> · </span>${esc(titleOf(current))}</h3>
     <div class="spacer"></div>
+    <span class="site-badge ${SITE}">${SITE === "instructor" ? "🔒 เว็บผู้สอน" : "🎓 สำหรับผู้เรียน"}</span>
     <div class="pgnum" id="pgnum"></div>`;
 
   const steps = sections.map((s, i) =>
@@ -205,7 +209,13 @@ document.addEventListener("DOMContentLoaded", () => {
     show(parseInt(a.dataset.page, 10));
     document.body.classList.remove("sidebar-open");
   }));
-  document.getElementById("btnToc").addEventListener("click", () => document.body.classList.toggle("sidebar-open"));
+  // ปุ่ม ☰: จอแคบ = เลื่อนแถบขั้นตอนออกมาทับเนื้อหา · จอกว้าง = ซ่อน/แสดงแถบขั้นตอน
+  const narrow = matchMedia("(max-width: 920px)");
+  document.getElementById("btnToc").addEventListener("click", () => {
+    if (narrow.matches) document.body.classList.toggle("sidebar-open");
+    else document.body.classList.toggle("drawer-hidden");
+  });
+  narrow.addEventListener?.("change", () => document.body.classList.remove("sidebar-open"));
   overlay.addEventListener("click", () => document.body.classList.remove("sidebar-open"));
 
   // ลิงก์ในหน้าเดียวกัน (#x หรือ หน้านี้.html#x) → สลับขั้นตอน

@@ -6,8 +6,8 @@
   <title>Lab 1 — Vibe warm-up + Starter สู่ production</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap">
-  <link rel="stylesheet" href="assets/style.css">
-  <script src="assets/site.js" defer></script>
+  <link rel="stylesheet" href="assets/style.css?v=2439dd60">
+  <script src="assets/site.js?v=2439dd60" defer></script>
 </head>
 <body data-page="lab-1.html">
 <main>
@@ -42,10 +42,19 @@
     </ol>
   </div>
 
+  <h3 id="login">ก่อนเริ่ม: ตรวจว่าเครื่องนี้ล็อกอิน Cloudflare เป็นบัญชีของคุณ</h3>
+  <p>ทั้งหน้านี้พิมพ์คำสั่งใน <strong>Git Bash</strong> บนเครื่อง Lab — เปิด Git Bash แล้วรัน:</p>
+<pre><code>npx wrangler whoami</code></pre>
+  <ul>
+    <li><strong>เห็นอีเมลของคุณ</strong> → พร้อมแล้ว ไปต่อ Lab 1a</li>
+    <li><strong>ขึ้นว่ายังไม่ได้ล็อกอิน</strong> (not authenticated) → รันคำสั่งล็อกอิน เบราว์เซอร์จะเปิดหน้า Cloudflare ให้ตรวจว่าเป็นอีเมลของคุณ แล้วกด <strong>Allow</strong>:
+<pre><code>npx wrangler login</code></pre></li>
+    <li><strong>เห็นอีเมลคนอื่น</strong> → ห้าม deploy · รัน <code>npx wrangler logout</code> แล้ว <code>npx wrangler login</code> ใหม่</li>
+  </ul>
   <div class="box warn">
-    <span class="label">⚠ ก่อนเริ่ม</span>
-    <p>ผ่านเช็กลิสต์ <a href="setup.html#morning">เตรียมเครื่องและบัญชี (PART C)</a> แล้ว: ZCode ล็อกอินเป็นบัญชีของคุณ และ <code>npx wrangler whoami</code> แสดง<strong>อีเมลของคุณ</strong>
-    · คำสั่งทั้งหน้านี้พิมพ์ใน <strong>Git Bash</strong> บนเครื่อง Lab · เตรียมชื่อ subdomain <code>workers.dev</code> ไว้ 1 ชื่อ (ภาษาอังกฤษตัวเล็ก)</p>
+    <span class="label">⚠ เช็กลิสต์ก่อนเริ่ม</span>
+    <p>ZCode ล็อกอินเป็นบัญชีของคุณ (<a href="zcode.html">ZCode เบื้องต้น</a>) · <code>npx wrangler whoami</code> แสดง<strong>อีเมลของคุณ</strong>
+    · เตรียมชื่อ subdomain <code>workers.dev</code> ไว้ 1 ชื่อ (ภาษาอังกฤษตัวเล็ก) — รายละเอียดเต็มอยู่ใน <a href="setup.html#morning">setup · PART C</a></p>
   </div>
 
   <!-- ═════════════════ LAB 1a ═════════════════ -->
@@ -58,7 +67,7 @@
       <p>agent ทำงานในโฟลเดอร์ที่เราเปิดให้เท่านั้น — สร้าง “บ้าน” เล็ก ๆ ให้มัน และแยกโฟลเดอร์ <code>site</code> ไว้เก็บไฟล์ที่จะขึ้นเว็บ</p>
     </div>
 <pre><code>mkdir -p hello-vibe/site && cd hello-vibe</code></pre>
-    <p>เปิด <strong>ZCode</strong> ในโฟลเดอร์ <code>hello-vibe</code> แล้วเลือกโมเดล <strong>Flash</strong></p>
+    <p>เปิด <strong>ZCode</strong> ในโฟลเดอร์ <code>hello-vibe</code> แล้วเลือกโมเดล <strong>Flash</strong> · ตรวจว่าโหมดเป็น <strong>Ask before changes</strong> (ยังไม่เคยใช้ ZCode? อ่าน <a href="zcode.html">ZCode เบื้องต้น</a> ก่อน — หน้าจอ โหมด และควรกดอะไรเมื่อมันขออนุญาต)</p>
   </div></div>
 
   <div class="step"><div class="step-num">2</div><div class="step-body">
