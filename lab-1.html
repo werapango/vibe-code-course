@@ -265,7 +265,8 @@
       <p>ดู log (บันทึกการทำงานของแอป) เพื่อรู้ว่าเกิดอะไรขึ้นบน production โดยไม่ต้องเดา — ความสามารถนี้เรียกว่า observability</p>
     </div>
 <pre><code>npx wrangler tail</code></pre>
-    <p>รันใน Git Bash แล้วรีเฟรชหน้าเว็บจากมือถือ ถ้าเห็นบรรทัดคำขอ (request) ขึ้นมาใน Git Bash แปลว่าสำเร็จ จากนั้นกด <kbd>Ctrl</kbd>+<kbd>C</kbd> เพื่อหยุด
+    <p>รันใน Git Bash แล้วจะขึ้น <code>Connected to my-app, waiting for logs...</code> และหยุดนิ่งอยู่แบบนั้น <strong>ไม่ได้ค้าง</strong> คำสั่งนี้กำลังรอฟังคำขอที่เข้ามา
+    ให้เปิด URL ของแอปในเบราว์เซอร์หรือบนมือถือแล้วรีเฟรช ถ้าเห็นบรรทัดคำขอ (request) เช่น <code>GET https://my-app…/api/health - Ok</code> ขึ้นมาใน Git Bash แปลว่าสำเร็จ จากนั้นกด <kbd>Ctrl</kbd>+<kbd>C</kbd> เพื่อหยุด
     · (ในเว็บ Cloudflare dashboard ไปที่ Workers &amp; Pages → Worker ของคุณ จะดูสถิติการใช้งาน (metrics) และเวอร์ชัน (versions) ได้ด้วย)</p>
   </div></div>
 
