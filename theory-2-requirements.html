@@ -16,7 +16,7 @@
   <p class="lede">spec (เอกสารที่บอกว่าระบบต้องทำอะไร) ที่ดีไม่ใช่เอกสารที่ยาว แต่เป็นเอกสารที่<strong>ทุกข้อตรวจได้</strong>ว่าทำแล้วหรือยัง และ<strong>ทุกข้อบอกได้ว่ามาจากใคร</strong>
   หน้านี้รวมทฤษฎีทั้งหมดของ Requirements และ Design ไว้อ่านเพิ่ม ในห้องเรียนผู้สอนเล่าแค่ภาพรวม 10 นาที แล้วทุกเรื่องจะได้เรียน<strong>ตรงจังหวะที่ใช้จริง</strong>ระหว่าง <a href="lab-2.html">Lab 2</a></p>
   <div class="box why"><span class="label">🗺 ภาพรวม 10 นาทีในห้อง</span>
-    <p>เล่าแค่ 3 เรื่อง: (1) ทำไมต้องมี spec — AI เขียนโค้ดได้เร็ว แต่ถ้าบอกไม่ชัดก็ได้ของผิดเร็วเหมือนกัน (2) spec ที่ดีคือทุกข้อ<strong>ตรวจได้</strong>และ<strong>บอกได้ว่ามาจากไหน</strong> (3) ใน Lab 2 AI เป็นคนวิเคราะห์และเขียนเอกสารให้ คุณทำแค่ถามเจ้าของโจทย์และตรวจ: ส่งโจทย์ให้ AI → ถามเจ้าของโจทย์ → สร้าง SRS → ตรวจ → สร้างเกณฑ์ตรวจรับ → สร้าง design · หัวข้อด้านล่างคือคำอธิบายเพิ่มที่ Lab 2 ลิงก์มา</p>
+    <p>เล่าแค่ 3 เรื่อง: (1) ทำไมต้องมี spec — AI เขียนโค้ดได้เร็ว แต่ถ้าบอกไม่ชัดก็ได้ของผิดเร็วเหมือนกัน (2) spec ที่ดีคือทุกข้อ<strong>ตรวจได้</strong>และ<strong>บอกได้ว่ามาจากไหน</strong> (3) ใน Lab 2 AI เป็นคนวิเคราะห์และเขียนเอกสารให้ คุณทำแค่ถามเจ้าของโจทย์และตรวจ: ส่งโจทย์ให้ AI → ฟังคำตอบเจ้าของโจทย์ → สร้าง SRS → ตรวจ → สร้าง design → สร้าง SPEC (เกณฑ์ตรวจรับ) → แตกงานเป็น TASKS · <strong>ช่วงเช้าวางแผนครบทั้งหมด ช่วงบ่ายลงมือทำตาม task</strong> · หัวข้อด้านล่างคือคำอธิบายเพิ่มที่ Lab 2 ลิงก์มา</p>
   </div>
 
   <div class="meta">
@@ -36,6 +36,7 @@
       <li><a href="#vv">Verification กับ Validation · วิธีตรวจ 4 แบบ</a></li>
       <li><a href="#moscow">จัดลำดับด้วย MoSCoW และตามรอย (traceability)</a></li>
       <li><a href="#design">Design: ข้อจำกัด → ภาพรวมระบบ → ADR → ข้อมูล → API</a></li>
+      <li><a href="#wbs">WBS: จาก SPEC สู่ TASKS (วางแผนงานให้ agent)</a></li>
       <li><a href="#discuss">คำถามชวนคุย</a></li>
       <li><a href="#lab">เชื่อมกับ Lab</a></li>
     </ol>
@@ -212,6 +213,32 @@ Actor: พนักงาน
     <p><code>docs/SRS.md</code> และ <code>docs/DESIGN.md</code> คือฉบับเต็มสำหรับคนอ่าน ส่วน <code>SPEC.md</code> คือฉบับย่อสำหรับ agent (มีแค่ AC + data model + API)
     agent ต้องอ่าน SPEC.md ทุกครั้งที่เริ่มงานย่อย ยิ่งสั้นและชัดก็ยิ่งประหยัด token (หน่วยนับข้อความที่ AI อ่าน/เขียน ซึ่งกินโควตา)</p>
   </div>
+
+  <h2 id="wbs">WBS: จาก SPEC สู่ TASKS (วางแผนงานให้ agent)</h2>
+  <p><strong>WBS</strong> (Work Breakdown Structure — การแตกโครงสร้างงาน) คือการแบ่งงานเป็นชั้น ๆ จาก <strong>Epic</strong> (งานก้อนใหญ่ระดับฟีเจอร์) ลงไปเป็น <strong>Task</strong> (งานย่อย) จนแต่ละชิ้นเล็กพอให้ทำและตรวจได้ทีละชิ้น ตัวอย่างข้างล่างมาจาก <code>TASKS.md</code> ของ baseline
+  (US = user story หรือเรื่องที่ผู้ใช้ต้องการ, AC = เกณฑ์ตรวจรับที่ใช้ตัดสินว่าทำถูก, 👤 = ขั้นที่คนต้องทำเอง, depends = ต้องทำ task นั้นให้เสร็จก่อน):</p>
+  <pre data-nocopy><code>## Epic 1: รถส่วนกลาง (US-1)
+- [ ] T1.1 migration 0002_cars.sql + API src/routes/cars.ts + เคส smoke — AC-1.1 – AC-1.6
+- [ ] 👤 migrations apply --local → npm run smoke → npm run trace → commit
+- [ ] T1.2 หน้าเว็บ "รถ" ใน public/ — depends: T1.1
+
+## Epic 2: การจอง (US-2, US-3, US-4)
+- [ ] T2.1 migration 0003_bookings.sql + POST /api/bookings + smoke ตามตารางตัวอย่าง #1–#8
+- [ ] T2.2 GET การจองของฉัน + DELETE ของฉัน — depends: T2.1
+- [ ] T2.3 GET /api/cars/:id/schedule — depends: T2.1
+- [ ] T2.4 หน้าเว็บจองรถ + การจองของฉัน — depends: T2.2, T2.3</code></pre>
+  <div class="table-wrap"><table>
+    <thead><tr><th>หลัก</th><th>ความหมาย</th><th>ในหลักสูตร</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1 task ต่อ 1 prompt</strong></td><td>แก้ 1–3 ไฟล์ จบในรอบเดียว</td><td>สั่ง <code>ทำ task T1.1 ใน TASKS.md</code> — prompt สั้น เพราะรายละเอียดอยู่ใน SPEC</td></tr>
+      <tr><td><strong>กฎ 100%</strong></td><td>task ทั้งหมดรวมกันต้องครอบคลุมขอบเขตงานพอดี ไม่ขาดไม่เกิน</td><td>AC ทุกข้อของ Release 1 ต้องมี task ที่รับผิดชอบ และต้องไม่มี task ไหนไปทำ FR (ความต้องการด้านฟังก์ชัน) ที่ SPEC ระบุว่า “ยังไม่ทำ”</td></tr>
+      <tr><td><strong>ตรวจได้</strong></td><td>ทุก task ผูกกับ AC</td><td>ทำ task เสร็จแล้วรัน smoke (สคริปต์ที่เรียก API จริงเทียบกับ AC) และ trace (สคริปต์เช็กว่าทุก AC มีเคสทดสอบ) ก็รู้ผลทันที</td></tr>
+      <tr><td><strong>รู้ลำดับ</strong></td><td>ระบุว่าต้องทำ task ไหนก่อน (depends)</td><td>ต้องสร้างตาราง cars ก่อนตาราง bookings และทำ API ก่อนทำหน้าเว็บ</td></tr>
+      <tr><td><strong>มีขั้นที่คนทำเอง</strong></td><td>ขั้นที่มี 👤 คือคนทำเองระหว่าง task</td><td>รัน migration (ไฟล์ SQL ที่สร้าง/แก้ตาราง), smoke, trace, อ่าน <code>git diff</code> (ดูว่าโค้ดเปลี่ยนตรงไหน) และ commit — agent ไม่ทำแทน</td></tr>
+    </tbody>
+  </table></div>
+
+  <p class="small">ใน Lab 2 ขั้น 7 คุณจะให้ AI แตกงานแบบนี้จาก SPEC ของคุณ แล้วตอนบ่ายทุกคนจะใช้ TASKS.md ฉบับ baseline ชุดเดียวกันสั่ง agent</p>
 
   <h2 id="discuss">คำถามชวนคุย</h2>
   <ol>

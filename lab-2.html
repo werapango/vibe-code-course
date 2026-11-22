@@ -30,15 +30,15 @@
   <p class="eyebrow">Lab 2 · 11:00–12:00 · 60 นาที</p>
   <h1>ให้ AI ช่วยเขียน SRS และ Design</h1>
   <p class="lede">ชั่วโมงนี้ <strong>AI เป็นคนวิเคราะห์และเขียน</strong> คุณทำแค่ 3 อย่าง: <strong>วาง prompt</strong> · <strong>ถามเจ้าของโจทย์</strong> · <strong>ตรวจตามเช็กลิสต์สั้น ๆ</strong>
-  ผลลัพธ์คือเอกสาร 3 ไฟล์ในโปรเจกต์ของคุณ: <code>docs/SRS.md</code> (ความต้องการของระบบ), <code>SPEC.md</code> (เกณฑ์ตรวจรับ) และ <code>docs/DESIGN.md</code> (แบบของระบบ)</p>
+  ผลลัพธ์คือเอกสาร 4 ไฟล์ในโปรเจกต์ของคุณ: <code>docs/SRS.md</code> (ความต้องการของระบบ), <code>docs/DESIGN.md</code> (แบบของระบบ), <code>SPEC.md</code> (เกณฑ์ตรวจรับ) และ <code>TASKS.md</code> (รายการงานที่จะสั่ง agent)</p>
 
   <div class="meta">
-    <span class="chip">⏱ 60 นาที (ทำจริงประมาณ 40 นาที เหลือเวลาถาม)</span>
+    <span class="chip">⏱ 60 นาที (ทำจริงประมาณ 50 นาที เหลือเวลาถาม)</span>
     <span class="chip">🤖 Gemini / ChatGPT (ฟรี) · ไม่ใช้โควต้า ZCode</span>
   </div>
 
   <div class="journey">
-    <span>1 ส่งโจทย์ให้ AI</span><span>2 ฟังคำตอบเจ้าของโจทย์</span><span>3 สร้าง SRS</span><span>4 ตรวจ</span><span>5 สร้าง Design</span><span>6 สร้าง SPEC (เกณฑ์ตรวจรับ)</span><span>7 commit</span>
+    <span>1 ส่งโจทย์ให้ AI</span><span>2 ฟังคำตอบเจ้าของโจทย์</span><span>3 สร้าง SRS</span><span>4 ตรวจ</span><span>5 สร้าง Design</span><span>6 สร้าง SPEC (เกณฑ์ตรวจรับ)</span><span>7 แตกงาน (TASKS)</span><span>8 commit</span>
   </div>
 
   <div class="box warn">
@@ -266,7 +266,7 @@ Q7: [เรื่องที่ถาม] — [คำตอบ]
   AI จะเก็บส่วนของ starter ไว้ แล้วเติมส่วนของระบบจองรถให้ — ใช้ได้แม้เปิดแชตใหม่ เพราะ AI อ่านจากไฟล์จริง ไม่ได้จำจากแชต</p>
   <p>เกณฑ์ตรวจรับ (acceptance criteria) บอกว่า “แบบไหนถือว่าทำถูก” ตอนบ่ายจะกลายเป็นเคสทดสอบ และเป็นไฟล์ที่ agent อ่านทุกครั้งที่เขียนโค้ด</p>
   <div class="box theory"><span class="label">🤝 SPEC ที่ได้ในขั้นนี้ใช้ถึงแค่ตอนเที่ยง</span>
-    <p>ตอนบ่ายทุกคนจะใช้ <strong>SPEC.md ฉบับกลาง (เฉลย)</strong> ชุดเดียวกัน พร้อม SRS, DESIGN และ <code>TASKS.md</code> — ดาวน์โหลดตอน 13:00 แล้วใช้ <code>git diff</code> เทียบกับของคุณ
+    <p>ตอนบ่ายทุกคนจะใช้ <strong>SPEC.md ฉบับกลาง (เฉลย)</strong> ชุดเดียวกัน พร้อม SRS, DESIGN และ TASKS — ดาวน์โหลดตอน 13:00 แล้วใช้ <code>git diff</code> เทียบกับของคุณ
     ขั้นนี้จึงเป็นการฝึกให้ AI เขียน SPEC ไม่ต้องสมบูรณ์ <a href="#central">ดูว่าตอนบ่ายใช้ไฟล์ไหนทำอะไร</a></p>
   </div>
   <p class="cue">📋 กด <strong>คัดลอก</strong> → วางในแชต (<strong>ยังไม่กด Enter</strong>) → วางไฟล์ 3 ไฟล์ต่อท้ายตามขั้นตอนด้านล่าง → กด <kbd>Enter</kbd></p>
@@ -316,19 +316,57 @@ Q7: [เรื่องที่ถาม] — [คำตอบ]
     ที่ใช้ <code>npm run trace</code> ตรวจ เพราะเป็นวิธีที่เครื่องตรวจให้ได้ทันทีว่ารหัส AC ในเอกสารตรงกับเคสทดสอบ ไม่ต้องอ่านเองทีละบรรทัด <a href="theory-2-requirements.html#ac">อ่านเพิ่มในทฤษฎี 2</a></p>
   </details>
 
-  <h2 id="s7">7 · บันทึกงานลง Git (3 นาที)</h2>
-  <div class="you"><b class="t">👤 ก่อน commit เช็กว่ามีครบ 3 ไฟล์</b>
-    <p>ไม่ต้องขอไฟล์ทั้งหมดจาก AI ใหม่ แต่ละไฟล์วางไปแล้วในขั้นของมัน: <code>docs/SRS.md</code> (ขั้น 3–4) · <code>docs/DESIGN.md</code> (ขั้น 5) · <code>SPEC.md</code> (ขั้น 6)
+  <h2 id="s7">7 · ให้ AI แตกงานเป็น TASKS — WBS (5 นาที)</h2>
+  <p>SPEC บอกว่า “ต้องได้อะไร” แต่ agent ทำทีเดียวทั้งระบบไม่ได้ดี ขั้นนี้ให้ AI แตกงานเป็นชิ้นเล็ก ๆ ที่สั่ง agent ได้ทีละชิ้น เรียกว่า <strong>WBS</strong> (Work Breakdown Structure)
+  — ตอนบ่ายจะสั่ง agent ว่า <code>ทำ task T1.1 ใน TASKS.md</code> ทีละข้อ</p>
+  <p class="cue">📋 กด <strong>คัดลอก</strong> → วางในแชตเดิม → กด <kbd>Enter</kbd></p>
+<pre><code>จาก SPEC.md และ DESIGN ที่เราทำในแชตนี้ แตกงานเป็นไฟล์ TASKS.md (WBS) ส่งทั้งไฟล์ใน code block เดียว ใช้รูปแบบนี้:
+
+# TASKS — Work Breakdown Structure (WBS)
+&gt; 1 task = 1 prompt ให้ agent · แก้ 1–3 ไฟล์ · ตรวจได้ด้วย AC ใน SPEC.md
+&gt; สั่ง agent ทีละ task: `ทำ task T1.1 ใน TASKS.md`
+
+## Epic 0: Starter (มีให้แล้ว)
+- [x] **T0.1** โครง Worker + Hono + หน้าเว็บ + `/api/health` — AC-0.1
+- [x] **T0.2** ผู้ใช้ + เข้าสู่ระบบ + จัดการผู้ใช้ (admin) — AC-A1.1 – AC-A4.6
+- [x] **T0.3** smoke test + traceability check
+
+## Epic 1: [ชื่อ] (US-…)
+- [ ] **T1.1** [ทำอะไร] — ไฟล์: [ ] — depends: [ ] — AC: [ ]
+- [ ] 👤 migrations apply --local → npm run smoke → npm run trace → commit
+
+## 👤 งานของคน
+- [ ] …
+
+กติกา:
+1) คง Epic 0 ไว้เหมือนเดิม · 1 Epic ต่อ 1 เรื่องใหญ่ (เช่น รถส่วนกลาง, การจอง)
+2) แต่ละ task แก้ไม่เกิน 3 ไฟล์ บอกชื่อไฟล์ (migration, src/routes/…, public/…) ทำ API ก่อนหน้าเว็บ
+3) ทุก task อ้าง AC จาก SPEC.md · AC ทุกข้อของส่วนโจทย์ต้องมี task รับ (ไม่ขาดไม่เกิน)
+4) บอก depends ว่าต้องทำ task ไหนก่อน · หลัง task ที่มี migration ใส่บรรทัด 👤 ให้คนรันคำสั่งเอง
+5) งานที่คนต้องทำ (รัน migration, smoke, trace, deploy, ตรวจรับ) อยู่ใน 👤 เท่านั้น ไม่ใช่งานของ agent</code></pre>
+  <div class="you"><b class="t">👤 คุณทำ</b>
+    <ol>
+      <li>Copy คำตอบ แล้ววางทับทั้งไฟล์ <code>TASKS.md</code> (อยู่นอกโฟลเดอร์ docs ข้าง <code>SPEC.md</code>): <kbd>Ctrl</kbd>+<kbd>A</kbd>, <kbd>Ctrl</kbd>+<kbd>V</kbd>, <kbd>Ctrl</kbd>+<kbd>S</kbd></li>
+      <li>ดู 3 เรื่อง: (1) ทุก task มี <code>AC:</code> (2) task หน้าเว็บมาหลัง task API (3) มีบรรทัด 👤 หลัง task ที่สร้างตาราง</li>
+    </ol>
+  </div>
+  <details class="why"><summary>📖 ทำไมต้องทำขั้นนี้</summary>
+    <p>agent ทำงานได้ดีเมื่อ 1 prompt = 1 งานเล็กที่ตรวจได้ ถ้าสั่ง “ทำระบบจองรถทั้งหมด” จะได้โค้ดก้อนใหญ่ที่ตรวจยาก WBS ช่วยให้รู้ลำดับ (depends) รู้ว่าแต่ละชิ้นตรวจด้วย AC ข้อไหน และแยกให้ชัดว่าขั้นไหนคนต้องทำเอง (👤) <a href="theory-2-requirements.html#wbs">อ่านเพิ่มในทฤษฎี 2</a></p>
+  </details>
+
+  <h2 id="s8">8 · บันทึกงานลง Git (3 นาที)</h2>
+  <div class="you"><b class="t">👤 ก่อน commit เช็กว่ามีครบ 4 ไฟล์</b>
+    <p>ไม่ต้องขอไฟล์ทั้งหมดจาก AI ใหม่ แต่ละไฟล์วางไปแล้วในขั้นของมัน: <code>docs/SRS.md</code> (ขั้น 3–4) · <code>docs/DESIGN.md</code> (ขั้น 5) · <code>SPEC.md</code> (ขั้น 6) · <code>TASKS.md</code> (ขั้น 7)
     — เปิดแต่ละไฟล์ใน VS Code ดูว่ามีเนื้อหาของระบบจองรถแล้ว ไม่ใช่แม่แบบที่มีแต่ <code>[ ]</code></p>
     <p>ถ้าไฟล์ไหนยังไม่ได้วาง ให้ขอจาก AI ใหม่ในแชตเดิม (เปลี่ยนชื่อไฟล์ให้ตรง) แล้ววางตามวิธีของขั้นนั้น:</p>
   </div>
 <pre><code>ส่งไฟล์ docs/SRS.md ฉบับล่าสุดทั้งไฟล์อีกครั้ง ใน code block เดียว</code></pre>
   <p>เมื่อครบแล้ว ใน Git Bash (โฟลเดอร์ <code>my-app</code>) พิมพ์ทีละบรรทัด:</p>
-<pre><code>git add docs/SRS.md docs/DESIGN.md SPEC.md</code></pre>
+<pre><code>git add docs/SRS.md docs/DESIGN.md SPEC.md TASKS.md</code></pre>
 <pre><code>git commit -m "lab 2: my SRS + design draft"</code></pre>
   <div class="box check"><span class="label">✅ ผ่าน Lab 2 เมื่อ</span>
     <ul>
-      <li>มี 3 ไฟล์: <code>docs/SRS.md</code> (หัวข้อ 1–9 ครบ) · <code>docs/DESIGN.md</code> · <code>SPEC.md</code> (มีเกณฑ์ตรวจรับใต้ “ส่วนของโจทย์” และ <code>npm run trace</code> ขึ้น อ้างผิด 0)</li>
+      <li>มี 4 ไฟล์: <code>docs/SRS.md</code> (หัวข้อ 1–9 ครบ) · <code>docs/DESIGN.md</code> · <code>TASKS.md</code> (ทุก task มี AC) · <code>SPEC.md</code> (มีเกณฑ์ตรวจรับใต้ “ส่วนของโจทย์” และ <code>npm run trace</code> ขึ้น อ้างผิด 0)</li>
       <li>commit แล้ว (ตรวจด้วย <code>git log --oneline</code> ต้องเห็นบรรทัด “lab 2”)</li>
     </ul>
   </div>
@@ -339,7 +377,7 @@ Q7: [เรื่องที่ถาม] — [คำตอบ]
       <thead><tr><th>ไฟล์กลาง</th><th>ตอนเช้า</th><th>ตอนบ่ายใช้ทำอะไร</th></tr></thead>
       <tbody>
         <tr><td><code>SPEC.md</code></td><td>ขั้น 6 (ของคุณ)</td><td>agent อ่านทุกครั้งที่เขียนโค้ด · รหัส AC กลายเป็นชื่อเคสทดสอบ · <code>npm run trace</code> ตรวจว่าครบ (Lab 3–4)</td></tr>
-        <tr><td><code>TASKS.md</code></td><td><strong>ใหม่</strong> ยังไม่ได้ทำ</td><td>รายการงานย่อย (WBS) T1.1–T2.4 · สั่ง agent ทีละข้อว่า <code>ทำ task T1.1 ใน TASKS.md</code> (ทฤษฎี 3 + Lab 3)</td></tr>
+        <tr><td><code>TASKS.md</code></td><td>ขั้น 7 (ของคุณ)</td><td>รายการงานย่อย (WBS) T1.1–T2.4 · สั่ง agent ทีละข้อว่า <code>ทำ task T1.1 ใน TASKS.md</code> (ทฤษฎี 3 + Lab 3)</td></tr>
         <tr><td><code>docs/SRS.md</code></td><td>ขั้น 3–4 (ของคุณ)</td><td>ที่มาของทุก AC (FR-xx, Q1–Q12) · ใช้ตรวจรับว่าทำครบตามความต้องการ (Lab 4)</td></tr>
         <tr><td><code>docs/DESIGN.md</code></td><td>ขั้น 5 (ของคุณ)</td><td>ตาราง Data Model และ API ที่ agent ต้องสร้างให้ตรง · ADR บอกเหตุผลที่เลือก (Lab 3)</td></tr>
       </tbody>
@@ -421,6 +459,7 @@ Q7: [เรื่องที่ถาม] — [คำตอบ]
       <tr><td>4</td><td>ตรวจเอกสาร (verification ของ spec)</td><td>ตรวจก่อนสร้าง ถูกกว่าไปแก้หลังเขียนโค้ด</td></tr>
       <tr><td>5</td><td>ออกแบบ (design)</td><td>ข้อจำกัดจริงกำหนดโครงสร้าง · บันทึกเหตุผลเป็น ADR</td></tr>
       <tr><td>6</td><td>เกณฑ์ตรวจรับ (acceptance criteria)</td><td>ตกลงล่วงหน้าว่าแบบไหน “ทำถูก” ตอนบ่ายกลายเป็นเคสทดสอบ</td></tr>
+      <tr><td>7</td><td>วางแผนงาน (WBS)</td><td>1 task = 1 prompt · ทุก task ผูก AC · รู้ลำดับ · แยกงานของคน (👤)</td></tr>
     </tbody>
   </table></div>
 </main>

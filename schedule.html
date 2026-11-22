@@ -73,7 +73,7 @@
       <tr><td>10:50–11:00<br><span class="small">10 นาที</span></td><td>📖 <a href="theory-2-requirements.html">ทฤษฎี 2</a> (ภาพรวม)</td>
         <td>ทำไมต้องมี spec · spec ที่ดีต้องตรวจได้และมีที่มา · เส้นทางของ Lab 2 — ทฤษฎีแต่ละเรื่อง (stakeholder (ผู้เกี่ยวข้อง) · elicitation (การถามหาความต้องการ) · use case · user story + AC (เกณฑ์ตรวจรับ) · FR/NFR ที่วัดได้ · verification กับ validation · MoSCoW (การจัดลำดับความสำคัญ) · traceability (การตามรอย requirement ถึง test) · ADR (บันทึกการตัดสินใจออกแบบ) · data model) สอนระหว่าง Lab 2</td><td>—</td></tr>
       <tr><td>11:00–12:00<br><span class="small">60 นาที</span></td><td>🔧 <a href="lab-2.html">Lab 2</a> (ให้ AI ช่วยเขียน)</td>
-        <td>ส่ง <a href="brief.html">โจทย์</a> ให้ Gemini/ChatGPT สรุปและตั้งคำถาม → <strong>ถามผู้สอน (เจ้าของโจทย์)</strong> → ให้ AI สร้าง SRS ทั้งไฟล์ → ตรวจตามเช็กลิสต์ → สร้างเกณฑ์ตรวจรับและ DESIGN → commit</td>
+        <td>ส่ง <a href="brief.html">โจทย์</a> ให้ Gemini/ChatGPT สรุปและตั้งคำถาม → ล็อกคำถาม Q1–Q12 → <strong>ฟังคำตอบเจ้าของโจทย์ (ผู้สอน)</strong> → ให้ AI สร้าง SRS → ตรวจ → DESIGN → SPEC (เกณฑ์ตรวจรับ) → TASKS (WBS) → commit</td>
         <td>ผู้สอนตอบตามชุดคำตอบ Q1–Q12 ของผู้สอน · ไม่ใช้โควต้า ZCode</td></tr>
     </tbody>
   </table></div>
@@ -87,7 +87,7 @@
         <td>คัดลอก spec อ้างอิงทับไฟล์ของตัวเอง → ดูจุดที่ต่างด้วย <code>git diff</code> → กรอกตาราง 4 ช่อง (ตรง/ตกหล่น/แต่งเพิ่ม/ดีกว่า) → ไล่ดูพร้อมกันทั้งห้อง → commit "adopt baseline spec"</td>
         <td>บทเรียน: ถ้าไม่ถามเจ้าของโจทย์ จะสร้างผิด และ LLM แต่ง requirement ขึ้นมาเองได้</td></tr>
       <tr><td>13:30–13:45<br><span class="small">15 นาที</span></td><td>📖 <a href="theory-3-agent-skill.html">ทฤษฎี 3</a></td>
-        <td>แตก spec เป็น task ด้วย WBS · agent loop · AGENTS.md / Skill / SPEC ต่างกันอย่างไร · ADLC</td><td>ผู้เรียนอ่าน TASKS.md ของ baseline แล้วเข้าใจว่าแต่ละ task ต้องทำอะไร</td></tr>
+        <td>ทบทวน TASKS.md ของ baseline · agent loop · AGENTS.md / Skill / SPEC ต่างกันอย่างไร · ADLC</td><td>ผู้เรียนอ่าน TASKS.md ของ baseline แล้วเข้าใจว่าแต่ละ task ต้องทำอะไร</td></tr>
       <tr><td>13:45–14:40<br><span class="small">55 นาที</span></td><td>🔧 <a href="lab-3.html">Lab 3</a></td>
         <td>ZCode ทำ T1.1 → T1.2 → T2.1 → T2.2 → T2.3 → T2.4 ทีละ task · ระหว่าง task คนรัน migration, smoke, trace, อ่าน diff และ commit เอง · จบด้วย release</td>
         <td>จุดเสี่ยง: ลืมรัน migration (จะเห็น error <code>no such table</code>) และ agent ทำงานเกินขอบเขต Release 1</td></tr>

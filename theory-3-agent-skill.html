@@ -13,7 +13,7 @@
 <main>
   <p class="eyebrow">ทฤษฎี 3 · 13:30–13:45 · 15 นาที</p>
   <h1>WBS, Agent &amp; Skill</h1>
-  <p class="lede">ตอนนี้ทุกคนมี SPEC ฉบับ baseline (ฉบับกลางที่ทั้งห้องใช้ร่วมกัน) แล้ว ขั้นต่อไปคือแตกงานเป็นชิ้นเล็ก ๆ ให้ agent (AI ที่ลงมือแก้ไฟล์และทำงานแทนเราได้) ทำทีละชิ้น และเตรียมเอกสารกติกาและขั้นตอนการทำงานไว้ให้ agent อ่าน
+  <p class="lede">ตอนนี้ทุกคนมี SPEC ฉบับ baseline (ฉบับกลางที่ทั้งห้องใช้ร่วมกัน) แล้ว รวมทั้ง TASKS.md ที่แตกงานไว้แล้ว (วางแผนครบตั้งแต่ช่วงเช้า) ช่วงบ่ายคือลงมือทำตาม task โดยให้ agent (AI ที่ลงมือแก้ไฟล์และทำงานแทนเราได้) ทำทีละชิ้น หน้านี้อธิบายว่า agent อ่านเอกสารกติกาและขั้นตอนการทำงานอะไรบ้าง
   ช่วงนี้สั้น เน้นเฉพาะสิ่งที่ต้องใช้ทันทีใน Lab 3</p>
 
   <div class="meta">
@@ -25,7 +25,7 @@
   <div class="toc">
     <b>ในหน้านี้</b>
     <ol>
-      <li><a href="#wbs">WBS: จาก SPEC สู่ TASKS</a></li>
+      <li><a href="#wbs">ทบทวน WBS: TASKS.md ของ baseline</a></li>
       <li><a href="#agent">Agent ทำงานอย่างไร</a></li>
       <li><a href="#files">AGENTS.md · SKILL.md · SPEC.md · prompt ต่างกันอย่างไร</a></li>
       <li><a href="#guard">ข้อห้ามของ agent: ทำไม agent ห้ามรันคำสั่งเอง</a></li>
@@ -35,29 +35,10 @@
     </ol>
   </div>
 
-  <h2 id="wbs">WBS: จาก SPEC สู่ TASKS</h2>
-  <p><strong>WBS</strong> (Work Breakdown Structure — การแตกโครงสร้างงาน) คือการแบ่งงานเป็นชั้น ๆ จาก <strong>Epic</strong> (งานก้อนใหญ่ระดับฟีเจอร์) ลงไปเป็น <strong>Task</strong> (งานย่อย) จนแต่ละชิ้นเล็กพอให้ทำและตรวจได้ทีละชิ้น ตัวอย่างข้างล่างมาจาก <code>TASKS.md</code> ของ baseline
-  (US = user story หรือเรื่องที่ผู้ใช้ต้องการ, AC = เกณฑ์ตรวจรับที่ใช้ตัดสินว่าทำถูก, 👤 = ขั้นที่คนต้องทำเอง, depends = ต้องทำ task นั้นให้เสร็จก่อน):</p>
-  <pre data-nocopy><code>## Epic 1: รถส่วนกลาง (US-1)
-- [ ] T1.1 migration 0002_cars.sql + API src/routes/cars.ts + เคส smoke — AC-1.1 – AC-1.6
-- [ ] 👤 migrations apply --local → npm run smoke → npm run trace → commit
-- [ ] T1.2 หน้าเว็บ "รถ" ใน public/ — depends: T1.1
-
-## Epic 2: การจอง (US-2, US-3, US-4)
-- [ ] T2.1 migration 0003_bookings.sql + POST /api/bookings + smoke ตามตารางตัวอย่าง #1–#8
-- [ ] T2.2 GET การจองของฉัน + DELETE ของฉัน — depends: T2.1
-- [ ] T2.3 GET /api/cars/:id/schedule — depends: T2.1
-- [ ] T2.4 หน้าเว็บจองรถ + การจองของฉัน — depends: T2.2, T2.3</code></pre>
-  <div class="table-wrap"><table>
-    <thead><tr><th>หลัก</th><th>ความหมาย</th><th>ในหลักสูตร</th></tr></thead>
-    <tbody>
-      <tr><td><strong>1 task ต่อ 1 prompt</strong></td><td>แก้ 1–3 ไฟล์ จบในรอบเดียว</td><td>สั่ง <code>ทำ task T1.1 ใน TASKS.md</code> — prompt สั้น เพราะรายละเอียดอยู่ใน SPEC</td></tr>
-      <tr><td><strong>กฎ 100%</strong></td><td>task ทั้งหมดรวมกันต้องครอบคลุมขอบเขตงานพอดี ไม่ขาดไม่เกิน</td><td>AC ทุกข้อของ Release 1 ต้องมี task ที่รับผิดชอบ และต้องไม่มี task ไหนไปทำ FR (ความต้องการด้านฟังก์ชัน) ที่ SPEC ระบุว่า “ยังไม่ทำ”</td></tr>
-      <tr><td><strong>ตรวจได้</strong></td><td>ทุก task ผูกกับ AC</td><td>ทำ task เสร็จแล้วรัน smoke (สคริปต์ที่เรียก API จริงเทียบกับ AC) และ trace (สคริปต์เช็กว่าทุก AC มีเคสทดสอบ) ก็รู้ผลทันที</td></tr>
-      <tr><td><strong>รู้ลำดับ</strong></td><td>ระบุว่าต้องทำ task ไหนก่อน (depends)</td><td>ต้องสร้างตาราง cars ก่อนตาราง bookings และทำ API ก่อนทำหน้าเว็บ</td></tr>
-      <tr><td><strong>มีขั้นที่คนทำเอง</strong></td><td>ขั้นที่มี 👤 คือคนทำเองระหว่าง task</td><td>รัน migration (ไฟล์ SQL ที่สร้าง/แก้ตาราง), smoke, trace, อ่าน <code>git diff</code> (ดูว่าโค้ดเปลี่ยนตรงไหน) และ commit — agent ไม่ทำแทน</td></tr>
-    </tbody>
-  </table></div>
+  <h2 id="wbs">ทบทวน WBS: TASKS.md ของ baseline</h2>
+  <p>ตอนเช้าใน <a href="lab-2.html#s7">Lab 2 ขั้น 7</a> ทุกคนให้ AI แตก SPEC เป็น <code>TASKS.md</code> มาแล้ว (หลักการอยู่ใน <a href="theory-2-requirements.html#wbs">ทฤษฎี 2: WBS</a>)
+  ตอนนี้ทุกคนมี <code>TASKS.md</code> <strong>ฉบับ baseline</strong> ชุดเดียวกัน ช่วงบ่ายจะสั่ง agent ทำตามนี้ทีละ task: <code>ทำ task T1.1 ใน TASKS.md</code> → T1.2 → T2.1 → … → T2.4
+  ระหว่าง task ขั้นที่มี 👤 คือคุณทำเอง (migration, smoke, trace, อ่าน diff, commit)</p>
 
   <h2 id="agent">Agent ทำงานอย่างไร</h2>
   <div class="flow">
