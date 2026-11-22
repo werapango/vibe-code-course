@@ -13,49 +13,49 @@
 <main>
   <p class="eyebrow">ทฤษฎี 4 · 14:55–15:20 · 25 นาที</p>
   <h1>Verify &amp; Release</h1>
-  <p class="lede">agent สร้าง MVP เสร็จแล้ว คำถามต่อไปไม่ใช่ “รันได้ไหม” แต่คือ “<strong>ถูกจริงไหม ปลอดภัยไหม และถ้าพังถอยกลับได้ไหม</strong>”
-  ช่วงนี้เตรียมคุณสำหรับ Lab 4 ที่จะตรวจรับระบบกับ “ผู้ใช้” และ release ขึ้น production</p>
+  <p class="lede">agent สร้าง MVP (ระบบรุ่นแรกที่มีเฉพาะฟีเจอร์จำเป็น) เสร็จแล้ว คำถามต่อไปไม่ใช่ “รันได้ไหม” แต่คือ “<strong>ถูกจริงไหม ปลอดภัยไหม และถ้าระบบมีปัญหา ย้อนกลับเวอร์ชันเดิมได้ไหม</strong>”
+  ช่วงนี้เตรียมคุณสำหรับ Lab 4 ที่จะให้ “ผู้ใช้” ตรวจรับระบบ แล้ว release (ปล่อยเวอร์ชันใหม่) ขึ้น production (ระบบจริงที่คนใช้งาน)</p>
 
   <div class="meta">
     <span class="chip">📖 บรรยาย 25 นาที</span>
-    <span class="chip">🧭 Testing · Deployment · Maintenance</span>
-    <span class="chip">🔐 อ่านและตรวจ auth ของ starter</span>
+    <span class="chip">🧭 ทดสอบ · ขึ้นระบบจริง · ดูแลระบบ</span>
+    <span class="chip">🔐 อ่านและตรวจระบบล็อกอิน (auth) ของ starter</span>
   </div>
 
   <div class="toc">
     <b>ในหน้านี้</b>
     <ol>
-      <li><a href="#pass">ผ่านไม่ error ≠ ถูก</a></li>
+      <li><a href="#pass">รันได้ไม่มี error ไม่ได้แปลว่าถูก</a></li>
       <li><a href="#levels">ระดับของการทดสอบ และจาก AC สู่ test</a></li>
       <li><a href="#eval">Test กับ Eval</a></li>
       <li><a href="#diff">อ่าน diff และวงจรดีบั๊ก</a></li>
-      <li><a href="#vv">Verification แล้ว ยังต้อง Validation</a></li>
+      <li><a href="#vv">ตรงตาม spec แล้ว ยังต้องตรงกับความต้องการของผู้ใช้ (Verification กับ Validation)</a></li>
       <li><a href="#auth">Auth ของ starter ใน 5 แนวคิด</a></li>
       <li><a href="#notprod">ทำไมยังไม่พร้อม production</a></li>
       <li><a href="#release">Release: migration, deploy, rollback, log</a></li>
-      <li><a href="#token">Token economics: ทบทวนทั้งวัน</a></li>
+      <li><a href="#token">ใช้ token อย่างประหยัด: สรุปทั้งวัน</a></li>
       <li><a href="#discuss">คำถามชวนคุย</a></li>
       <li><a href="#lab">เชื่อมกับ Lab</a></li>
     </ol>
   </div>
 
-  <h2 id="pass">ผ่านไม่ error ≠ ถูก</h2>
+  <h2 id="pass">รันได้ไม่มี error ไม่ได้แปลว่าถูก</h2>
   <p>ดู query ตรวจเวลาซ้อนสองแบบนี้ — <strong>ทั้งคู่รันได้ ไม่มี error</strong>:</p>
   <div class="grid">
-    <div class="card"><h4>❌ แบบที่ดูถูก</h4>
+    <div class="card"><h4>❌ แบบที่ดูเหมือนถูก</h4>
 <pre data-nocopy><code>WHERE car_id = ?
   AND start_at &lt;= ?   -- end ใหม่
   AND end_at   &gt;= ?   -- start ใหม่</code></pre>
-      <p class="small">ปฏิเสธการ “ต่อคิวพอดี” (จบ 12:00 / เริ่ม 12:00) ซึ่ง spec บอกว่าต้องจองได้</p></div>
+      <p class="small">แบบนี้จะไม่ยอมให้จอง “ต่อคิวพอดี” (รถคันเดียวกัน คนแรกจบ 12:00 คนถัดไปเริ่ม 12:00) ทั้งที่ spec บอกว่าต้องจองได้</p></div>
     <div class="card"><h4>✅ แบบที่ตรง spec</h4>
 <pre data-nocopy><code>WHERE car_id = ?
   AND start_at &lt; ?    -- end ใหม่
   AND end_at   &gt; ?    -- start ใหม่</code></pre>
-      <p class="small">ช่วงแบบ [เริ่ม, จบ) — ต่างกันแค่เครื่องหมาย <code>=</code> ตัวเดียว</p></div>
+      <p class="small">นับช่วงเวลาแบบ [เริ่ม, จบ) คือรวมเวลาเริ่ม แต่ไม่รวมเวลาจบ — ต่างจากแบบแรกแค่เครื่องหมาย <code>=</code> ตัวเดียว</p></div>
   </div>
   <div class="box theory">
     <span class="label">📖 แนวคิดหลัก</span>
-    <p>agent เขียนโค้ดที่ “ดูเหมือนถูก” ได้เก่งมาก ความผิดแบบนี้ไม่มี error ให้เห็น — <strong>จับได้ด้วยการเทียบกับ spec เท่านั้น</strong>
+    <p>agent มักเขียนโค้ดที่ดูเหมือนถูกแต่จริง ๆ ผิด ความผิดแบบนี้ไม่มี error ให้เห็น — <strong>จับได้ด้วยการเทียบกับ spec เท่านั้น</strong>
     นี่คือเหตุผลที่ตารางตัวอย่าง #1–#8 ใน SPEC มีเคส “ต่อคิวพอดี” อยู่ด้วย</p>
   </div>
 
@@ -63,59 +63,61 @@
   <div class="table-wrap"><table>
     <thead><tr><th>ระดับ</th><th>ทดสอบอะไร</th><th>วันนี้</th></tr></thead>
     <tbody>
-      <tr><td>Unit</td><td>ฟังก์ชันเดียว เช่น <code>normalizeTime()</code></td><td>ไม่ได้ทำ (ต่อยอดได้)</td></tr>
-      <tr><td>Integration</td><td>หลายส่วนทำงานร่วมกัน (route + DB)</td><td>ครอบคลุมโดย smoke</td></tr>
-      <tr><td><strong>Smoke / Acceptance</strong></td><td>เรียก API จริง เทียบกับ AC</td><td><code>npm run smoke</code> — หลักของวันนี้</td></tr>
-      <tr><td>Manual / Demonstration</td><td>คนใช้จริงบนอุปกรณ์จริง</td><td>เช็กลิสต์ Lab 4 · มือถือ 375px</td></tr>
+      <tr><td>Unit</td><td>ฟังก์ชันเดียว เช่น <code>normalizeTime()</code></td><td>ไม่ได้ทำ (ทำเพิ่มภายหลังได้)</td></tr>
+      <tr><td>Integration</td><td>หลายส่วนทำงานร่วมกัน (route + ฐานข้อมูล)</td><td>smoke ทดสอบส่วนนี้ไปด้วยแล้ว</td></tr>
+      <tr><td><strong>Smoke / Acceptance</strong></td><td>เรียก API จริงแล้วเทียบผลกับ AC (เกณฑ์ตรวจรับใน SPEC)</td><td><code>npm run smoke</code> — การทดสอบหลักของวันนี้</td></tr>
+      <tr><td>Manual / Demonstration</td><td>คนลองใช้จริงบนอุปกรณ์จริง</td><td>ทำตามเช็กลิสต์ใน Lab 4 และลองบนจอมือถือกว้าง 375px</td></tr>
     </tbody>
   </table></div>
-  <p>ชื่อเคสทุกเคสขึ้นต้นด้วยรหัส AC — นี่คือจุดเชื่อมระหว่าง spec กับ test:</p>
+  <p>ชื่อเคสทดสอบทุกเคสขึ้นต้นด้วยรหัส AC เพื่อให้รู้ว่าเคสนี้ทดสอบข้อไหนของ spec:</p>
   <pre data-nocopy><code>test("AC-A4.1 ผู้ใช้ทั่วไปเรียก /api/users → 403", async () =&gt; {
   const u = await makeUser();
   const r = await u.api("GET", "/api/users");
   expect(r.status === 403, `ควรได้ 403 แต่ได้ ${r.status}`);
 });</code></pre>
-  <p><code>npm run trace</code> ตรวจอีกชั้นว่า<strong>ไม่มี AC ไหนตกหล่น</strong> — smoke ผ่าน 100% แต่ trace ขาด แปลว่ายังมีความต้องการที่ไม่ได้ทดสอบ</p>
+  <p><code>npm run trace</code> ตรวจอีกชั้นว่าทุก AC มีเคสทดสอบ <strong>ไม่มีข้อไหนตกหล่น</strong> (การโยงความต้องการแต่ละข้อไปหาเคสทดสอบแบบนี้เรียกว่า traceability หรือการตามรอย)
+  ถ้า smoke ผ่าน 100% แต่ trace บอกว่าขาด แปลว่ายังมีความต้องการที่ไม่ได้ทดสอบ</p>
   <pre data-nocopy><code>AC ทั้งหมด 33 · มีเคสทดสอบ 33 · ขาด 0 · อ้างผิด 0 · FR ที่ยังไม่ถูกอ้าง 0/15
 ✅ ตามรอยครบ</code></pre>
 
   <h2 id="eval">Test กับ Eval</h2>
   <div class="grid">
-    <div class="card"><h4>Test — ตรวจโค้ด</h4><p>input เดิม → ผลเดิมทุกครั้ง · ผ่าน/ไม่ผ่านชัดเจน · ใช้กับแอปที่เราสร้าง</p></div>
-    <div class="card"><h4>Eval — ตรวจ agent/LLM</h4><p>ผลไม่แน่นอน ต้องลองหลายเคสแล้วดูอัตรา · ใช้กับ AGENTS.md, skill, prompt (ADLC) และงานร่าง SRS ของ LLM</p></div>
+    <div class="card"><h4>Test — ตรวจโค้ด</h4><p>ใส่ input เดิม ได้ผลเดิมทุกครั้ง ตัดสินผ่าน/ไม่ผ่านได้ชัด ใช้ตรวจแอปที่เราสร้าง</p></div>
+    <div class="card"><h4>Eval — ตรวจ agent/LLM</h4><p>ผลของ AI ไม่เหมือนเดิมทุกครั้ง จึงต้องลองหลายเคสแล้วดูว่าทำถูกบ่อยแค่ไหน ใช้ตรวจ AGENTS.md, skill, prompt (ตามวงจร ADLC ในทฤษฎี 3) และ SRS ที่ LLM ร่างให้</p></div>
   </div>
 
   <h2 id="diff">อ่าน diff และวงจรดีบั๊ก</h2>
-  <p><code>git diff</code> คือ code review ยุค agent — อ่านก่อน commit ทุกครั้ง ดูแค่ 3 เรื่องก็พอ:</p>
+  <p><code>git diff</code> แสดงว่าโค้ดเปลี่ยนไปตรงไหนบ้าง การอ่าน diff จึงเป็นการรีวิวโค้ดที่ agent เขียน ให้อ่านก่อน commit (บันทึกการเปลี่ยนแปลงลง git) ทุกครั้ง โดยดูแค่ 3 เรื่องก็พอ:</p>
   <ul class="checklist">
     <li>แก้<strong>เฉพาะไฟล์</strong>ที่ task บอกไหม (ไม่แตะ <code>auth.ts</code> ถ้าไม่ได้สั่ง)</li>
-    <li>มี <strong>SQL ต่อ string</strong> ไหม · มี query ของข้อมูลผู้ใช้ที่<strong>ไม่กรอง user_id</strong> ไหม</li>
-    <li>ทำ<strong>เกิน</strong> task ไหม (เพิ่ม dependency, ทำฟีเจอร์ที่อยู่ใน “ยังไม่ทำ”) → <code>git restore .</code> แล้วสั่งใหม่</li>
+    <li>มี <strong>SQL ที่เอาข้อความมาต่อกันเอง</strong> ไหม (เสี่ยงถูกแทรกคำสั่ง SQL) และมี query ข้อมูลผู้ใช้ที่<strong>ไม่กรอง user_id</strong> ไหม (คนอื่นจะเห็นข้อมูลของเรา)</li>
+    <li>ทำ<strong>เกิน</strong> task ไหม (เช่น เพิ่ม dependency หรือทำฟีเจอร์ที่ SPEC ระบุว่า “ยังไม่ทำ”) ถ้าเกิน ให้รัน <code>git restore .</code> เพื่อทิ้งการแก้ทั้งหมด แล้วสั่งใหม่</li>
   </ul>
   <div class="flow">
-    <div class="node"><b>1 ทำให้พังซ้ำ</b>เคสไหน ขั้นตอนไหน</div><div class="arrow">→</div>
-    <div class="node"><b>2 ตั้งสมมติฐาน</b>อ่าน error ที่เกี่ยว</div><div class="arrow">→</div>
-    <div class="node hl"><b>3 วินิจฉัยก่อนแก้</b>ให้ agent อธิบายสาเหตุ ห้ามแก้ทันที</div><div class="arrow">→</div>
-    <div class="node"><b>4 แก้ + พิสูจน์</b>smoke เคสนั้นผ่าน</div><div class="arrow">→</div>
-    <div class="node"><b>5 commit</b>อ่าน diff</div>
+    <div class="node"><b>1 ทำให้พังซ้ำได้</b>รู้ว่าพังที่เคสไหน ขั้นตอนไหน</div><div class="arrow">→</div>
+    <div class="node"><b>2 เดาสาเหตุ</b>จาก error บรรทัดที่เกี่ยว</div><div class="arrow">→</div>
+    <div class="node hl"><b>3 หาสาเหตุก่อนแก้</b>ให้ agent อธิบายสาเหตุก่อน ยังไม่ให้แก้</div><div class="arrow">→</div>
+    <div class="node"><b>4 แก้แล้วตรวจซ้ำ</b>รัน smoke เคสนั้นให้ผ่าน</div><div class="arrow">→</div>
+    <div class="node"><b>5 commit</b>อ่าน diff ก่อน commit</div>
   </div>
 
-  <h2 id="vv">Verification แล้ว ยังต้อง Validation</h2>
-  <p>smoke + trace ผ่านหมด = <strong>verification</strong> ครบ (ระบบตรงกับ spec) แต่ยังไม่รู้ว่า<strong>ตรงกับสิ่งที่หัวหน้างานยานพาหนะต้องการจริง</strong>ไหม
+  <h2 id="vv">ตรงตาม spec แล้ว ยังต้องตรงกับความต้องการของผู้ใช้</h2>
+  <p>เมื่อ smoke และ trace ผ่านหมด แปลว่า <strong>verification</strong> (ตรวจว่าระบบตรงกับ spec) ครบแล้ว แต่ยังไม่รู้ว่า<strong>ตรงกับสิ่งที่หัวหน้างานยานพาหนะต้องการจริง</strong>ไหม การตรวจข้อหลังนี้เรียกว่า validation
   Lab 4 จึงให้เพื่อนเล่นบทผู้ใช้ ทดสอบเทียบกับ <a href="brief.html">โจทย์ต้นฉบับ</a> (ไม่ใช่เทียบกับ SPEC) แล้วแยกสิ่งที่เจอเป็น 2 แบบ:</p>
   <div class="table-wrap"><table>
     <thead><tr><th>ประเภท</th><th>ความหมาย</th><th>แก้ที่</th></tr></thead>
     <tbody>
       <tr><td><strong>Bug</strong></td><td>ระบบไม่ตรงกับ spec</td><td>โค้ด (task ใหม่ให้ agent)</td></tr>
-      <tr><td><strong>Requirement gap</strong></td><td>spec ไม่ครอบคลุมความต้องการ หรือตั้งใจเลื่อนไว้</td><td>SRS/SPEC → backlog รอบถัดไป (เช่น การอนุมัติ = FR-14 ยังไม่ทำ)</td></tr>
+      <tr><td><strong>Requirement gap</strong></td><td>ความต้องการที่ spec ไม่ได้เขียนไว้ หรือตั้งใจเลื่อนไปทำรอบหน้า</td><td>บันทึกใน SRS/SPEC แล้วใส่ backlog (รายการงานรอทำ) ของรอบถัดไป (เช่น การอนุมัติ = FR-14 ยังไม่ทำ)</td></tr>
     </tbody>
   </table></div>
 
   <h2 id="auth">Auth ของ starter ใน 5 แนวคิด</h2>
-  <p>ระบบผู้ใช้มากับ starter ตั้งแต่ Lab 1b — งานของเราคือ<strong>อ่านให้เข้าใจและตรวจให้ได้</strong> โค้ดจริงจาก <code>src/lib/auth.ts</code>:</p>
+  <p>auth คือระบบล็อกอินและสิทธิ์ของผู้ใช้ ซึ่งมากับ starter (โปรเจกต์ตั้งต้น) ตั้งแต่ Lab 1b งานของเราคือ<strong>อ่านให้เข้าใจและตรวจให้ได้</strong> ตัวอย่างข้างล่างเป็นโค้ดจริงจาก <code>src/lib/auth.ts</code>:</p>
 
-  <h3>1 · Authentication ≠ Authorization</h3>
-  <p><strong>Authentication</strong> = คุณคือใคร (ล็อกอิน → 401 ถ้าไม่รู้ว่าเป็นใคร) · <strong>Authorization</strong> = คุณทำสิ่งนี้ได้ไหม (403 ถ้ารู้ว่าเป็นใครแต่ไม่มีสิทธิ์)</p>
+  <h3>1 · Authentication กับ Authorization ไม่เหมือนกัน</h3>
+  <p><strong>Authentication</strong> (ยืนยันตัวตน) คือตรวจว่าคุณเป็นใคร ถ้ายังไม่ได้ล็อกอิน เซิร์ฟเวอร์ตอบรหัส 401
+  <strong>Authorization</strong> (ตรวจสิทธิ์) คือตรวจว่าคุณทำสิ่งนี้ได้ไหม ถ้ารู้ว่าเป็นใครแต่ไม่มีสิทธิ์ เซิร์ฟเวอร์ตอบรหัส 403</p>
   <pre data-nocopy><code>// authorization: ต้องเป็น admin (ใช้ต่อจาก requireAuth เสมอ)
 export const requireAdmin: MiddlewareHandler&lt;AppEnv&gt; = async (c, next) =&gt; {
   if (c.get("role") !== "admin") return c.json({ error: "เฉพาะผู้ดูแลระบบเท่านั้น" }, 403);
@@ -129,21 +131,24 @@ export async function hashPassword(password: string): Promise&lt;string&gt; {
   const salt = crypto.getRandomValues(new Uint8Array(16));
   return toHex(salt) + ":" + (await pbkdf2(password, salt));
 }</code></pre>
-  <p class="small">PBKDF2 ตั้งใจให้ช้า (เดารหัสทีละล้านครั้งยาก) · salt สุ่มต่อผู้ใช้ ทำให้รหัสเดียวกันได้ hash ต่างกัน · ตรวจได้ด้วยการเปิดตาราง users (inspection)</p>
+  <p class="small">hash คือการแปลงรหัสผ่านเป็นข้อความที่แปลงกลับไม่ได้ ส่วน salt คือค่าสุ่มที่เติมให้ผู้ใช้แต่ละคน ทำให้รหัสเดียวกันได้ hash ต่างกัน
+  PBKDF2 (วิธี hash ที่ใช้) ตั้งใจให้ช้า คนร้ายจึงลองเดารหัสเป็นล้านครั้งได้ยาก ตรวจด้วยตาได้โดยเปิดตาราง users ดูว่าไม่มีรหัสผ่านจริงเก็บอยู่</p>
 
-  <h3>3 · Session: บัตรผ่านชั่วคราว</h3>
+  <h3>3 · Session: สถานะการล็อกอิน</h3>
   <pre data-nocopy><code>const token = toHex(crypto.getRandomValues(new Uint8Array(32)));
 const expiresAt = new Date(Date.now() + SESSION_DAYS * 86_400_000).toISOString();</code></pre>
-  <p class="small">ล็อกอินสำเร็จ → token สุ่มเดาไม่ได้ เก็บในตาราง sessions หมดอายุ 7 วัน · logout หรือ admin ตั้งรหัสใหม่ = ลบ session ทิ้งฝั่งเซิร์ฟเวอร์</p>
+  <p class="small">session คือสถานะ “ล็อกอินอยู่” เมื่อล็อกอินสำเร็จ เซิร์ฟเวอร์สร้าง token (ในที่นี้คือรหัสสุ่มยาวที่เดาไม่ได้ คนละความหมายกับ token ของ AI) เก็บในตาราง sessions และหมดอายุใน 7 วัน
+  เมื่อ logout หรือ admin ตั้งรหัสผ่านใหม่ให้ เซิร์ฟเวอร์จะลบ session นั้นทิ้ง</p>
 
   <h3>4 · Cookie HttpOnly</h3>
   <pre data-nocopy><code>return { httpOnly: true, secure: new URL(c.req.url).protocol === "https:",
          sameSite: "Lax" as const, path: "/", maxAge: SESSION_DAYS * 86_400 };</code></pre>
-  <p class="small">JavaScript ในหน้าเว็บอ่าน cookie นี้ไม่ได้ → ขโมยผ่านสคริปต์แปลกปลอม (XSS) ยากขึ้น · ดูได้ที่ F12 → Application → Cookies</p>
+  <p class="small">cookie คือข้อมูลเล็ก ๆ ที่เบราว์เซอร์เก็บไว้และส่งกลับไปกับทุกคำขอ (ที่นี่ใช้เก็บ token ของ session) ค่า HttpOnly ทำให้ JavaScript ในหน้าเว็บอ่าน cookie นี้ไม่ได้
+  สคริปต์แปลกปลอมที่ถูกแอบฝังในหน้าเว็บ (XSS) จึงขโมยได้ยากขึ้น ลองดูได้โดยกด F12 แล้วไปที่ Application → Cookies</p>
 
   <h3>5 · เซิร์ฟเวอร์เช็กทุกคำขอ</h3>
   <pre data-nocopy><code>bookings.use("*", requireAuth); // ทุก route ด้านล่างต้องล็อกอิน</code></pre>
-  <p class="small">ซ่อนปุ่มในหน้าเว็บไม่ใช่ความปลอดภัย — ใครก็เรียก API ตรงได้ ด่านจริงอยู่ที่เซิร์ฟเวอร์ทุกคำขอ</p>
+  <p class="small">ซ่อนปุ่มในหน้าเว็บไม่ใช่ความปลอดภัย — ใครก็เรียก API ตรงได้ การตรวจสิทธิ์จึงต้องทำที่เซิร์ฟเวอร์ทุกคำขอ</p>
 
   <div class="box warn">
     <span class="label">⚠ ความเสี่ยงของหน้า “ตั้งค่าครั้งแรก”</span>
@@ -152,22 +157,22 @@ const expiresAt = new Date(Date.now() + SESSION_DAYS * 86_400_000).toISOString()
   </div>
 
   <h2 id="notprod">ทำไมยังไม่พร้อม production</h2>
-  <p>ระบบนี้ทำไว้เพื่อการเรียน — สิ่งที่ขาดเขียนเป็น <strong>NFR</strong> สำหรับรอบถัดไปได้ทันที:</p>
+  <p>ระบบนี้ทำไว้เพื่อการเรียน สิ่งที่ยังขาดเอาไปเขียนเป็น <strong>NFR</strong> (ความต้องการด้านคุณภาพ เช่น ความปลอดภัย ความเร็ว) สำหรับรอบถัดไปได้ทันที:</p>
   <div class="table-wrap"><table>
     <thead><tr><th>ที่ขาด</th><th>เสี่ยงอะไร</th><th>NFR ที่ควรเขียน (วัดได้)</th></tr></thead>
     <tbody>
       <tr><td>จำกัดจำนวนครั้งที่ล็อกอินผิด</td><td>ถูกเดารหัสแบบอัตโนมัติ</td><td>ล็อกอินผิด 5 ครั้งใน 15 นาที → ระงับชื่อนั้น 15 นาที</td></tr>
       <tr><td>รีเซ็ตรหัสด้วยตัวเอง</td><td>ลืมรหัสต้องพึ่ง admin</td><td>ผู้ใช้รีเซ็ตรหัสผ่านลิงก์ทางอีเมลที่หมดอายุใน 30 นาที</td></tr>
-      <tr><td>เทียบ hash แบบ constant-time</td><td>timing attack (ทางทฤษฎี)</td><td>การตรวจรหัสใช้เวลาเท่ากันไม่ว่าถูกหรือผิด</td></tr>
+      <tr><td>เทียบ hash โดยใช้เวลาคงที่ (constant-time)</td><td>คนร้ายจับเวลาการตอบเพื่อเดารหัส (timing attack — เสี่ยงในทางทฤษฎี)</td><td>การตรวจรหัสใช้เวลาเท่ากันไม่ว่าถูกหรือผิด</td></tr>
       <tr><td>บันทึกเหตุการณ์ (audit log)</td><td>ไม่รู้ว่าใครลบ/แก้อะไร</td><td>ทุกการลบรถ/ผู้ใช้ บันทึกผู้ทำและเวลา เก็บ 90 วัน</td></tr>
-      <tr><td>2 คำขอพร้อมกันเป๊ะ (race)</td><td>อาจได้การจองซ้อน 1 คู่</td><td>ไม่มีการจองซ้อนแม้ส่งคำขอพร้อมกัน 10 รายการ</td></tr>
+      <tr><td>รับมือ 2 คำขอที่มาพร้อมกันพอดี (race condition)</td><td>อาจได้การจองซ้อน 1 คู่</td><td>ไม่มีการจองซ้อนแม้ส่งคำขอพร้อมกัน 10 รายการ</td></tr>
     </tbody>
   </table></div>
 
   <h2 id="release">Release: migration, deploy, rollback, log</h2>
-  <h3>Migration เดินหน้าอย่างเดียว</h3>
-  <p>schema เปลี่ยน = ไฟล์ migration ใหม่ <strong>ห้ามแก้ไฟล์เก่า</strong> เพราะ local และ production บันทึกไว้แล้วว่ารันไฟล์ไหนไปแล้ว — แก้ไฟล์เก่า = สองที่ไม่ตรงกันอย่างเงียบ ๆ</p>
-  <h3>ลำดับ release</h3>
+  <h3>Migration: เพิ่มไฟล์ใหม่เท่านั้น ไม่แก้ไฟล์เก่า</h3>
+  <p>migration คือไฟล์ SQL ที่เปลี่ยนโครงสร้างตาราง (schema) ทุกครั้งที่ต้องเปลี่ยน schema ให้สร้างไฟล์ migration ใหม่ <strong>ห้ามแก้ไฟล์เก่า</strong> เพราะทั้ง local (เครื่องเรา) และ production (ระบบจริง) จดไว้แล้วว่ารันไฟล์ไหนไปแล้ว ถ้าไปแก้ไฟล์เก่า ฐานข้อมูลสองที่จะไม่ตรงกันโดยไม่มีอะไรเตือน</p>
+  <h3>ลำดับ release (deploy = นำโค้ดขึ้นระบบจริง, rollback = ย้อนกลับไปเวอร์ชันก่อน)</h3>
   <div class="flow">
     <div class="node"><b>1</b>smoke + trace ผ่านใน local</div><div class="arrow">→</div>
     <div class="node"><b>2</b>migrations apply --remote</div><div class="arrow">→</div>
@@ -177,42 +182,42 @@ const expiresAt = new Date(Date.now() + SESSION_DAYS * 86_400_000).toISOString()
   </div>
   <pre data-nocopy><code>npx wrangler d1 migrations apply app-db --remote
 npx wrangler deploy
-BASE_URL=https://my-app.&lt;subdomain&gt;.workers.dev SMOKE_ADMIN_USER=... SMOKE_ADMIN_PASS=... npm run smoke
+npm run smoke url=https://my-app.&lt;subdomain&gt;.workers.dev user=admin pass=...
 npx wrangler deployments list
 npx wrangler rollback
 npx wrangler tail</code></pre>
   <p class="small">ข้อควรรู้: <code>rollback</code> ย้อน<strong>โค้ด</strong> ไม่ได้ย้อน<strong>ฐานข้อมูล</strong> — migration ที่รันบน remote แล้วยังอยู่ จึงควรออกแบบ migration ให้โค้ดเวอร์ชันก่อนยังทำงานได้ (เช่น เพิ่มตาราง/คอลัมน์ ไม่ลบ)
-  · ใน PowerShell ตั้งตัวแปรด้วย <code>$env:BASE_URL="..."; npm run smoke</code></p>
+  ส่วน <code>npx wrangler tail</code> ใช้ดู log (บันทึกการทำงาน) ของระบบจริงแบบสด ๆ</p>
 
-  <h2 id="token">Token economics: ทบทวนทั้งวัน</h2>
+  <h2 id="token">ใช้ token อย่างประหยัด: สรุปทั้งวัน</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>งาน</th><th>ใครทำ</th><th>ทำไม</th></tr></thead>
     <tbody>
-      <tr><td>คำสั่ง Cloudflare (dev, d1, migrate, deploy, rollback)</td><td>คน</td><td>สั้น แม่นยำ ผลยาวไม่ควรเข้า context ของ agent</td></tr>
-      <tr><td>ร่าง SRS / design</td><td>Gemini / ChatGPT</td><td>ฟรี ไม่ใช้โควต้า ZCode · คน validate</td></tr>
-      <tr><td>เขียนโค้ดทีละ task</td><td>ZCode <strong>Flash</strong></td><td>spec ชัด + ตัวอย่างโค้ดในโปรเจกต์ = จบในรอบเดียว</td></tr>
-      <tr><td>บั๊กที่ Flash แก้ไม่ตก 2 รอบ</td><td>ZCode <strong>GLM-5.3</strong></td><td>แปะสรุปสิ่งที่ลองแล้ว ไม่เริ่มใหม่จากศูนย์</td></tr>
+      <tr><td>คำสั่ง Cloudflare (dev, d1, migrate, deploy, rollback)</td><td>คน</td><td>คนพิมพ์เองได้สั้นและแม่นยำ ส่วนผลลัพธ์ที่ยาวไม่ควรเข้าไปเปลือง context ของ agent</td></tr>
+      <tr><td>ร่าง SRS / design</td><td>Gemini / ChatGPT</td><td>ใช้ฟรีและไม่กินโควต้า ZCode แต่คนต้องตรวจว่าถูกต้อง</td></tr>
+      <tr><td>เขียนโค้ดทีละ task</td><td>ZCode <strong>Flash</strong></td><td>เมื่อ spec ชัดและมีโค้ดตัวอย่างในโปรเจกต์ โมเดล Flash ก็ทำจบได้ในรอบเดียว</td></tr>
+      <tr><td>บั๊กที่ Flash แก้ไม่ได้ภายใน 2 รอบ</td><td>ZCode <strong>GLM-5.3</strong></td><td>สลับไปใช้โมเดลนี้ โดยแปะสรุปสิ่งที่ลองแล้ว ไม่ต้องเริ่มใหม่ทั้งหมด</td></tr>
     </tbody>
   </table></div>
-  <p class="small">ประมาณการทั้งวัน ~0.3–0.5M token ของ ZCode ต่อคน (ยังไม่ได้วัดจากห้องจริง) เทียบกับโควต้าฟรี GLM-5.3 ~3M + Flash ~5M</p>
+  <p class="small">คาดว่าทั้งวันแต่ละคนใช้ ZCode ประมาณ ~0.3–0.5M token (M = ล้าน, ยังไม่ได้วัดจากห้องจริง) ขณะที่โควต้าฟรีมี GLM-5.3 ~3M และ Flash ~5M</p>
 
   <h2 id="discuss">คำถามชวนคุย</h2>
   <ol>
-    <li>smoke ผ่าน 100% และ trace ครบ แต่ผู้ใช้บอกว่า “ไม่ใช่ที่ต้องการ” — เกิดได้อย่างไร? ผิดที่ phase ไหน?</li>
+    <li>smoke ผ่าน 100% และ trace ครบ แต่ผู้ใช้บอกว่า “ไม่ใช่ที่ต้องการ” — เกิดได้อย่างไร? พลาดตั้งแต่ขั้นไหนของ SDLC?</li>
     <li>ถ้าซ่อนปุ่ม “ลบรถ” ในหน้าเว็บของผู้ใช้ทั่วไปแล้ว ยังต้องมี <code>requireAdmin</code> ที่เซิร์ฟเวอร์อีกไหม? ทำไม?</li>
     <li>deploy แล้วพัง กด rollback แล้วยังพัง — สาเหตุน่าจะอยู่ที่อะไร?</li>
   </ol>
 
   <h2 id="lab">เชื่อมกับ Lab</h2>
-  <p><a href="lab-4.html">Lab 4</a> (25 นาที): ทำเช็กลิสต์ตรวจ auth และ NFR บน production → จับคู่ตรวจรับกับ “ผู้ใช้” เทียบโจทย์ต้นฉบับ → แยก bug กับ requirement gap → release และ <code>git tag v1.0</code>
-  · กลุ่มเร็ว: change request (FR-11/FR-12) หรือล่าบั๊กปลูก · ก่อนกลับ: ออกจากระบบทุกบริการ</p>
+  <p>ใน <a href="lab-4.html">Lab 4</a> (30 นาที) คุณจะทำเช็กลิสต์ตรวจ auth และ NFR บน production จากนั้นจับคู่กับเพื่อนที่เล่นบท “ผู้ใช้” ตรวจรับเทียบกับโจทย์ต้นฉบับ แยกสิ่งที่เจอว่าเป็น bug หรือ requirement gap แล้ว release และติดป้ายเวอร์ชันด้วย <code>git tag v1.0</code>
+  กลุ่มที่เสร็จเร็วลองทำ change request (คำขอเปลี่ยนแปลง FR-11/FR-12) หรือหาบั๊กที่ผู้สอนใส่ไว้ในระบบ ก่อนกลับอย่าลืมออกจากระบบ (log out) ทุกบริการ</p>
 
   <div class="box check">
     <span class="label">✅ สรุป 3 บรรทัด</span>
     <ul>
-      <li>รันได้ไม่เท่ากับถูก — smoke ตรวจตาม AC, trace ตรวจว่าไม่มี AC ตกหล่น, การตรวจรับกับผู้ใช้คือ validation</li>
-      <li>auth = authn (401) + authz (403 / กรอง user_id) + hash+salt + session + HttpOnly cookie + เช็กทุกคำขอ</li>
-      <li>release ปลอดภัย: smoke local → migrate remote → deploy → smoke production → rollback ได้ (แต่ฐานข้อมูลไม่ย้อน)</li>
+      <li>รันได้ไม่ได้แปลว่าถูก — smoke ตรวจตาม AC, trace ตรวจว่าไม่มี AC ตกหล่น, การตรวจรับกับผู้ใช้คือ validation</li>
+      <li>auth ประกอบด้วย ยืนยันตัวตน (401), ตรวจสิทธิ์ (403 และกรอง user_id), เก็บรหัสเป็น hash+salt, session, cookie แบบ HttpOnly และเซิร์ฟเวอร์เช็กทุกคำขอ</li>
+      <li>release อย่างปลอดภัย: smoke ใน local → migrate บน remote → deploy → smoke บน production → ถ้าพังก็ rollback ได้ (แต่ฐานข้อมูลไม่ย้อนตาม)</li>
     </ul>
   </div>
 

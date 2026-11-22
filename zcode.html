@@ -19,7 +19,7 @@
 <main>
   <p class="eyebrow">เครื่องมือ · อ่านก่อน Lab 1</p>
   <h1>ZCode เบื้องต้น</h1>
-  <p class="lede">ZCode คือ <strong>AI coding agent แบบโปรแกรมบนเครื่อง</strong> ของ Z.ai — เราพิมพ์บอกงานเป็นภาษาคน
+  <p class="lede">ZCode คือ <strong>AI coding agent</strong> (AI ที่ลงมือเขียนและแก้โค้ดให้เองได้) แบบโปรแกรมที่ติดตั้งบนเครื่อง ของ Z.ai — เราพิมพ์บอกงานเป็นภาษาพูดทั่วไป
   แล้วมันอ่านโค้ด วางแผน แก้ไฟล์ และขอรันคำสั่งให้ หน้านี้อธิบายว่ามันคืออะไร ใช้อย่างไร
   และ<strong>ตั้งค่าอย่างไรให้ตรงกติกาของวันนี้</strong>: agent แก้ไฟล์ได้ แต่คำสั่ง Cloudflare / npm / git คนพิมพ์เอง</p>
 
@@ -33,20 +33,20 @@
     <span class="label">📖 agent ต่างจาก chat AI อย่างไร</span>
     <p>Gemini / ChatGPT ใน Lab 2 <strong>ตอบเป็นข้อความ</strong> ให้เราเอาไปใช้ต่อเอง
     ส่วน ZCode <strong>ลงมือในโฟลเดอร์โปรเจกต์ได้จริง</strong> — เปิดไฟล์ แก้ไฟล์ สร้างไฟล์ และขอรันคำสั่งใน terminal
-    จึงทำงานได้เร็ว แต่ก็ทำพังได้เร็วเท่ากัน หน้าที่ของคนคือ <strong>กำหนดงาน อนุญาต/ปฏิเสธ และตรวจผล</strong></p>
+    จึงทำงานได้เร็ว แต่ถ้าผิดพลาดก็สร้างความเสียหายได้เร็วเช่นกัน หน้าที่ของคนคือ <strong>กำหนดงาน อนุญาต/ปฏิเสธ และตรวจผล</strong></p>
   </div>
 
   <h2 id="what">ZCode คืออะไร</h2>
   <ul>
-    <li><strong>Agentic Development Environment</strong> — โปรแกรมเดสก์ท็อปที่เน้นคุยกับ agent ไม่ได้เป็น code editor แบบ VS Code (วันนี้เราใช้ VS Code อ่านโค้ด และ Git Bash รันคำสั่ง)</li>
-    <li>เป็นตัวควบคุม (harness) ทางการของโมเดล <strong>GLM</strong> ของ Z.ai และเป็น open source (Apache-2.0)</li>
-    <li>ทำงานเป็นวงจร <strong>agent loop</strong>: อ่าน context → วางแผน → ใช้เครื่องมือ (อ่าน/แก้ไฟล์, ขอรันคำสั่ง) → ดูผล → ทำต่อจนจบ — ทุกรอบใช้ token</li>
+    <li><strong>Agentic Development Environment</strong> (โปรแกรมสำหรับทำงานร่วมกับ agent) — โปรแกรมเดสก์ท็อปที่เน้นคุยกับ agent ไม่ได้เป็น code editor แบบ VS Code (วันนี้เราใช้ VS Code อ่านโค้ด และ Git Bash รันคำสั่ง)</li>
+    <li>เป็นโปรแกรมทางการที่ Z.ai ทำไว้ให้ใช้งานโมเดล AI ชื่อ <strong>GLM</strong> ของตัวเอง และเปิดซอร์สโค้ดให้ทุกคนดูได้ (open source, Apache-2.0)</li>
+    <li>ทำงานวนเป็นรอบ เรียกว่า <strong>agent loop</strong>: อ่านข้อมูลที่มีอยู่ตอนนั้น (context = คำสั่งของเรา ไฟล์ที่อ่าน และบทสนทนาก่อนหน้า) แล้ววางแผน ใช้เครื่องมือ (อ่าน/แก้ไฟล์, ขอรันคำสั่ง) ดูผลที่ได้ แล้ววนทำต่อจนงานเสร็จ — ทุกรอบใช้ token (หน่วยนับข้อความที่ AI อ่าน/เขียน ซึ่งหักจากโควต้า)</li>
     <li>ติดตั้งไว้บนเครื่อง Lab แล้ว ผู้เรียนแค่<strong>ล็อกอินด้วยบัญชี Z.ai ของตัวเอง</strong> (<a href="setup.html#morning">setup · PART C</a>)</li>
   </ul>
   <div class="flow">
-    <div class="node"><b>👤 คน</b>เขียน spec + TASKS · สั่ง 1 task</div><div class="arrow">→</div>
-    <div class="node hl"><b>🤖 ZCode</b>อ่าน AGENTS.md + SPEC → แก้ไฟล์</div><div class="arrow">→</div>
-    <div class="node"><b>👤 คน</b>อ่านสรุปไฟล์ที่แก้ · git diff</div><div class="arrow">→</div>
+    <div class="node"><b>👤 คน</b>เขียน spec และรายการงาน (TASKS) แล้วสั่งทีละ 1 task</div><div class="arrow">→</div>
+    <div class="node hl"><b>🤖 ZCode</b>อ่าน AGENTS.md และ SPEC แล้วแก้ไฟล์</div><div class="arrow">→</div>
+    <div class="node"><b>👤 คน</b>อ่านสรุปไฟล์ที่แก้ แล้วดูด้วย git diff</div><div class="arrow">→</div>
     <div class="node"><b>👤 คน</b>รัน migration / smoke / commit ใน Git Bash</div>
   </div>
 
@@ -59,17 +59,17 @@
   <div class="table-wrap"><table>
     <thead><tr><th>#</th><th>ส่วน</th><th>ใช้ทำอะไร</th></tr></thead>
     <tbody>
-      <tr><td>1</td><td><strong>แถบซ้าย</strong></td><td><strong>New task</strong> (<kbd>Ctrl</kbd>+<kbd>N</kbd>) สร้างงานใหม่ · <strong>Projects</strong> คือโฟลเดอร์งาน ใต้แต่ละโปรเจกต์คือ <strong>task</strong> (1 task = 1 บทสนทนา) ปักหมุดหรือเก็บถาวรได้ · ล่างสุดคือโปรไฟล์ผู้ใช้ (log out ก่อนกลับ) และ ⚙ Settings · Automations / Plugin Marketplace วันนี้ไม่ใช้</td></tr>
+      <tr><td>1</td><td><strong>แถบซ้าย</strong></td><td><strong>New task</strong> (<kbd>Ctrl</kbd>+<kbd>N</kbd>) สร้างงานใหม่ · <strong>Projects</strong> คือโฟลเดอร์งาน ใต้แต่ละโปรเจกต์คือ <strong>task</strong> (1 task = 1 บทสนทนา) ปักหมุดหรือเก็บถาวรได้ · ล่างสุดคือโปรไฟล์ผู้ใช้ (log out ก่อนกลับ) และ ⚙ Settings · ส่วน Automations และ Plugin Marketplace วันนี้ไม่ใช้</td></tr>
       <tr><td>2</td><td><strong>บทสนทนา</strong></td><td>เห็นแผน การเรียกเครื่องมือ (เช่น <em>Explored</em>, <em>Ran 1 command</em>, <em>Skill</em>) คำขออนุญาต และ<strong>สรุปไฟล์ที่เปลี่ยน</strong>ท้ายแต่ละคำตอบ — อ่านทุกครั้ง แล้วยืนยันด้วย <code>git diff</code></td></tr>
-      <tr><td>3</td><td><strong>ช่องพิมพ์ + ปุ่ม <code>+</code></strong></td><td>พิมพ์งานเป็นภาษาคน เช่น <code>ทำ task T1.1 ใน TASKS.md</code> · ปุ่ม <code>+</code> แนบไฟล์ · <code>@</code> อ้างไฟล์/โฟลเดอร์ · <code>#</code> อ้างบทสนทนาเก่า · <code>/</code> คำสั่ง · <code>$</code> เรียก skill</td></tr>
-      <tr><td>4</td><td><strong>โหมด · Computer Use · โมเดล</strong></td><td>ใต้ช่องพิมพ์ ซ้าย: <strong>ปุ่มโหมด</strong> (ไอคอนเปลี่ยนตามโหมด — ✋ = Ask before changes · กดเลือก หรือ <kbd>Shift</kbd>+<kbd>Tab</kbd>) · <strong>Computer Use</strong> (ไอคอนจอ) = ให้ agent ควบคุมหน้าจอ <strong>วันนี้ไม่เปิด</strong> ·
-        ขวา: <strong>โมเดล</strong> <code>GLM-5.3-Flash Max</code> (คำท้าย <em>Max</em> คือระดับการคิด) กดเปลี่ยนเป็น GLM-5.3 เมื่อ task ยาก · วงกลมเล็กข้างชื่อโมเดล = สัดส่วน context ที่ใช้ไปใน task นี้</td></tr>
-      <tr><td>5</td><td><strong>ปุ่ม terminal</strong></td><td>มุมขวาบนมี 4 ปุ่ม: เปิดโฟลเดอร์ใน Explorer · แชร์ · ช่วยเหลือ · <strong>terminal</strong> (ไอคอน <code>&gt;_</code>) — terminal <strong>วันนี้ไม่ใช้</strong> คำสั่ง wrangler / npm / git พิมพ์เองใน Git Bash เสมอ</td></tr>
+      <tr><td>3</td><td><strong>ช่องพิมพ์ + ปุ่ม <code>+</code></strong></td><td>พิมพ์งานเป็นภาษาพูดทั่วไป เช่น <code>ทำ task T1.1 ใน TASKS.md</code> · ปุ่ม <code>+</code> แนบไฟล์ · <code>@</code> อ้างไฟล์/โฟลเดอร์ · <code>#</code> อ้างบทสนทนาเก่า · <code>/</code> คำสั่ง · <code>$</code> เรียก skill (ชุดขั้นตอนสำเร็จรูปที่บันทึกไว้)</td></tr>
+      <tr><td>4</td><td><strong>โหมด · Computer Use · โมเดล</strong></td><td>ใต้ช่องพิมพ์ด้านซ้าย มี<strong>ปุ่มโหมด</strong> (ไอคอนเปลี่ยนตามโหมด เช่น ✋ คือ Ask before changes กดเพื่อเลือก หรือใช้ <kbd>Shift</kbd>+<kbd>Tab</kbd>) และ <strong>Computer Use</strong> (ไอคอนจอ) ซึ่งให้ agent ควบคุมหน้าจอเครื่องเรา <strong>วันนี้ไม่เปิด</strong>
+        ด้านขวาคือ<strong>โมเดล</strong> <code>GLM-5.3-Flash Max</code> (คำท้าย <em>Max</em> คือระดับการคิด) กดเปลี่ยนเป็น GLM-5.3 เมื่อ task ยาก · วงกลมเล็กข้างชื่อโมเดลบอกว่า task นี้ใช้พื้นที่ความจำ (context) ไปแล้วเท่าไร</td></tr>
+      <tr><td>5</td><td><strong>ปุ่ม terminal</strong></td><td>มุมขวาบนมี 4 ปุ่ม: เปิดโฟลเดอร์ใน Explorer · แชร์ · ช่วยเหลือ · <strong>terminal</strong> (หน้าต่างพิมพ์คำสั่ง ไอคอน <code>&gt;_</code>) — terminal นี้<strong>วันนี้ไม่ใช้</strong> คำสั่ง wrangler / npm / git ให้พิมพ์เองใน Git Bash เสมอ</td></tr>
     </tbody>
   </table></div>
   <div class="box token">
-    <span class="label">🪙 วงกลม context คือมิเตอร์ค่าใช้จ่าย</span>
-    <p>ยิ่งวงกลมเต็ม แปลว่า task นี้สะสมข้อความไว้มาก ทุกรอบที่ agent คิดต้องอ่านทั้งหมดซ้ำ = เปลือง token — เต็มเกินครึ่งแล้วงานยังไม่จบ ให้เริ่ม task ใหม่</p>
+    <span class="label">🪙 วงกลม context บอกว่าใช้ token ไปมากแค่ไหน</span>
+    <p>ยิ่งวงกลมเต็ม แปลว่า task นี้สะสมข้อความไว้มาก และทุกรอบที่ agent คิดต้องอ่านข้อความทั้งหมดนั้นซ้ำ จึงเปลือง token มากขึ้นเรื่อย ๆ — ถ้าวงกลมเต็มเกินครึ่งแล้วงานยังไม่จบ ให้เริ่ม task ใหม่</p>
   </div>
 
   <h2 id="start">เริ่มงาน: โปรเจกต์ และ task ใหม่</h2>
@@ -79,13 +79,13 @@
     ต้องเป็นโฟลเดอร์ที่ถูก เพราะ agent อ่าน/แก้ได้เฉพาะในโปรเจกต์นี้ และอ่าน <code>AGENTS.md</code> ที่รากโฟลเดอร์</p>
   </div></div>
   <div class="step"><div class="step-num">2</div><div class="step-body">
-    <h3>สร้าง task ใหม่ = context สะอาด</h3>
-    <p>กด <strong>New task</strong> ที่แถบซ้าย (หรือ <kbd>Ctrl</kbd>+<kbd>N</kbd>) · agent <strong>ไม่มีความจำข้าม task</strong> มันรู้แค่สิ่งที่อยู่ใน context ตอนนั้น — task ยาว = ทุกรอบต้องอ่านของเก่าซ้ำ = เปลือง token
+    <h3>สร้าง task ใหม่ คือเริ่มบทสนทนาใหม่ที่ไม่มีข้อความเก่า</h3>
+    <p>กด <strong>New task</strong> ที่แถบซ้าย (หรือ <kbd>Ctrl</kbd>+<kbd>N</kbd>) agent <strong>จำข้าม task ไม่ได้</strong> มันรู้แค่สิ่งที่อยู่ใน context ของ task นั้น ถ้า task ยาว ทุกรอบมันต้องอ่านข้อความเก่าซ้ำ จึงเปลือง token
     กติกา: <strong>เริ่ม task ใหม่เมื่อขึ้น lab ใหม่</strong> หรือเมื่อบทสนทนายาวจนวกวน</p>
   </div></div>
   <div class="step"><div class="step-num">3</div><div class="step-body">
     <h3>เลือกโมเดล และตรวจโหมด</h3>
-    <p>ใต้ช่องพิมพ์: ปุ่มที่ 2 จากซ้ายต้องเป็น<strong>ไอคอนมือ ✋</strong> (= Ask before changes) และโมเดลเป็น <code>GLM-5.3-Flash</code></p>
+    <p>ใต้ช่องพิมพ์: ปุ่มที่ 2 จากซ้ายต้องเป็น<strong>ไอคอนมือ ✋</strong> (โหมด Ask before changes) และโมเดลเป็น <code>GLM-5.3-Flash</code></p>
   <figure class="shot sm">
     <img src="assets/zcode/zcode-input.png" width="566" height="147" loading="lazy" alt="ช่องพิมพ์ของ ZCode: ปุ่ม +, ปุ่มโหมดรูปมือ, ปุ่ม Computer Use, วงกลม context และตัวเลือกโมเดล GLM-5.3-Flash Max">
     <figcaption>ช่องพิมพ์ที่พร้อมใช้: <code>+</code> · ✋ โหมด Ask before changes · 🖥 Computer Use (ไม่เปิด) · วงกลม context · โมเดล</figcaption>
@@ -96,18 +96,18 @@
   <div class="table-wrap"><table>
     <thead><tr><th>โมเดล</th><th>จุดเด่น</th><th>วันนี้ใช้เมื่อ</th></tr></thead>
     <tbody>
-      <tr><td><strong>GLM-5.3</strong></td><td>เก่งที่สุด context ยาว (1M) ใช้โควต้ามากกว่า</td><td>task ยาก เช่น T2.1 กติกาการจองทั้งหมด หรือเมื่อ Flash แก้ไม่ผ่าน</td></tr>
+      <tr><td><strong>GLM-5.3</strong></td><td>เก่งที่สุด รับข้อความได้ยาวมาก (context 1M token) แต่ใช้โควต้ามากกว่า</td><td>task ยาก เช่น T2.1 กติกาการจองทั้งหมด หรือเมื่อ Flash แก้ไม่ผ่าน</td></tr>
       <tr><td><strong>GLM-5.3-Flash</strong> <span class="small">Vision</span></td><td>เร็ว ประหยัด และอ่านรูปภาพได้</td><td>ค่าเริ่มต้นของ Lab 1a และ Lab 3</td></tr>
     </tbody>
   </table></div>
   <figure class="shot sm">
     <img src="assets/zcode/zcode-model.png" width="370" height="347" loading="lazy" alt="เมนูเลือกโมเดลของ ZCode: GLM-5.3 และ GLM-5.3-Flash (Vision, เลือกอยู่) และแถบ Effort ตั้งไว้ที่ Max ปรับด้วย Ctrl+T">
-    <figcaption>กดชื่อโมเดลใต้ช่องพิมพ์ → เลือกโมเดล · แถบ <strong>Effort</strong> = ระดับการคิด (ค่าเริ่มต้น Max · ปรับด้วย <kbd>Ctrl</kbd>+<kbd>T</kbd>)</figcaption>
+    <figcaption>กดชื่อโมเดลใต้ช่องพิมพ์ → เลือกโมเดล · แถบ <strong>Effort</strong> คือระดับการคิด (ค่าเริ่มต้น Max · ปรับด้วย <kbd>Ctrl</kbd>+<kbd>T</kbd>)</figcaption>
   </figure>
   <div class="box why">
     <span class="label">💡 Effort คืออะไร</span>
-    <p>Effort สูง = agent คิดนานและละเอียดก่อนตอบ ได้ผลดีขึ้นกับงานยาก แต่ใช้เวลาและ token มากขึ้น
-    งานเล็ก (แก้ข้อความ ปรับหน้าเว็บ) ลด Effort ลงได้ · งานที่มีกติกาเยอะ (T2.1) คงไว้ที่ Max</p>
+    <p>ตั้ง Effort สูง agent จะคิดนานและละเอียดก่อนตอบ ได้ผลดีขึ้นกับงานยาก แต่ใช้เวลาและ token มากขึ้น
+    งานเล็ก (แก้ข้อความ ปรับหน้าเว็บ) ลด Effort ลงได้ ส่วนงานที่มีกติกาเยอะ (T2.1) ให้คงไว้ที่ Max</p>
   </div>
   <div class="box token">
     <span class="label">🪙 ดูโควต้าที่เหลือ</span>
@@ -127,7 +127,7 @@
     <thead><tr><th>โหมด</th><th>พฤติกรรม</th><th>วันนี้</th></tr></thead>
     <tbody>
       <tr><td>💡 <strong>Plan mode</strong></td><td><em>Plan before editing</em> — วางแผนก่อน แล้วรอเรายืนยันจึงลงมือ</td><td>✅ ใช้ได้กับ task ใหญ่ เช่น T2.1 — อ่านแผนเทียบกับ AC ก่อนให้ทำ</td></tr>
-      <tr><td>✋ <strong>Ask before changes</strong> (ค่าเริ่มต้น)</td><td><em>Ask before file changes</em> — ถามก่อนแก้ไฟล์และก่อนรันคำสั่ง</td><td>✅ <strong>ใช้โหมดนี้</strong> — เห็นทุกอย่างก่อนเกิด</td></tr>
+      <tr><td>✋ <strong>Ask before changes</strong> (ค่าเริ่มต้น)</td><td><em>Ask before file changes</em> — ถามก่อนแก้ไฟล์และก่อนรันคำสั่ง</td><td>✅ <strong>ใช้โหมดนี้</strong> — เห็นทุกการเปลี่ยนแปลงก่อนเกิดขึ้นจริง</td></tr>
       <tr><td>🛡 Autonomous mode</td><td><em>Ask when there’s risk</em> — ทำเองเป็นส่วนใหญ่ ถามเฉพาะเมื่อโปรแกรมประเมินว่าเสี่ยง</td><td>⚠ <strong>วันนี้ไม่ใช้</strong> — โปรแกรมเป็นคนตัดสินว่าอะไรเสี่ยง ไม่ใช่เรา</td></tr>
       <tr><td>❗ Full access</td><td><em>Run with fewer confirmations</em> — ถามน้อยที่สุด</td><td>❌ <strong>ห้ามใช้</strong> — agent อาจรัน deploy / migration / git แทนคนได้</td></tr>
     </tbody>
@@ -140,16 +140,16 @@
     <thead><tr><th>agent ขอ…</th><th>กด</th><th>เหตุผล</th></tr></thead>
     <tbody>
       <tr><td>แก้/สร้างไฟล์ ใน <code>src/</code> <code>public/</code> <code>migrations/</code> ที่ task สั่ง</td><td><strong>Allow</strong> (อ่านชื่อไฟล์ก่อน)</td><td>เป็นงานของ agent</td></tr>
-      <tr><td>แก้ไฟล์ที่ task <strong>ไม่ได้</strong>สั่ง เช่น <code>SPEC.md</code> <code>wrangler.jsonc</code> <code>package.json</code></td><td><strong>Reject</strong> แล้วถามเหตุผล</td><td>agent ทำเกิน task = เสี่ยงและเปลือง token</td></tr>
-      <tr><td>รัน <code>wrangler</code> · <code>npx</code> · <code>npm</code> · <code>git</code></td><td><strong>Reject</strong> แล้วพิมพ์เองใน Git Bash</td><td>คำสั่งเหล่านี้กระทบของจริงและย้อนยาก — กติกาข้อ 1 ของวัน</td></tr>
+      <tr><td>แก้ไฟล์ที่ task <strong>ไม่ได้</strong>สั่ง เช่น <code>SPEC.md</code> <code>wrangler.jsonc</code> <code>package.json</code></td><td><strong>Reject</strong> แล้วถามเหตุผล</td><td>agent ทำเกินที่ task สั่ง ทั้งเสี่ยงและเปลือง token</td></tr>
+      <tr><td>รัน <code>wrangler</code> · <code>npx</code> · <code>npm</code> · <code>git</code></td><td><strong>Reject</strong> แล้วพิมพ์เองใน Git Bash</td><td>คำสั่งเหล่านี้กระทบระบบจริงและย้อนกลับได้ยาก — กติกาข้อ 1 ของวัน</td></tr>
       <tr><td>อ่านไฟล์ / ค้นหาในโปรเจกต์</td><td>Allow</td><td>ไม่เปลี่ยนอะไร</td></tr>
     </tbody>
   </table></div>
   <div class="box warn">
     <span class="label">⚠ อย่ากด Always Allow กับคำสั่ง</span>
     <p>“Always Allow” ทำให้ครั้งต่อไป agent รันคำสั่งแบบเดียวกันได้โดยไม่ถาม — บนเครื่องส่วนกลางยิ่งอันตราย
-    เพราะคนที่ใช้เครื่องต่ออาจได้สิทธิ์นั้นไปด้วย · <code>AGENTS.md</code> ของ starter เขียนห้าม agent รันคำสั่งไว้แล้ว
-    ถ้ามันยังขอ แปลว่ามันพลาด — ปฏิเสธได้เลย</p>
+    เพราะคนที่ใช้เครื่องต่ออาจได้สิทธิ์นั้นไปด้วย ไฟล์ <code>AGENTS.md</code> (ไฟล์กติกาที่ agent อ่านทุกครั้ง) ของ starter (โปรเจกต์ตั้งต้นที่ผู้สอนเตรียมให้) เขียนห้าม agent รันคำสั่งไว้แล้ว
+    ถ้ายังขอรันคำสั่ง แสดงว่า agent ทำผิดกติกา ให้กด Reject</p>
   </div>
 
   <h2 id="context">บอกบริบทให้ ZCode</h2>
@@ -157,9 +157,9 @@
     <thead><tr><th>ช่องทาง</th><th>ZCode ใช้อย่างไร</th><th>วันนี้</th></tr></thead>
     <tbody>
       <tr><td><code>AGENTS.md</code> ที่รากโปรเจกต์</td><td><strong>อ่านอัตโนมัติทุกครั้งที่เริ่ม task</strong> (รวมกับ <code>~/.zcode/AGENTS.md</code> ของผู้ใช้ ถ้ามี โดยไฟล์ของโปรเจกต์เป็นหลัก)</td><td>มากับ starter: กติกา ทำทีละ task ห้ามรันคำสั่ง ถามก่อนเดา</td></tr>
-      <tr><td><code>@ไฟล์</code></td><td>แนบไฟล์หรือโฟลเดอร์เข้า context</td><td>ปกติไม่ต้อง — AGENTS.md บอกให้อ่าน SPEC/TASKS เอง</td></tr>
+      <tr><td><code>@ไฟล์</code></td><td>แนบไฟล์หรือโฟลเดอร์ให้ agent อ่าน (เพิ่มเข้า context)</td><td>ปกติไม่ต้อง — AGENTS.md บอกให้อ่าน SPEC/TASKS เอง</td></tr>
       <tr><td><code>$skill</code></td><td>เรียก skill (ขั้นตอนมาตรฐานของงานที่ทำซ้ำ)</td><td>ดู <a href="theory-3-agent-skill.html">ทฤษฎี 3</a></td></tr>
-      <tr><td><code>/คำสั่ง</code></td><td>prompt ที่บันทึกไว้ และคำสั่งของโปรแกรม</td><td>ไม่จำเป็น</td></tr>
+      <tr><td><code>/คำสั่ง</code></td><td>ข้อความสั่งงาน (prompt) ที่บันทึกไว้ และคำสั่งของโปรแกรม</td><td>ไม่จำเป็น</td></tr>
       <tr><td><code>CLAUDE.md</code></td><td><strong>ไม่อ่าน</strong>ระหว่างทำงาน</td><td>starter จึงใช้ AGENTS.md</td></tr>
     </tbody>
   </table></div>
@@ -171,19 +171,19 @@
     <li>ท้ายแต่ละคำตอบมี <strong>สรุปไฟล์ที่เปลี่ยน</strong> — อ่านทุกครั้ง แล้วดูรายละเอียดด้วย <code>git diff</code> ใน Git Bash หรือ VS Code</li>
     <li>ใน ZCode เองก็ดู diff ได้: เปิด<strong>แผงด้านขวา</strong> → แท็บใหม่ → <strong>Review</strong> (<em>Review code changes and diffs</em>) เห็นทีละบรรทัดว่าเพิ่ม/ลบอะไร</li>
     <li>ปุ่ม <strong>Undo</strong> ของ ZCode ย้อนไฟล์ที่ agent แก้ในคำตอบนั้นได้ (ย้อนทั้งชุด ไม่เลือกทีละไฟล์) และกด Reapply คืนได้</li>
-    <li>แก้ข้อความล่าสุดที่ส่งไป แล้วเลือก <strong>Reset chat + files</strong> = ย้อนไฟล์ของรอบนั้นแล้วส่งใหม่</li>
-    <li>สิ่งที่<strong>เกิดจากคำสั่งใน terminal ย้อนด้วย Undo ไม่ได้</strong> — อีกเหตุผลที่คนรันคำสั่งเอง</li>
+    <li>แก้ข้อความล่าสุดที่ส่งไป แล้วเลือก <strong>Reset chat + files</strong> โปรแกรมจะย้อนไฟล์ที่แก้ในรอบนั้นกลับก่อน แล้วจึงส่งข้อความใหม่</li>
+    <li>สิ่งที่<strong>เกิดจากคำสั่งใน terminal ย้อนด้วย Undo ไม่ได้</strong> — นี่เป็นอีกเหตุผลที่ให้คนรันคำสั่งเอง</li>
   </ul>
   <figure class="shot ">
     <img src="assets/zcode/zcode-tabs.png" width="990" height="779" loading="lazy" alt="แผงด้านขวาของ ZCode หน้า New tab: Files, Terminal, Sites, Browser, Review, Side conversation และ App plugins">
     <figcaption>แผงด้านขวา → New tab · ที่ใช้วันนี้: <strong>Review</strong> (ดู diff) และ <strong>Files</strong> (ดูไฟล์) · <strong>ไม่ใช้</strong>: Terminal (พิมพ์ใน Git Bash แทน) · <strong>Sites</strong> (เว็บของ Z.ai — วันนี้ deploy ขึ้น Cloudflare ด้วย wrangler) · Browser · App plugins</figcaption>
   </figure>
   <div class="box check">
-    <span class="label">✅ ตาข่ายนิรภัยหลักของวันนี้คือ Git</span>
-    <p>commit หลังทุก task ที่ผ่าน · ถ้า agent ทำพังหรือทำเกิน task: <code>git restore .</code> (ทิ้งการแก้ที่ยังไม่ commit) แล้วสั่งใหม่ให้ชัดขึ้น</p>
+    <span class="label">✅ วันนี้ใช้ Git เป็นเครื่องมือหลักในการย้อนกลับ</span>
+    <p>ทุกครั้งที่ task ผ่าน ให้ commit (บันทึกสถานะของโค้ดไว้) ถ้า agent ทำผิดหรือทำเกิน task ให้ใช้ <code>git restore .</code> (ทิ้งการแก้ที่ยังไม่ commit) แล้วสั่งใหม่ให้ชัดขึ้น</p>
   </div>
 
-  <h2 id="loop">วงจรใช้ ZCode ใน Lab 3</h2>
+  <h2 id="loop">ขั้นตอนการใช้ ZCode ใน Lab 3</h2>
   <div class="flow">
     <div class="node"><b>1 · สั่ง</b><code>ทำ task Tx.y ใน TASKS.md</code></div><div class="arrow">→</div>
     <div class="node"><b>2 · อนุญาต</b>Allow แก้ไฟล์ · Reject คำสั่ง</div><div class="arrow">→</div>
@@ -198,11 +198,11 @@
     <thead><tr><th>อาการ</th><th>ทำอย่างไร</th></tr></thead>
     <tbody>
       <tr><td>ZCode ล็อกอินเป็นบัญชีคนอื่นค้างอยู่</td><td>ออกจากระบบ แล้วล็อกอินบัญชี Z.ai ของตัวเอง — ไม่งั้นใช้โควต้าของคนอื่น</td></tr>
-      <tr><td>agent ขอรัน <code>npm install</code> / <code>wrangler …</code></td><td>Reject แล้วรันเองใน Git Bash · บอกมันว่า “รันให้แล้ว ผลคือ …”</td></tr>
+      <tr><td>agent ขอรัน <code>npm install</code> / <code>wrangler …</code></td><td>Reject แล้วรันเองใน Git Bash จากนั้นบอกมันว่า “รันให้แล้ว ผลคือ …”</td></tr>
       <tr><td>agent แก้หลายไฟล์เกิน task</td><td>Undo หรือ <code>git restore .</code> แล้วสั่งใหม่: “ทำเฉพาะ T1.1 แก้แค่ src/routes/cars.ts กับ migrations/”</td></tr>
-      <tr><td>คุยไปนานแล้ววกวน ตอบช้า</td><td>เริ่ม task ใหม่ — context สะอาด agent อ่าน AGENTS.md ใหม่</td></tr>
+      <tr><td>คุยไปนานแล้ววกวน ตอบช้า</td><td>เริ่ม task ใหม่ — ได้บทสนทนาใหม่ที่ไม่มีข้อความเก่า และ agent จะอ่าน AGENTS.md ใหม่</td></tr>
       <tr><td>Flash แก้ซ้ำ 2 รอบยังไม่ผ่าน</td><td>สลับเป็น GLM-5.3 สำหรับ task นั้น แล้วกลับมา Flash</td></tr>
-      <tr><td>โควต้าใกล้หมด</td><td>แจ้งผู้สอน — ใช้ checkpoint ของผู้สอนแทนการให้ agent เขียนต่อ</td></tr>
+      <tr><td>โควต้าใกล้หมด</td><td>แจ้งผู้สอน — ใช้โค้ดที่ผู้สอนเตรียมไว้ถึงจุดนั้น (checkpoint) แทนการให้ agent เขียนต่อ</td></tr>
     </tbody>
   </table></div>
   <div class="box warn">

@@ -11,65 +11,66 @@
 </head>
 <body data-page="lab-4.html">
 <main>
-  <p class="eyebrow">Lab 4 · 15:20–15:45 (25 นาที)</p>
+  <p class="eyebrow">Lab 4 · 15:20–15:50 (30 นาที)</p>
   <h1>Verify แล้ว Validate: ตรวจระบบ และตรวจรับกับ "ผู้ใช้"</h1>
-  <p class="lede">ช่วงแรกถามว่า <strong>"สร้างถูกตาม spec ไหม"</strong> (verification) ด้วยเช็กลิสต์บน production
-  ช่วงหลังถามว่า <strong>"สร้างของที่ผู้ใช้ต้องการจริงไหม"</strong> (validation) โดยให้เพื่อนเล่นบทเจ้าของโจทย์ ทดสอบเทียบกับโจทย์ต้นฉบับ</p>
+  <p class="lede">ช่วงแรกตอบคำถามว่า <strong>"สร้างถูกตาม spec ไหม"</strong> เรียกว่า verification โดยไล่เช็กลิสต์บน production (ระบบที่ใช้งานจริงซึ่ง deploy ขึ้น Cloudflare แล้ว)
+  ช่วงหลังตอบคำถามว่า <strong>"สร้างของที่ผู้ใช้ต้องการจริงไหม"</strong> เรียกว่า validation โดยให้เพื่อนเล่นบทเจ้าของโจทย์ แล้วลองใช้ระบบเทียบกับโจทย์ต้นฉบับ</p>
 
   <div class="meta">
-    <span class="chip">⏱ 25 นาที</span>
+    <span class="chip">⏱ 30 นาที</span>
     <span class="chip">👥 จับคู่</span>
-    <span class="chip">🪙 ~0–50K token (เฉพาะถ้าต้องแก้)</span>
+    <span class="chip">🪙 ข้อ 4 ใช้ token (ยังไม่ได้วัด) · ข้ออื่นใช้เฉพาะถ้าต้องแก้</span>
     <span class="chip">SDLC: Testing → Acceptance → Release</span>
   </div>
 
   <div class="toc">
     <b>ในหน้านี้</b>
     <ol>
-      <li><a href="#verify">เช็กลิสต์ verification บน production (10 นาที)</a></li>
-      <li><a href="#accept">ตรวจรับกับ "ผู้ใช้" (10 นาที)</a></li>
-      <li><a href="#fast">กลุ่มเร็ว: change request / บั๊กปลูก</a></li>
+      <li><a href="#verify">เช็กลิสต์ verification บน production (8 นาที)</a></li>
+      <li><a href="#accept">ตรวจรับกับ "ผู้ใช้" (8 นาที)</a></li>
       <li><a href="#tag">ปิด release v1.0</a></li>
-      <li><a href="#retro">คำถาม retro</a></li>
+      <li><a href="#agent">ลอง deploy ด้วย agent (10 นาที)</a></li>
+      <li><a href="#fast">ถ้ายังมีเวลา: ขอเปลี่ยน spec / หาบั๊กที่ผู้สอนใส่ไว้</a></li>
+      <li><a href="#retro">คำถามทบทวนท้ายวัน (retro)</a></li>
       <li><a href="#signout">ออกจากระบบก่อนออกจากห้อง</a></li>
     </ol>
   </div>
 
-  <h2 id="verify">1 · เช็กลิสต์ verification บน production (10 นาที)</h2>
-  <div class="box intent"><span class="label">🎯 เจตนา</span>
-    <p>smoke test ตรวจ AC ให้แล้ว แต่บางเรื่องตรวจด้วยวิธีอื่น: <strong>ตรวจ (inspection)</strong> ข้อมูลในฐานข้อมูล · <strong>สาธิต (demonstration)</strong> บนมือถือ
-    — ทำบน <strong>production</strong> ซึ่งเป็นของที่ผู้ใช้จะใช้จริง</p>
+  <h2 id="verify">1 · เช็กลิสต์ verification บน production (8 นาที)</h2>
+  <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+    <p>smoke test (ชุดทดสอบอัตโนมัติจาก Lab 3) ตรวจ AC (เกณฑ์ตรวจรับใน SPEC) ให้แล้ว แต่บางเรื่องต้องตรวจด้วยวิธีอื่น เช่น <strong>เปิดดูโดยตรง (inspection)</strong> อย่างข้อมูลในฐานข้อมูล หรือ<strong>สาธิตให้ดู (demonstration)</strong> บนมือถือ
+    ทุกข้อให้ทำบน <strong>production</strong> เพราะเป็นระบบที่ผู้ใช้จะใช้จริง ทำเสร็จข้อไหนให้ติ๊ก ☐ ในช่อง “ผล”</p>
   </div>
 
   <div class="table-wrap"><table>
     <thead><tr><th>#</th><th>ตรวจอะไร</th><th>วิธีตรวจ</th><th>วิธี</th><th>ผล</th></tr></thead>
     <tbody>
-      <tr><td>1</td><td>ไม่ล็อกอิน เรียกการจองไม่ได้</td><td>เปิดหน้าต่าง InPrivate แล้วไปที่ <code>https://…workers.dev/api/bookings</code> ต้องเห็น <code>{"error":"กรุณาเข้าสู่ระบบ"}</code> (401)</td><td>test</td><td>☐</td></tr>
-      <tr><td>2</td><td>รหัสผ่านไม่ถูกเก็บเป็นข้อความเปล่า (NFR-03)</td><td>รันคำสั่งด้านล่าง ต้องเห็นรูปแบบ <code>salt:hash</code> ยาว ๆ ไม่ใช่รหัสจริง</td><td>inspection</td><td>☐</td></tr>
-      <tr><td>3</td><td>cookie session เป็น HttpOnly</td><td>F12 → Application → Cookies → <code>session</code> ช่อง HttpOnly ✓ และ Secure ✓ (บน https)</td><td>inspection</td><td>☐</td></tr>
-      <tr><td>4</td><td>A ไม่เห็น / ยกเลิกการจองของ B ไม่ได้ (NFR-04)</td><td>admin สร้างผู้ใช้ 2 คน · แต่ละคนจอง 1 รายการ · สลับล็อกอินดูหน้า "การจองของฉัน"</td><td>demonstration</td><td>☐</td></tr>
-      <tr><td>5</td><td>ผู้ใช้ทั่วไปจัดการผู้ใช้/รถไม่ได้</td><td>ล็อกอินเป็น user → ไม่เห็นเมนู "ผู้ใช้" · เปิด <code>/api/users</code> ตรง ๆ ได้ 403</td><td>test</td><td>☐</td></tr>
-      <tr><td>6</td><td>ใช้บนมือถือจอเล็กได้ (NFR-01)</td><td>เปิดบนมือถือ (หรือ F12 → โหมดอุปกรณ์ 375px) ทุกหน้าไม่มี scroll แนวนอน</td><td>demonstration</td><td>☐</td></tr>
+      <tr><td>1</td><td>ไม่ล็อกอิน เรียกการจองไม่ได้</td><td>เปิดเบราว์เซอร์หน้าต่าง InPrivate (ยังไม่ล็อกอิน) แล้วไปที่ <code>https://…workers.dev/api/bookings</code> ของคุณ ผ่านเมื่อเห็น <code>{"error":"กรุณาเข้าสู่ระบบ"}</code> (รหัส 401)</td><td>test</td><td>☐</td></tr>
+      <tr><td>2</td><td>รหัสผ่านไม่ถูกเก็บเป็นข้อความเปล่า (NFR-03)</td><td>รันคำสั่งใต้ตารางใน Git Bash ผ่านเมื่อช่อง password_hash เป็นข้อความยาว ๆ รูปแบบ <code>salt:hash</code> (รหัสที่ถูกเข้ารหัสทางเดียวแล้ว) ไม่ใช่รหัสผ่านจริง</td><td>inspection</td><td>☐</td></tr>
+      <tr><td>3</td><td>cookie session เป็น HttpOnly</td><td>ล็อกอินแล้วกด F12 ไปที่แท็บ Application → Cookies แล้วดูแถว <code>session</code> ผ่านเมื่อช่อง HttpOnly ✓ (JavaScript อ่าน cookie ไม่ได้) และ Secure ✓ (ส่งเฉพาะ https)</td><td>inspection</td><td>☐</td></tr>
+      <tr><td>4</td><td>A ไม่เห็น / ยกเลิกการจองของ B ไม่ได้ (NFR-04)</td><td>ใช้ admin สร้างผู้ใช้ 2 คน ให้แต่ละคนจอง 1 รายการ แล้วสลับล็อกอินดูหน้า "การจองของฉัน" ผ่านเมื่อแต่ละคนเห็นเฉพาะการจองของตัวเอง</td><td>demonstration</td><td>☐</td></tr>
+      <tr><td>5</td><td>ผู้ใช้ทั่วไปจัดการผู้ใช้/รถไม่ได้</td><td>ล็อกอินเป็น user ธรรมดา ผ่านเมื่อไม่เห็นเมนู "ผู้ใช้" และเมื่อพิมพ์ <code>/api/users</code> ต่อท้าย URL ตรง ๆ ได้ error 403 (ไม่มีสิทธิ์)</td><td>test</td><td>☐</td></tr>
+      <tr><td>6</td><td>ใช้บนมือถือจอเล็กได้ (NFR-01)</td><td>เปิดบนมือถือ (หรือกด F12 แล้วเปิดโหมดจำลองอุปกรณ์ กว้าง 375px) ผ่านเมื่อทุกหน้าไม่ต้องเลื่อนซ้าย–ขวา</td><td>demonstration</td><td>☐</td></tr>
       <tr><td>7</td><td>จองเสร็จใน 1 นาที (NFR-02)</td><td>ให้เพื่อนจับเวลา: จากเปิดหน้าจองจนเห็น "จองสำเร็จ"</td><td>demonstration</td><td>☐</td></tr>
     </tbody>
   </table></div>
 
   <div class="box cmd"><span class="label">⌨️ ข้อ 2 — ดูข้อมูลจริงในฐานข้อมูลบนคลาวด์</span></div>
 <pre><code>npx wrangler d1 execute app-db --remote --command "SELECT username, role, password_hash FROM users"</code></pre>
-  <div class="box intent"><span class="label">🎯 เจตนาของคำสั่งนี้</span>
-    <p>อ่านอย่างเดียว ไม่แก้ข้อมูล · <code>--remote</code> = ฐานข้อมูลบน production (ถ้าไม่ใส่จะดูฐานข้อมูลในเครื่อง) — ระวังอย่ารันคำสั่ง <code>DELETE</code>/<code>UPDATE</code> กับ <code>--remote</code> โดยไม่ตั้งใจ</p>
+  <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไรของคำสั่งนี้</span>
+    <p>คำสั่งนี้อ่านข้อมูลอย่างเดียว ไม่แก้อะไร ส่วน <code>--remote</code> แปลว่าดูฐานข้อมูลบน production (ถ้าไม่ใส่จะดูฐานข้อมูลในเครื่อง) ระวังอย่าเผลอรันคำสั่ง <code>DELETE</code>/<code>UPDATE</code> คู่กับ <code>--remote</code> เพราะจะแก้ข้อมูลจริง</p>
   </div>
-  <p>ข้อไหนไม่ผ่าน → แก้ด้วย agent โดยรายงานเป็นเลขข้อ เช่น <code>เช็กลิสต์ข้อ 4 ไม่ผ่าน: B เห็นการจองของ A ที่หน้า #mine ช่วยหาสาเหตุก่อน อย่าเพิ่งแก้</code> แล้ว release ใหม่</p>
+  <p>ถ้าข้อไหนไม่ผ่าน ให้สั่ง agent (ZCode) แก้ โดยบอกเลขข้อและอาการ เช่น <code>เช็กลิสต์ข้อ 4 ไม่ผ่าน: B เห็นการจองของ A ที่หน้า #mine ช่วยหาสาเหตุก่อน อย่าเพิ่งแก้</code> เมื่อแก้เสร็จแล้ว ให้ทำขั้น Release ใน Lab 3 ซ้ำ (migration --remote ถ้ามี แล้ว deploy)</p>
 
-  <h2 id="accept">2 · ตรวจรับกับ "ผู้ใช้" (10 นาที)</h2>
-  <div class="box intent"><span class="label">🎯 เจตนา</span>
-    <p>ทุก test ผ่าน ≠ ผู้ใช้พอใจ · ให้เพื่อนเล่นบท <strong>หัวหน้างานยานพาหนะ</strong> ใช้ระบบของคุณบนมือถือ แล้วตรวจเทียบกับ
-    <a href="brief.html">โจทย์ต้นฉบับ B1–B7</a> — <strong>ไม่ใช่เทียบกับ SPEC</strong> เพราะ spec เองก็อาจผิดหรือขาดได้</p>
+  <h2 id="accept">2 · ตรวจรับกับ "ผู้ใช้" (8 นาที)</h2>
+  <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+    <p>ผ่านทุก test ไม่ได้แปลว่าผู้ใช้จะพอใจ ให้เพื่อนเล่นบท <strong>หัวหน้างานยานพาหนะ</strong> ลองใช้ระบบของคุณบนมือถือ แล้วตรวจเทียบกับ
+    <a href="brief.html">โจทย์ต้นฉบับ ย่อหน้า B1–B7</a> <strong>ไม่ใช่เทียบกับ SPEC</strong> เพราะ spec เองก็อาจเขียนผิดหรือตกหล่นได้</p>
   </div>
   <ol>
-    <li>จับคู่ คนหนึ่งเป็น "ผู้ใช้" อีกคนเป็นทีมพัฒนา (สลับกันหลัง 5 นาที)</li>
+    <li>จับคู่ คนหนึ่งเป็น "ผู้ใช้" อีกคนเป็นทีมพัฒนา (สลับกันหลัง 4 นาที)</li>
     <li>"ผู้ใช้" อ่านโจทย์ทีละย่อหน้า แล้วลองทำสิ่งนั้นในระบบจริง</li>
-    <li>ทีมพัฒนาจดผลลงตาราง <strong>ห้ามอธิบายแก้ตัว</strong> — จดอย่างเดียว</li>
+    <li>ทีมพัฒนาจดผลลงตารางด้านล่าง <strong>ห้ามอธิบายหรือโต้แย้ง</strong> ให้จดอย่างเดียว ถ้าไม่ตรง ให้ระบุว่าเป็นแบบไหนใน 3 แบบใต้ตาราง</li>
   </ol>
   <div class="table-wrap"><table>
     <thead><tr><th>ย่อหน้า</th><th>"ผู้ใช้" ลองอะไร</th><th>ผล</th><th>ถ้าไม่ตรง: เป็นแบบไหน</th></tr></thead>
@@ -83,34 +84,20 @@
     </tbody>
   </table></div>
   <div class="grid">
-    <div class="card"><h4>🐞 bug</h4><p>ระบบ<strong>ไม่ตรงกับ spec</strong> — เช่น AC บอกต่อคิวพอดีได้ แต่ระบบปฏิเสธ · แก้ที่โค้ด แล้วเพิ่มเคส smoke ที่จับได้</p></div>
-    <div class="card"><h4>🕳 requirement gap</h4><p>ระบบตรง spec แต่ <strong>spec ไม่ครอบคลุมความต้องการ</strong> — แก้ที่ spec ก่อน (SRS → AC → task) แล้วค่อยโค้ด</p></div>
-    <div class="card"><h4>📌 ตั้งใจเลื่อน</h4><p>อยู่ใน SRS แต่จัดเป็น Release 2 หรือ "ยังไม่ทำ" — เช่น B6 การอนุมัติ → FR-14 · ตอบผู้ใช้ได้ว่า "อยู่ในแผน รอบหน้า" เพราะ<strong>เขียนไว้แล้ว</strong></p></div>
+    <div class="card"><h4>🐞 bug</h4><p>ระบบ<strong>ไม่ตรงกับ spec</strong> เช่น AC บอกว่าจองต่อคิวพอดีได้ แต่ระบบปฏิเสธ วิธีแก้คือแก้โค้ด แล้วเพิ่มเคส smoke ที่จับบั๊กนี้ได้</p></div>
+    <div class="card"><h4>🕳 requirement gap (ความต้องการตกหล่น)</h4><p>ระบบตรง spec แต่ <strong>spec ไม่ครอบคลุมสิ่งที่ผู้ใช้ต้องการ</strong> วิธีแก้คือแก้ spec ก่อน (SRS แล้ว AC แล้ว task) แล้วค่อยแก้โค้ด</p></div>
+    <div class="card"><h4>📌 ตั้งใจเลื่อน</h4><p>มีเขียนไว้ใน SRS แต่จัดไว้ใน Release 2 หรือ "ยังไม่ทำ" เช่น เรื่องการอนุมัติใน B6 ถูกบันทึกเป็น FR-14 จึงตอบผู้ใช้ได้ว่า "อยู่ในแผนรอบหน้า" เพราะ<strong>เขียนไว้แล้ว</strong></p></div>
   </div>
   <div class="box theory"><span class="label">📖 ข้อสังเกต</span>
-    <p>ถ้าตอนเช้าไม่ได้ถามเจ้าของโจทย์เรื่องการอนุมัติ (Q3) ช่องนี้จะกลายเป็น "requirement gap" ที่น่าอายต่อหน้าผู้ใช้ —
-    การบันทึกสิ่งที่<strong>ตั้งใจไม่ทำ</strong>ไว้ใน spec จึงสำคัญพอ ๆ กับสิ่งที่ทำ</p>
+    <p>ถ้าตอนเช้าไม่ได้ถามเจ้าของโจทย์เรื่องการอนุมัติ (คำถาม Q3) เรื่องนี้จะกลายเป็น "requirement gap" ที่ผู้ใช้มาพบตอนตรวจรับ
+    ดังนั้นการบันทึกสิ่งที่<strong>ตั้งใจไม่ทำ</strong>ไว้ใน spec จึงสำคัญพอ ๆ กับสิ่งที่ทำ</p>
   </div>
 
-  <h2 id="fast">3 · กลุ่มเร็ว: เลือก 1 อย่าง</h2>
-  <h3>ก. Change request: FR-11 หรือ FR-12</h3>
-  <div class="box intent"><span class="label">🎯 เจตนา</span>
-    <p>เจ้าของโจทย์ขอเพิ่มหลังเห็นระบบ — ฝึกเดินวงจรครบ <strong>SRS → SPEC (AC + ตัวอย่าง) → smoke → TASKS → agent → verify</strong> โดยไม่ข้ามขั้น</p>
+  <h2 id="tag">3 · ปิด release v1.0</h2>
+  <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+    <p>ติดป้ายชื่อเวอร์ชัน (tag) ให้ commit ที่ผ่านการตรวจรับแล้ว วันหน้าจะย้อนกลับมาดูได้ว่า "เวอร์ชันที่ผู้ใช้รับไป" คือโค้ดชุดไหน</p>
   </div>
-  <ol>
-    <li>เลือก <strong>FR-11</strong> (จองล่วงหน้าไม่เกิน 30 วัน) หรือ <strong>FR-12</strong> (ยกเลิกได้เฉพาะก่อนเวลาเริ่ม) — ย้ายจาก §7 ใน SPEC.md มาเป็น US/AC ใหม่ เช่น <code>**AC-2.8**</code> พร้อมแถวตัวอย่างขอบเขต (วันที่ 30 ได้ · วันที่ 31 ไม่ได้)</li>
-    <li>รัน <code>npm run trace</code> → ต้องเห็น ❌ AC ใหม่ยังไม่มีเคส (ดีแล้ว: spec นำหน้าโค้ด)</li>
-    <li>เพิ่ม task ใน TASKS.md เช่น <code>T3.1</code> แล้วสั่ง <code>ทำ task T3.1 ใน TASKS.md</code></li>
-    <li>smoke + trace ✅ → commit → migration (ถ้ามี) → deploy</li>
-  </ol>
-  <p class="small">ข้อสังเกตสำหรับ FR-12: เคส "ยกเลิกหลังเวลาเริ่มไม่ได้" เขียนเป็น smoke test ยาก (สร้างการจองในอดีตไม่ได้เพราะ AC-2.5) — ตัดสินใจว่าจะตรวจด้วยวิธีไหน แล้วเขียนวิธีตรวจลงใน SPEC</p>
-  <h3>ข. ล่าบั๊กปลูก</h3>
-  <p>ขอการ์ดบั๊กจากผู้สอน ติดตั้งตามการ์ด แล้วหาว่า <strong>smoke test เคสไหนจับได้</strong> — มีบั๊กหนึ่งตัวที่ smoke test จับไม่ได้ ต้องใช้วิธีตรวจอื่น ลองหาให้เจอ</p>
-
-  <h2 id="tag">4 · ปิด release v1.0</h2>
-  <div class="box intent"><span class="label">🎯 เจตนา</span>
-    <p>ติดป้ายเวอร์ชันให้ commit ที่ผ่านการตรวจรับแล้ว — วันหน้าย้อนกลับมาดูได้ว่า "เวอร์ชันที่ผู้ใช้รับ" คือโค้ดชุดไหน</p>
-  </div>
+  <p>รันใน Git Bash ทีละคำสั่ง คำสั่งสุดท้ายต้องเห็นคำว่า <code>tag: v1.0</code> ที่ commit บนสุด</p>
 <pre><code>git add . &amp;&amp; git commit -m "release 1: verified and accepted"</code></pre>
 <pre><code>git tag v1.0</code></pre>
 <pre><code>git log --oneline --decorate</code></pre>
@@ -119,25 +106,89 @@
       <li>เช็กลิสต์ verification ผ่านครบ 7 ข้อบน production</li>
       <li>ตารางตรวจรับมีผลครบทุกย่อหน้า และแยก bug / gap / ตั้งใจเลื่อน ได้</li>
       <li>มี tag <code>v1.0</code> ใน <code>git log</code></li>
+      <li>deploy v1.1 ด้วย agent สำเร็จ (ข้อ 4) และบอกได้ว่า agent รันคำสั่งอะไรไปบ้าง</li>
     </ul>
   </div>
 
-  <h2 id="retro">5 · คำถาม retro (ช่วง 15:45)</h2>
+  <h2 id="agent">4 · ลอง deploy ด้วย agent (10 นาที)</h2>
+  <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+    <p>ทั้งวันคุณพิมพ์คำสั่ง Cloudflare เองจนรู้แล้วว่าแต่ละคำสั่งทำอะไร ข้อนี้ลองให้ agent ทำแทนดูบ้าง
+    โดยใช้ <strong>Cloudflare agent setup</strong> ซึ่งเป็นชุดคำสั่งที่ Cloudflare เตรียมไว้ให้ agent ติดตั้งความรู้เรื่อง Cloudflare (skills) และเชื่อมกับบัญชี Cloudflare ของคุณเอง (MCP)
+    จะได้เห็นว่า agent ทำได้เร็วแค่ไหน และ<strong>ต้องได้สิทธิ์อะไรบ้าง</strong>จึงทำได้</p>
+  </div>
+  <div class="step"><div class="step-num">1</div><div class="step-body">
+    <h3>จดโควต้าก่อนเริ่ม</h3>
+    <p>เปิดหน้า Usage Stats ใน ZCode แล้วจดตัวเลขโควต้าที่เหลือไว้ (จะเทียบหลังจบข้อนี้)</p>
+  </div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body">
+    <h3>ให้ agent ตั้งค่า Cloudflare เอง</h3>
+    <p>ใน ZCode กด <strong>New task</strong> ในโปรเจกต์ <code>my-app</code> ตรวจว่าโหมดเป็น <strong>Ask before changes</strong> (ไอคอนมือ ✋) แล้วพิมพ์:</p>
+<pre><code>Fetch and execute the appropriate instructions to set me up for Cloudflare from https://developers.cloudflare.com/agent-setup/prompt.md</code></pre>
+    <ul>
+      <li>ZCode จะขออนุญาตรันคำสั่งทีละข้อ เช่น <code>npx -y skills add cloudflare/skills …</code> <strong>อ่านทุกคำสั่งก่อนกด Allow</strong> ถ้าไม่เข้าใจว่าคำสั่งทำอะไร ให้กด Reject แล้วถาม agent ก่อน</li>
+      <li>ถ้าถามว่าจะติดตั้ง <code>cf</code> CLI ไหม ให้ตอบ<strong>ไม่ติดตั้ง</strong> (วันนี้ใช้ wrangler อยู่แล้ว)</li>
+      <li>ถ้าเบราว์เซอร์เปิดหน้า Cloudflare ให้อนุญาต ตรวจว่าเป็นอีเมลของคุณก่อนกดยืนยัน — ขั้นนี้คือการให้ agent เข้าถึงบัญชีของคุณ</li>
+    </ul>
+  </div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body">
+    <h3>สั่งให้ agent แก้และ deploy เวอร์ชัน 1.1</h3>
+    <p><code>AGENTS.md</code> ของ starter ห้าม agent รันคำสั่ง wrangler ไว้ จึงต้องบอกข้อยกเว้นให้ชัดในคำสั่ง (นี่คือการปรับกติกาของ agent อย่างตั้งใจ ตรงกับขั้น Improve ของ ADLC ในทฤษฎี 3):</p>
+<pre><code>ครั้งนี้ผู้สอนอนุญาตให้คุณรันคำสั่ง deploy เองได้ เป็นข้อยกเว้นจากกติกาใน AGENTS.md เฉพาะงานนี้เท่านั้น
+งาน: แก้หัวข้อของหน้าแรกให้มีคำว่า "v1.1" แล้ว deploy my-app ขึ้น Cloudflare
+ห้ามรัน migration ห้ามลบ Worker หรือฐานข้อมูล และบอกทุกคำสั่งที่จะรันก่อนรัน</code></pre>
+    <p>อ่านคำสั่ง deploy ที่ agent ขอรันก่อนกด <strong>Allow</strong> (ห้ามกด Always Allow)</p>
+  </div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body">
+    <h3>ตรวจผลด้วยตัวเอง แล้ว commit</h3>
+    <p>เปิด URL ของแอปแล้วรีเฟรช ต้องเห็น "v1.1" จากนั้นพิมพ์ใน Git Bash เพื่อยืนยันว่ามี deployment ใหม่อยู่บนสุด แล้ว commit การแก้ของ agent:</p>
+<pre><code>npx wrangler deployments list</code></pre>
+<pre><code>git add . &amp;&amp; git commit -m "v1.1: deployed by agent"</code></pre>
+    <p>สุดท้ายเปิด Usage Stats อีกครั้ง แล้วเทียบกับตัวเลขที่จดไว้ในขั้นที่ 1</p>
+  </div></div>
+  <div class="box warn"><span class="label">⚠ ถ้า agent deploy แล้วหน้าเว็บพัง</span>
+    <p>คุณย้อนกลับเองได้ทันทีด้วย <code>npx wrangler rollback</code> ใน Git Bash (แบบเดียวกับที่ทำใน Lab 1) ไม่ต้องรอ agent</p>
+  </div>
+  <div class="box theory"><span class="label">📖 คิดก่อนใช้ในงานจริง</span>
+    <p>agent deploy ได้เร็วกว่าพิมพ์เอง แต่ถ้า deploy ผิด คนที่กด Allow ยังเป็นคนรับผิดชอบ
+    และถ้าไม่เคยพิมพ์คำสั่งเหล่านี้เองมาก่อน ก็จะตัดสินไม่ได้ว่าคำสั่งที่ agent ขอรันนั้นปลอดภัยหรือไม่
+    นี่คือเหตุผลที่วันนี้ให้พิมพ์เองก่อน แล้วค่อยลองให้ agent ทำตอนท้าย</p>
+  </div>
+
+  <h2 id="fast">5 · ถ้ายังมีเวลา: เลือก 1 อย่าง</h2>
+  <p>ทำหลังข้อ 4 เสร็จแล้วเท่านั้น ถ้าเวลาหมดให้ข้ามไปข้อ 6</p>
+  <h3>ก. Change request (คำขอเปลี่ยน): FR-11 หรือ FR-12</h3>
+  <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+    <p>สมมติว่าเจ้าของโจทย์เห็นระบบแล้วขอเพิ่มความสามารถ ให้ฝึกทำครบทุกขั้นตามลำดับโดยไม่ข้าม: แก้ SRS ก่อน แล้วเขียน AC และตัวอย่างใน SPEC จากนั้นให้มีเคส smoke เพิ่ม task ใน TASKS แล้วจึงสั่ง agent และตรวจผล</p>
+  </div>
   <ol>
-    <li>วางแต่ละ commit ของคุณวันนี้ลงบน phase ของ SDLC — phase ไหนที่ AI ช่วยมากที่สุด และ phase ไหนที่คนต้องทำเองทั้งหมด?</li>
+    <li>เลือก <strong>FR-11</strong> (จองล่วงหน้าไม่เกิน 30 วัน) หรือ <strong>FR-12</strong> (ยกเลิกได้เฉพาะก่อนเวลาเริ่ม) แล้วเปิด SPEC.md ย้ายข้อนั้นจาก §7 (นอกขอบเขต) มาเขียนเป็น user story และ AC ใหม่ เช่น <code>**AC-2.8**</code> พร้อมแถวตัวอย่างกรณีค่าขอบ (วันที่ 30 จองได้ · วันที่ 31 จองไม่ได้)</li>
+    <li>รัน <code>npm run trace</code> ใน Git Bash ต้องเห็น ❌ ที่ AC ใหม่ เพราะยังไม่มีเคสทดสอบ (ถูกต้องแล้ว: เขียน spec ก่อนโค้ด)</li>
+    <li>เพิ่ม task ใหม่ใน TASKS.md เช่น <code>T3.1</code> แล้วพิมพ์ใน ZCode ว่า <code>ทำ task T3.1 ใน TASKS.md</code></li>
+    <li>รัน smoke และ trace จนเป็น ✅ แล้ว commit จากนั้นรัน migration แบบ --remote (ถ้ามีไฟล์ใหม่) แล้ว deploy</li>
+  </ol>
+  <p class="small">ข้อสังเกตสำหรับ FR-12: เคส "ยกเลิกหลังเวลาเริ่มไม่ได้" เขียนเป็น smoke test ยาก เพราะระบบไม่ยอมให้สร้างการจองในอดีต (AC-2.5) ให้ตัดสินใจว่าจะตรวจข้อนี้ด้วยวิธีไหน แล้วเขียนวิธีตรวจนั้นลงใน SPEC</p>
+  <h3>ข. หาบั๊กที่ผู้สอนใส่ไว้</h3>
+  <p>ขอการ์ดบั๊กจากผู้สอน แก้โค้ดตามการ์ดเพื่อใส่บั๊กเข้าไป แล้วหาว่า <strong>smoke test เคสไหนจับบั๊กนั้นได้</strong> มีบั๊กหนึ่งตัวที่ smoke test จับไม่ได้ ต้องใช้วิธีตรวจอื่น ลองหาให้เจอ</p>
+
+  <h2 id="retro">6 · คำถามทบทวนท้ายวัน (retro ช่วง 15:50)</h2>
+  <p>retro (retrospective) คือการทบทวนว่าวันนี้อะไรได้ผล อะไรควรทำต่างไป ใช้คำถามเหล่านี้คุยกับคู่หรือในกลุ่ม</p>
+  <ol>
+    <li>ไล่ดู commit ของคุณวันนี้ (<code>git log --oneline</code>) แล้วจับคู่แต่ละ commit กับขั้นของ SDLC (เช่น Requirements, Design, Implementation, Testing, Deployment) ขั้นไหนที่ AI ช่วยมากที่สุด และขั้นไหนที่คนต้องทำเองทั้งหมด?</li>
     <li>คำถามข้อไหนที่ถามเจ้าของโจทย์ตอนเช้า ถ้าไม่ได้ถาม ระบบจะสร้างผิด?</li>
-    <li>SRS ตอนเช้าของคุณ "แต่งเพิ่ม" (⚠) กี่ข้อ — LLM เดาอะไรที่ไม่มีในโจทย์?</li>
+    <li>SRS ตอนเช้าของคุณมีข้อที่ AI "แต่งเพิ่ม" (ช่อง ⚠ ในตาราง 4 ช่องตอน Baseline) กี่ข้อ AI เดาอะไรที่ไม่มีในโจทย์บ้าง?</li>
     <li>มีอะไรที่ smoke test ผ่านหมดแต่ผู้ใช้ยังไม่พอใจไหม? เป็น bug หรือ gap?</li>
-    <li>ถ้าต้องสร้างระบบใหม่พรุ่งนี้ (เช่น จองห้องประชุม) จะใช้อะไรจากวันนี้ซ้ำได้บ้าง? (starter, template, skill, STARTER-PROMPT)</li>
+    <li>ตอนให้ agent deploy (ข้อ 4) มันรันคำสั่งอะไรบ้าง ใช้โควต้าไปเท่าไร และถ้าเป็นงานจริงของหน่วยงาน คุณจะยอมให้ agent deploy เองไหม ในกรณีไหน?</li>
+    <li>ถ้าต้องสร้างระบบใหม่พรุ่งนี้ (เช่น จองห้องประชุม) จะใช้อะไรจากวันนี้ซ้ำได้บ้าง? (เช่น โปรเจกต์ตั้งต้น starter, แม่แบบเอกสาร template, skill, STARTER-PROMPT)</li>
   </ol>
 
-  <h2 id="signout">6 · ออกจากระบบก่อนออกจากห้อง</h2>
+  <h2 id="signout">7 · ออกจากระบบก่อนออกจากห้อง</h2>
   <div class="box warn"><span class="label">🔒 เครื่อง Lab เป็นของส่วนกลาง</span>
-    <p>ถ้าไม่ออกจากระบบ คนที่ใช้เครื่องต่อจะ deploy ทับ ลบฐานข้อมูล หรือใช้โควต้า AI ของคุณได้ — แอปที่ deploy แล้วยังเปิดได้ตามปกติหลัง logout</p>
+    <p>ถ้าไม่ออกจากระบบ คนที่ใช้เครื่องต่อจะ deploy ทับ ลบฐานข้อมูล หรือใช้โควต้า AI ของคุณได้ ไม่ต้องห่วงว่าแอปจะหาย แอปที่ deploy แล้วยังเปิดได้ตามปกติหลัง logout รันใน Git Bash:</p>
 <pre><code>npx wrangler logout</code></pre>
 <pre><code>npx wrangler whoami</code></pre>
     <ul class="checklist">
-      <li><code>whoami</code> บอกว่ายังไม่ได้ล็อกอิน</li>
+      <li>คำสั่ง <code>whoami</code> ตอบว่ายังไม่ได้ล็อกอิน</li>
+      <li>ลบสิ่งที่ข้อ 4 ติดตั้งไว้: ใน ZCode (task เดิมของข้อ 4) พิมพ์ <code>ลบ Cloudflare skills และการตั้งค่า MCP ของ Cloudflare ที่ติดตั้งเมื่อกี้ออกจากเครื่องนี้</code> แล้วอ่านคำสั่งก่อนกด Allow</li>
       <li>ZCode → log out</li>
       <li>เบราว์เซอร์: ออกจากระบบ dash.cloudflare.com · z.ai · Gemini / ChatGPT แล้วปิดทุกหน้าต่าง</li>
     </ul>

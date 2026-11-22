@@ -13,19 +13,19 @@
 <main>
   <p class="eyebrow">Lab 2 · 11:15–12:00 · 45 นาที</p>
   <h1>เขียน SRS และร่าง Design ร่วมกับ AI แชต</h1>
-  <p class="lede">เปลี่ยน<a href="brief.html">โจทย์จากผู้ใช้</a>ให้เป็น <strong>SRS</strong> ที่ตรวจสอบได้ และร่าง <strong>design</strong> ของระบบ
+  <p class="lede">เปลี่ยน<a href="brief.html">โจทย์จากผู้ใช้</a>ให้เป็น <strong>SRS</strong> (Software Requirements Specification — เอกสารรวบรวมความต้องการของระบบเป็นข้อ ๆ) ที่ตรวจสอบได้ และร่าง <strong>design</strong> (แบบว่าจะสร้างระบบอย่างไร)
   โดยใช้ Gemini หรือ ChatGPT ในเบราว์เซอร์เป็นผู้ช่วยร่าง — <strong>คุณ</strong>เป็นคนตัดสินและยืนยันกับเจ้าของโจทย์ทุกข้อ</p>
 
   <div class="meta">
     <span class="chip">⏱ 45 นาที</span>
     <span class="chip">🤖 Gemini / ChatGPT (ฟรี) · ZCode 0 token</span>
-    <span class="chip">🧭 SDLC: Requirements · Design</span>
+    <span class="chip">🧭 SDLC (ขั้นตอนการพัฒนาซอฟต์แวร์): Requirements · Design</span>
   </div>
 
   <div class="table-wrap"><table>
     <thead><tr><th>👤 คน</th><th>🤖 AI แชต</th></tr></thead>
     <tbody>
-      <tr><td>เลือกคำถามไปถามเจ้าของโจทย์ · ตัดสินว่า requirement ไหนจริง · ติดป้ายสมมติฐาน · วางผลลงไฟล์ · รีวิวกับเพื่อน · commit</td>
+      <tr><td>เลือกคำถามไปถามเจ้าของโจทย์ · ตัดสินว่า requirement (ความต้องการ) ข้อไหนจริง · ติดป้าย [สมมติฐาน] ให้ข้อที่ไม่มีที่มา · วางผลลงไฟล์ · รีวิวกับเพื่อน · commit (บันทึกงานลง Git)</td>
           <td>ตั้งคำถาม · ร่างตาราง use case / FR / NFR / story / design · รีวิวหาจุดกำกวม</td></tr>
     </tbody>
   </table></div>
@@ -45,7 +45,7 @@
   <div class="box warn">
     <span class="label">⚠ กติกา 3 ข้อของ lab นี้</span>
     <ol>
-      <li><strong>AI แต่ง requirement ขึ้นมาได้อย่างมั่นใจ</strong> — ทุกข้อใน SRS ต้องบอกที่มาได้ (<code>B#</code> = ย่อหน้าในโจทย์ · <code>Q#</code> = คำตอบเจ้าของโจทย์) ข้อที่ไม่มีที่มาต้องติด <strong>[สมมติฐาน]</strong></li>
+      <li><strong>AI แต่ง requirement ขึ้นมาได้อย่างมั่นใจ</strong> — ทุกข้อใน SRS ต้องบอกที่มาได้ (<code>B#</code> คือย่อหน้าในโจทย์ · <code>Q#</code> คือคำตอบของเจ้าของโจทย์) ข้อที่ไม่มีที่มาต้องติด <strong>[สมมติฐาน]</strong></li>
       <li><strong>ห้ามใส่ข้อมูลส่วนตัวหรือข้อมูลจริงของหน่วยงาน</strong>ลงใน prompt — ใช้เฉพาะโจทย์สมมติในหน้านี้</li>
       <li>เครื่อง Lab เป็นของส่วนกลาง — <strong>ออกจากระบบ Gemini/ChatGPT</strong> ตอนเลิกเรียน (<a href="setup.html#signout">PART D</a>)</li>
     </ol>
@@ -55,19 +55,19 @@
   <ol>
     <li>เปิด <a href="brief.html">โจทย์จากผู้ใช้</a> ไว้แท็บหนึ่ง</li>
     <li>เปิด <strong>gemini.google.com</strong> หรือ <strong>chatgpt.com</strong> อีกแท็บ (ล็อกอินบัญชีของคุณ) — เริ่ม<strong>แชตใหม่</strong></li>
-    <li>เปิดโปรเจกต์ <code>my-app</code> ใน VS Code (<code>code .</code>) เปิดไฟล์ <code>docs/SRS.md</code> และ <code>docs/DESIGN.md</code> — template รออยู่แล้ว</li>
+    <li>ใน Git Bash เข้าโฟลเดอร์ <code>my-app</code> แล้วพิมพ์ <code>code .</code> เพื่อเปิดโปรเจกต์ใน VS Code จากนั้นเปิดไฟล์ <code>docs/SRS.md</code> และ <code>docs/DESIGN.md</code> — ในไฟล์มีหัวข้อแม่แบบ (template) เตรียมไว้แล้ว ให้เติมเนื้อหาลงไป</li>
   </ol>
   <div class="box token"><span class="label">🪙 ทำไมใช้ AI แชตแทน ZCode</span>
     <p>งานเขียนเอกสารไม่ต้องแก้ไฟล์โค้ด — ใช้เครื่องมือฟรีที่ทุกคนมีได้ และเก็บโควต้า ZCode ไว้ใช้สร้างโค้ดตอนบ่าย</p>
   </div>
 
   <h2 id="steps">8 ขั้นของ prompt</h2>
-  <p>ส่งทีละขั้นในแชตเดียวกัน (AI จะจำบริบทเดิม) · แต่ละขั้น: <strong>อ่านคำตอบ → ตัดสิน → วางส่วนที่ใช้ลงไฟล์</strong></p>
+  <p>ส่ง prompt ทีละขั้นในแชตเดียวกัน เพื่อให้ AI จำสิ่งที่คุยกันก่อนหน้าได้ · ทุกขั้นให้ทำ 3 อย่าง: <strong>อ่านคำตอบของ AI, ตัดสินว่าส่วนไหนถูกและใช้ได้, แล้วคัดลอกเฉพาะส่วนนั้นไปวางในไฟล์</strong></p>
 
   <!-- 1 -->
   <div class="step"><div class="step-num">1</div><div class="step-body">
-    <h3>วางบทบาท + ให้ AI ถามก่อน <span class="small">· 4 นาที</span></h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span>
+    <h3>บอกบทบาทให้ AI และให้มันตั้งคำถามก่อน <span class="small">· 4 นาที</span></h3>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
       <p>เริ่มด้วยการ<strong>ถาม</strong> ไม่ใช่การเขียน — ให้ AI ช่วยหาจุดกำกวมในโจทย์ แทนที่จะปล่อยให้มันเดาคำตอบเอง</p>
     </div>
     <div class="box prompt"><span class="label">💬 วาง prompt นี้ แล้วแปะข้อความโจทย์ทั้งหมดต่อท้าย</span></div>
@@ -87,16 +87,16 @@
   <!-- 2 -->
   <div class="step"><div class="step-num">2</div><div class="step-body">
     <h3>👤 ถามเจ้าของโจทย์ (ผู้สอน) <span class="small">· 6 นาที</span></h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span>
-      <p>นี่คือ <strong>validation</strong> — ยืนยันกับคนที่รู้ความต้องการจริง AI ตอบแทนเจ้าของโจทย์ไม่ได้</p>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+      <p>ขั้นนี้เรียกว่า <strong>validation</strong> (การยืนยันความต้องการ) คือถามคนที่รู้ความต้องการจริง เพราะ AI ตอบแทนเจ้าของโจทย์ไม่ได้</p>
     </div>
     <ol>
       <li>เลือก<strong>คำถามที่สำคัญที่สุด 3–5 ข้อ</strong> (ข้อที่ถ้าตอบผิดจะทำให้ระบบผิด)</li>
       <li>ยกมือถามผู้สอนซึ่งรับบท “หัวหน้างานยานพาหนะ” หรือฟังคำตอบที่เพื่อนถามแล้ว</li>
-      <li>จดลง <code>docs/SRS.md</code> <strong>§8</strong> เป็น <code>Q1</code>, <code>Q2</code>, … พร้อมคำตอบ</li>
-      <li>คำถามที่ยังไม่ได้ถาม → จดใน §8 ว่า <strong>[สมมติฐาน]</strong> พร้อมสิ่งที่คุณสมมติ</li>
+      <li>จดคำถามและคำตอบลงใน <code>docs/SRS.md</code> หัวข้อที่ 8 (<strong>§8</strong>) โดยตั้งรหัสเป็น <code>Q1</code>, <code>Q2</code>, … ตามลำดับ</li>
+      <li>คำถามที่ไม่ได้ถาม ให้จดใน §8 เหมือนกัน พร้อมเขียนว่าคุณสมมติคำตอบไว้อย่างไร และติดป้าย <strong>[สมมติฐาน]</strong></li>
     </ol>
-    <div class="box prompt"><span class="label">💬 แปะคำตอบกลับให้ AI</span></div>
+    <div class="box prompt"><span class="label">💬 แปะคำตอบที่ได้กลับไปในแชต AI</span></div>
 <pre><code>นี่คือคำตอบจากเจ้าของโจทย์ ใช้รหัส Q เป็นที่มาได้ ข้อที่ไม่มีคำตอบให้ถือเป็นสมมติฐาน:
 Q1: [คำถาม] → [คำตอบ]
 Q2: [คำถาม] → [คำตอบ]
@@ -106,8 +106,9 @@ Q2: [คำถาม] → [คำตอบ]
   <!-- 3 -->
   <div class="step"><div class="step-num">3</div><div class="step-body">
     <h3>Stakeholder + Use case <span class="small">· 5 นาที</span></h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span>
-      <p>หาว่า<strong>ใครเกี่ยวข้อง</strong>บ้าง (รวมคนที่ไม่ได้ใช้ระบบแต่ได้รับผล) และระบบต้องรองรับ “งาน” อะไร — use case ช่วยมองครบทั้ง flow ปกติและกรณีผิดปกติ</p>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+      <p>หาว่า<strong>ใครเกี่ยวข้อง</strong>กับระบบบ้าง เรียกว่า stakeholder (รวมคนที่ไม่ได้ใช้ระบบแต่ได้รับผล) และระบบต้องรองรับ “งาน” อะไรบ้าง
+      — use case คืองานแต่ละอย่างที่ผู้ใช้ทำกับระบบ (เช่น “จองรถ”) การเขียน use case ช่วยให้คิดครบทั้งขั้นตอนปกติและกรณีผิดปกติ</p>
     </div>
 <pre><code>จากโจทย์และคำตอบ เขียนเป็น Markdown:
 1) ตาราง stakeholders: กลุ่ม | บทบาท/สิ่งที่ต้องการ | ใช้ระบบไหม
@@ -115,14 +116,15 @@ Q2: [คำถาม] → [คำตอบ]
 3) use case "จองรถ" แบบละเอียด: actor, precondition, main flow เป็นข้อ ๆ,
    alternate flows (เช่น เวลาซ้อน คนเกินที่นั่ง เวลาไม่ถูกต้อง), postcondition
 ระบบมีระบบผู้ใช้/ล็อกอิน/admin จัดการบัญชีอยู่แล้ว ไม่ต้องออกแบบส่วนนั้นใหม่</code></pre>
-    <p><strong>วางลง:</strong> <code>docs/SRS.md</code> §2 และ §3 · <strong>ตรวจ:</strong> alternate flow ครบกติกาในโจทย์ไหม · มี actor ที่โจทย์ไม่ได้พูดถึงโผล่มาไหม (ถ้ามี = แต่งเพิ่ม)</p>
+    <p><strong>วางลง:</strong> <code>docs/SRS.md</code> §2 และ §3 · <strong>ตรวจ:</strong> กรณีผิดปกติ (alternate flow) ครอบคลุมกติกาในโจทย์ครบไหม และมีผู้ใช้ (actor) ที่โจทย์ไม่ได้พูดถึงโผล่มาไหม — ถ้ามี แปลว่า AI แต่งเพิ่มเอง</p>
   </div></div>
 
   <!-- 4 -->
   <div class="step"><div class="step-num">4</div><div class="step-body">
     <h3>Functional Requirements พร้อมที่มา <span class="small">· 6 นาที</span></h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span>
-      <p>เปลี่ยนความต้องการเป็นข้อ ๆ ที่<strong>ตรวจได้</strong> และ<strong>ตามรอยได้</strong> — ทุกข้อมีรหัส ที่มา และลำดับความสำคัญ</p>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+      <p>Functional Requirement (FR) คือสิ่งที่ระบบต้อง<strong>ทำได้</strong> · ขั้นนี้เปลี่ยนความต้องการเป็นข้อ ๆ ที่<strong>ตรวจได้</strong> (ทดสอบได้ว่าทำแล้วหรือยัง)
+      และ<strong>ตามรอยได้</strong> (ชี้ได้ว่ามาจากย่อหน้าไหนของโจทย์ หรือคำตอบข้อไหน) — ทุกข้อมีรหัส ที่มา และลำดับความสำคัญ</p>
     </div>
 <pre><code>เขียนตาราง Functional Requirements:
 รหัส FR-01.. | ระบบต้อง... | ที่มา (B# หรือ Q#) | ความสำคัญ (ต้องมี / ควรมี / อาจทำ / ยังไม่ทำ) | use case
@@ -130,14 +132,15 @@ Q2: [คำถาม] → [คำตอบ]
 - 1 ข้อ = 1 ความสามารถ ขึ้นต้นด้วย "ระบบต้อง" และตรวจได้ว่าทำแล้วหรือยัง
 - ข้อที่ไม่มีที่มาในโจทย์หรือคำตอบ ให้ใส่ที่มาว่า [สมมติฐาน] ห้ามแต่งที่มา
 - สิ่งที่เจ้าของโจทย์บอกว่า "ไว้รอบหน้า" ให้ใส่ความสำคัญเป็น ควรมี หรือ ยังไม่ทำ</code></pre>
-    <p><strong>วางลง:</strong> <code>docs/SRS.md</code> §4 · <strong>ตรวจ:</strong> ไล่ทุกแถวที่มี <code>[สมมติฐาน]</code> — ตัดทิ้ง หรือย้ายไปถามใน §8 · มีกติกา “ห้ามจองชน” “นั่งไม่พอ” “แก้ของคนอื่นไม่ได้” ครบไหม</p>
+    <p><strong>วางลง:</strong> <code>docs/SRS.md</code> §4 · <strong>ตรวจ:</strong> ไล่ดูทุกแถวที่มี <code>[สมมติฐาน]</code> แล้วเลือกว่าจะตัดทิ้ง หรือย้ายไปเป็นคำถามใน §8 · ดูว่ามีกติกา “ห้ามจองชน” “นั่งไม่พอ” “แก้ของคนอื่นไม่ได้” ครบไหม</p>
   </div></div>
 
   <!-- 5 -->
   <div class="step"><div class="step-num">5</div><div class="step-body">
     <h3>Non-functional Requirements ที่วัดได้ <span class="small">· 4 นาที</span></h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span>
-      <p>NFR ที่ดีต้อง<strong>วัดได้</strong>และมี<strong>วิธีตรวจ</strong> — “ใช้ง่าย” ตรวจไม่ได้ · “จองเสร็จใน 1 นาทีบนจอ 375px” ตรวจได้</p>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+      <p>Non-functional Requirement (NFR) คือคุณภาพของระบบ เช่น ความเร็ว ความปลอดภัย ความง่ายในการใช้ (ไม่ใช่ฟังก์ชัน) · NFR ที่ดีต้อง<strong>วัดได้</strong>และบอก<strong>วิธีตรวจ</strong>
+      ตัวอย่าง: “ใช้ง่าย” ตรวจไม่ได้ แต่ “จองเสร็จใน 1 นาทีบนจอกว้าง 375px” ตรวจได้</p>
     </div>
 <pre><code>เขียนตาราง Non-functional Requirements:
 รหัส NFR-01.. | ด้าน (ความปลอดภัย/ใช้งาน/ประสิทธิภาพ/ค่าใช้จ่าย/ความถูกต้อง) | เกณฑ์ที่วัดได้เป็นตัวเลขหรือผ่าน/ไม่ผ่าน | วิธีตรวจ | ที่มา
@@ -149,8 +152,9 @@ Q2: [คำถาม] → [คำตอบ]
   <!-- 6 -->
   <div class="step"><div class="step-num">6</div><div class="step-body">
     <h3>User story + Acceptance criteria + ตารางตัวอย่าง <span class="small">· 6 นาที</span></h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span>
-      <p>AC แบบ Given/When/Then คือ<strong>ข้อตกลงว่าแบบไหนเรียกว่า “ถูก”</strong> · ตารางตัวอย่างพร้อมผลที่คาดหวังเขียน<strong>ก่อน</strong>โค้ด จะกลายเป็นเคสทดสอบตอนบ่าย</p>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+      <p>user story คือความต้องการที่เขียนจากมุมของผู้ใช้ ส่วน acceptance criteria (AC) คือ<strong>เงื่อนไขที่ตกลงกันว่าแบบไหนถือว่า “ทำถูก”</strong>
+      เขียนแบบ Given/When/Then (กำหนดให้… / เมื่อ… / แล้วต้อง…) · ตารางตัวอย่างพร้อมผลที่คาดหวังที่เขียน<strong>ก่อน</strong>เขียนโค้ด จะถูกนำไปใช้เป็นเคสทดสอบตอนบ่าย</p>
     </div>
 <pre><code>สำหรับ FR ระดับ "ต้องมี" เขียน user story รูปแบบ "ในฐานะ ... ฉันต้องการ ... เพื่อ ..."
 แต่ละ story มี acceptance criteria แบบ Given / When / Then รหัส AC-1.1, AC-1.2, ...
@@ -159,14 +163,15 @@ Q2: [คำถาม] → [คำตอบ]
 สมมติรถ A ถูกจอง 10:00–12:00 ไว้แล้ว ให้ 8 กรณีการจองใหม่ (ทับบางส่วน, อยู่ข้างใน, คลุมทั้งช่วง, ต่อคิวพอดี, คนละคัน ฯลฯ)
 คอลัมน์: # | การจองใหม่ | ผลที่คาดหวัง | เหตุผล
 ถ้ากรณีไหนโจทย์ยังไม่ได้ตัดสิน ให้เขียนว่า "ต้องถามเจ้าของโจทย์"</code></pre>
-    <p><strong>วางลง:</strong> ท้าย <code>docs/SRS.md</code> หรือใน <code>SPEC.md</code> §3 ส่วนของโจทย์ · <strong>ตรวจ:</strong> กรณี “ต่อคิวพอดี” ตอบตามคำตอบเจ้าของโจทย์ หรือ AI เดาเอง?</p>
+    <p><strong>วางลง:</strong> ท้าย <code>docs/SRS.md</code> หรือใน <code>SPEC.md</code> §3 ส่วนของโจทย์ · <strong>ตรวจ:</strong> กรณี “ต่อคิวพอดี” (เช่น การจองใหม่เริ่ม 12:00 ตรงกับเวลาที่การจองเดิมจบ) AI ตอบตามคำตอบของเจ้าของโจทย์ หรือเดาเอง?</p>
   </div></div>
 
   <!-- 7 -->
   <div class="step"><div class="step-num">7</div><div class="step-body">
     <h3>ร่าง Design <span class="small">· 6 นาที</span></h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span>
-      <p>จาก “ต้องการอะไร” ไปสู่ “จะสร้างอย่างไร” — สถาปัตยกรรม การตัดสินใจหลัก (ADR) ข้อมูลที่ต้องเก็บ และ API · ให้ AI รู้ข้อจำกัดจริงที่คุณเห็นใน Lab 1</p>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+      <p>เปลี่ยนจาก “ระบบต้องทำอะไร” เป็น “จะสร้างอย่างไร”: โครงสร้างระบบ (สถาปัตยกรรม), การตัดสินใจสำคัญพร้อมเหตุผล (ADR — Architecture Decision Record), ตารางข้อมูลที่ต้องเก็บ และ API
+      · prompt นี้บอกข้อจำกัดจริงที่คุณเจอใน Lab 1 (Cloudflare แบบฟรี และ starter ที่มีระบบล็อกอินแล้ว) เพื่อไม่ให้ AI เสนอสิ่งที่ใช้ไม่ได้</p>
     </div>
 <pre><code>จาก SRS ข้างต้น ร่าง design เป็น Markdown โดยมีข้อจำกัดดังนี้:
 - deploy บน Cloudflare Workers + Hono (TypeScript) + D1 (SQLite) free plan ห้ามใช้บริการที่ต้องผูกบัตร
@@ -184,8 +189,8 @@ Q2: [คำถาม] → [คำตอบ]
   <!-- 8 -->
   <div class="step"><div class="step-num">8</div><div class="step-body">
     <h3>ให้ AI รีวิว แต่คนตัดสิน <span class="small">· 3 นาที</span></h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span>
-      <p>ใช้ AI เป็น “ผู้ตรวจคนที่สอง” หาจุดอ่อน — แต่<strong>คุณ</strong>เป็นคนเลือกว่าจะแก้ข้อไหน</p>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+      <p>ให้ AI ช่วยตรวจอีกรอบเพื่อหาจุดอ่อน — แต่<strong>คุณ</strong>เป็นคนเลือกว่าจะแก้ข้อไหน</p>
     </div>
 <pre><code>รีวิว SRS ทั้งหมดที่เราเขียนในแชตนี้ ตอบเป็นรายการสั้น ๆ ไม่เกิน 8 ข้อ:
 - requirement ที่กำกวมหรือตรวจไม่ได้
@@ -193,7 +198,7 @@ Q2: [คำถาม] → [คำตอบ]
 - requirement ที่ไม่มีที่มาจากโจทย์หรือคำตอบ (อาจถูกแต่งขึ้น)
 - กรณีผิดปกติที่ยังไม่มี AC รองรับ
 ห้ามเขียน SRS ใหม่ทั้งหมด</code></pre>
-    <p>แก้เฉพาะข้อที่เห็นด้วยในไฟล์ของคุณ</p>
+    <p>อ่านรายการที่ AI ส่งมา แล้วแก้ในไฟล์ของคุณเฉพาะข้อที่คุณเห็นด้วย</p>
   </div></div>
 
   <h2 id="quality">เช็กคุณภาพ requirement (ทำเอง 2 นาที)</h2>
@@ -210,18 +215,19 @@ Q2: [คำถาม] → [คำตอบ]
   </table></div>
 
   <h2 id="review">รีวิวกับเพื่อน + commit (5 นาที)</h2>
-  <div class="box intent"><span class="label">🎯 เจตนา</span>
-    <p>คนที่ไม่ได้เขียนมักเห็นจุดกำกวมที่ผู้เขียนมองข้าม — นี่คือ peer review ของ requirement</p>
+  <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+    <p>คนที่ไม่ได้เขียนมักเห็นจุดกำกวมที่ผู้เขียนมองข้าม — การให้เพื่อนช่วยตรวจแบบนี้เรียกว่า peer review</p>
   </div>
   <ol>
     <li>สลับจอกับเพื่อนข้าง ๆ อ่าน SRS ของกันและกัน 3 นาที</li>
     <li>ใช้ตารางคุณภาพด้านบน ชี้ให้เพื่อน <strong>2 จุด</strong> ที่กำกวมหรือไม่มีที่มา</li>
-    <li>แก้ของตัวเอง แล้ว commit:</li>
+    <li>แก้ไฟล์ของตัวเองตามที่เพื่อนชี้ แล้ว commit โดยพิมพ์ใน Git Bash (ในโฟลเดอร์ <code>my-app</code>):</li>
   </ol>
 <pre><code>git add docs/SRS.md docs/DESIGN.md SPEC.md</code></pre>
 <pre><code>git commit -m "lab 2: my SRS + design draft"</code></pre>
   <div class="box why"><span class="label">ทำไมต้อง commit ตอนนี้</span>
-    <p>ตอน 13:00 เราจะคัดลอก spec อ้างอิงทับลงไป — <code>git diff</code> จะเทียบงานของคุณกับฉบับอ้างอิงให้ทีละบรรทัด และงานของคุณยังอยู่ใน history เสมอ</p>
+    <p>ตอน 13:00 เราจะคัดลอก spec ฉบับอ้างอิงที่ผู้สอนเตรียมไว้มาทับไฟล์ของคุณ ถ้า commit ไว้ก่อน คำสั่ง <code>git diff</code> จะแสดงความต่างระหว่างงานของคุณกับฉบับอ้างอิงทีละบรรทัด
+    และงานของคุณจะยังเก็บอยู่ในประวัติของ Git (history) เสมอ ไม่หายไปไหน</p>
   </div>
 
   <div class="box check"><span class="label">✅ ผ่าน Lab 2 เมื่อ</span>
@@ -233,7 +239,7 @@ Q2: [คำถาม] → [คำตอบ]
   </div>
 
   <div class="box warn"><span class="label">🆘 ถ้าตามไม่ทัน</span>
-    <p>ทำให้ได้ถึงขั้น 4 (FR พร้อมที่มา) ก่อน — ขั้นนี้สำคัญที่สุดสำหรับการเทียบตอนบ่าย · ส่วน design ฟังจาก walkthrough ตอน 13:00 ได้</p>
+    <p>ทำให้ได้ถึงขั้น 4 (FR พร้อมที่มา) ก่อน — ขั้นนี้สำคัญที่สุด เพราะตอนบ่ายจะนำไปเทียบกับฉบับอ้างอิง · ส่วน design ฟังผู้สอนอธิบายฉบับอ้างอิงตอน 13:00 ได้</p>
   </div>
 
   <h2 id="trouble">ปัญหาที่พบบ่อย</h2>
@@ -241,11 +247,11 @@ Q2: [คำถาม] → [คำตอบ]
     <thead><tr><th>อาการ</th><th>วิธีแก้</th></tr></thead>
     <tbody>
       <tr><td>AI เขียน SRS ยาวทั้งเล่มทันทีโดยไม่ถาม</td><td>ตอบกลับว่า “หยุด ทำเฉพาะงานแรก: ตั้งคำถามอย่างเดียว ห้ามเดา”</td></tr>
-      <tr><td>AI ใส่ที่มา B# ให้ requirement ที่โจทย์ไม่ได้พูดถึง</td><td>เปิดโจทย์ตรวจเอง — ที่มาที่แต่งขึ้นอันตรายกว่าไม่มีที่มา</td></tr>
+      <tr><td>AI ใส่ที่มา B# ให้ requirement ที่โจทย์ไม่ได้พูดถึง</td><td>เปิดโจทย์ตรวจเอง — ที่มาที่แต่งขึ้นอันตรายกว่าไม่มีที่มา เพราะทำให้เราเชื่อว่ามีหลักฐานทั้งที่ไม่มี</td></tr>
       <tr><td>AI เสนอ Firebase / AWS / ส่งอีเมล / OTP</td><td>ย้ำข้อจำกัด: Cloudflare free plan ไม่ผูกบัตร และมีระบบล็อกอินจาก starter แล้ว</td></tr>
       <tr><td>ตาราง Markdown วางแล้วเพี้ยน</td><td>ขอ AI ว่า “ส่งเป็น Markdown ใน code block” แล้วคัดลอกจาก code block</td></tr>
       <tr><td>ไม่ได้ถามเจ้าของโจทย์ทัน</td><td>จดเป็น [สมมติฐาน] ใน §8 — ตอนบ่ายจะเห็นว่าสมมติถูกหรือผิด</td></tr>
-      <tr><td>AI ตอบช้า / ใช้ไม่ได้</td><td>สลับไปอีกเจ้า (Gemini ↔ ChatGPT) แล้ววาง prompt ขั้นล่าสุดพร้อมผลก่อนหน้า</td></tr>
+      <tr><td>AI ตอบช้า / ใช้ไม่ได้</td><td>สลับไปใช้อีกเจ้า (Gemini ↔ ChatGPT) เปิดแชตใหม่ แล้ววางผลที่ได้จากขั้นก่อน ๆ พร้อม prompt ของขั้นล่าสุด</td></tr>
     </tbody>
   </table></div>
 
@@ -253,11 +259,11 @@ Q2: [คำถาม] → [คำตอบ]
   <div class="table-wrap"><table>
     <thead><tr><th>ขั้น</th><th>phase / กิจกรรม</th><th>บทเรียน</th></tr></thead>
     <tbody>
-      <tr><td>1–2</td><td>Requirements: elicitation + validation</td><td>ถามก่อนเขียน · เจ้าของโจทย์คือผู้ยืนยัน ไม่ใช่ AI</td></tr>
-      <tr><td>3–5</td><td>Requirements: analysis + specification</td><td>use case → FR → NFR ที่วัดได้ ทุกข้อมีที่มา</td></tr>
-      <tr><td>6</td><td>Requirements → Testing</td><td>AC และตารางตัวอย่างคือเคสทดสอบที่เขียนล่วงหน้า</td></tr>
-      <tr><td>7</td><td>Design</td><td>ข้อจำกัดจริงกำหนดสถาปัตยกรรม · ตัดสินใจแล้วบันทึกเหตุผล (ADR)</td></tr>
-      <tr><td>8 + รีวิว</td><td>Verification ของเอกสาร</td><td>ตรวจ spec ก่อนสร้าง ถูกกว่าตรวจโค้ดหลังสร้าง</td></tr>
+      <tr><td>1–2</td><td>Requirements: รวบรวมความต้องการ (elicitation) + ยืนยันกับเจ้าของโจทย์ (validation)</td><td>ถามก่อนเขียน · เจ้าของโจทย์คือผู้ยืนยัน ไม่ใช่ AI</td></tr>
+      <tr><td>3–5</td><td>Requirements: วิเคราะห์ (analysis) + เขียนเป็นข้อกำหนด (specification)</td><td>จาก use case ไปเป็น FR และ NFR ที่วัดได้ ทุกข้อมีที่มา</td></tr>
+      <tr><td>6</td><td>Requirements → Testing</td><td>AC และตารางตัวอย่างคือเคสทดสอบที่เขียนไว้ล่วงหน้า</td></tr>
+      <tr><td>7</td><td>Design</td><td>ข้อจำกัดจริง (เช่น ต้องใช้ของฟรี) เป็นตัวกำหนดโครงสร้างระบบ · ตัดสินใจแล้วบันทึกเหตุผลไว้ (ADR)</td></tr>
+      <tr><td>8 + รีวิว</td><td>ตรวจเอกสาร (verification)</td><td>ตรวจ spec ก่อนสร้าง เสียแรงน้อยกว่าไปตรวจโค้ดหลังสร้างเสร็จ</td></tr>
     </tbody>
   </table></div>
 </main>

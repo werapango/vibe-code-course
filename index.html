@@ -13,14 +13,15 @@
 <main>
   <p class="eyebrow">หลักสูตร 1 วัน · 09:00–16:00 · ห้อง Lab (Windows)</p>
   <h1>พัฒนาซอฟต์แวร์ให้เป็นระบบ ในยุคที่ AI ช่วยเขียนโค้ด</h1>
-  <p class="lede">เดินตาม <strong>SDLC</strong> ตั้งแต่ความต้องการของผู้ใช้จนขึ้นใช้งานจริงบน Cloudflare —
-  เขียน <strong>Spec ที่ตรวจสอบได้</strong> แตกงานเป็น <strong>WBS</strong> และใช้ <strong>Agent &amp; Skill</strong> อย่างมีวินัย
-  โดยใช้ token ของ AI ให้น้อยที่สุด</p>
+  <p class="lede">ทำตามขั้นตอน <strong>SDLC</strong> (วงจรการพัฒนาซอฟต์แวร์: หาความต้องการ ออกแบบ สร้าง ทดสอบ และนำขึ้นใช้งาน) ตั้งแต่ความต้องการของผู้ใช้จนขึ้นใช้งานจริงบน Cloudflare
+  โดยเขียน <strong>Spec ที่ตรวจสอบได้</strong> (เอกสารบอกว่าระบบต้องทำอะไร พร้อมเกณฑ์ตัดสินว่าทำถูก) แตกงานเป็น <strong>WBS</strong> (แบ่งงานใหญ่เป็นงานย่อยทีละชิ้น)
+  และใช้ <strong>Agent &amp; Skill</strong> (AI ที่ลงมือเขียนโค้ดให้ กับคู่มือขั้นตอนที่เราเตรียมให้มันอ่าน) อย่างมีวินัย
+  โดยใช้ token (หน่วยนับข้อความที่ AI อ่านและเขียน ใช้คิดโควต้า) ให้น้อยที่สุด</p>
 
   <div class="meta">
     <span class="chip">⏱ เรียนสุทธิ 5.5 ชม.</span>
     <span class="chip">🌅 เช้า: ฝึกเอง</span>
-    <span class="chip">🤝 บ่าย: spec กลาง</span>
+    <span class="chip">🤝 บ่าย: ทุกคนใช้ spec ฉบับเดียวกัน</span>
     <span class="chip">💳 0 บาท · ไม่ใช้บัตรเครดิต</span>
     <span class="chip">🎯 ผลลัพธ์: ระบบจองรถออนไลน์ของตัวเอง</span>
   </div>
@@ -40,59 +41,59 @@
 
   <h2 id="idea">แนวคิดของวัน: เช้าฝึกเอง บ่ายใช้ spec กลาง</h2>
   <div class="flow">
-    <div class="node"><b>Lab 1</b>vibe warm-up → starter → deploy · รู้จักแพลตฟอร์ม</div>
+    <div class="node"><b>Lab 1</b>ลองให้ AI สร้างเว็บ (vibe warm-up) แล้วดึงโปรเจกต์ตั้งต้น (starter) ขึ้น Cloudflare</div>
     <div class="arrow">→</div>
     <div class="node"><b>Lab 2</b>เขียน SRS + ร่าง design เองกับ Gemini/ChatGPT</div>
     <div class="arrow">→</div>
-    <div class="node hl"><b>13:00 Baseline</b>เทียบกับ spec อ้างอิง แล้วรับเป็นฉบับเดียวกัน</div>
+    <div class="node hl"><b>13:00 Baseline</b>เทียบงานตัวเองกับ spec อ้างอิง แล้วทุกคนใช้ฉบับนั้นร่วมกัน</div>
     <div class="arrow">→</div>
-    <div class="node"><b>Lab 3</b>ZCode สร้าง MVP ทีละ task</div>
+    <div class="node"><b>Lab 3</b>ZCode สร้าง MVP (ระบบรุ่นแรก) ทีละ task</div>
     <div class="arrow">→</div>
-    <div class="node"><b>Lab 4</b>verify · release · ตรวจรับกับ "ผู้ใช้"</div>
+    <div class="node"><b>Lab 4</b>ตรวจความถูกต้อง ปล่อยขึ้นใช้งานจริง และให้ "ผู้ใช้" ตรวจรับ</div>
   </div>
   <p><strong>ช่วงเช้า</strong> ผู้เรียนเป็นเจ้าของงานเอง: ได้ฝึกถามความต้องการจากเจ้าของโจทย์ (ผู้สอนรับบท) และเขียน SRS จริง
-  <strong>ตอน 13:00</strong> ทุกคนเทียบงานของตัวเองกับ spec อ้างอิงด้วย <code>git diff</code> แล้วรับเป็น <strong>baseline</strong> —
-  แบบเดียวกับที่ทีมจริงต้องตกลง spec ฉบับเดียวก่อนเริ่มสร้าง <strong>ช่วงบ่าย</strong> ทุกคนจึงไปพร้อมกัน ผู้สอนช่วยได้ทั่วถึง</p>
+  <strong>ตอน 13:00</strong> ทุกคนเทียบงานของตัวเองกับ spec อ้างอิงด้วย <code>git diff</code> (คำสั่งแสดงจุดที่ต่างกัน) แล้วรับ spec อ้างอิงเป็น <strong>baseline</strong> (ฉบับกลางที่ทุกคนใช้ต่อจากนี้)
+  แบบเดียวกับที่ทีมจริงต้องตกลง spec ฉบับเดียวก่อนเริ่มสร้าง <strong>ช่วงบ่าย</strong> ทุกคนจึงทำไปพร้อมกัน และผู้สอนช่วยได้ทั่วถึง</p>
   <div class="box theory">
     <span class="label">📖 แนวคิดหลัก</span>
-    <p>ยุคที่ AI เขียนโค้ดแทน คอขวดย้ายไปอยู่ที่ <strong>“บอกให้ชัดว่าต้องการอะไร”</strong> และ <strong>“พิสูจน์ว่าที่ได้มาถูกจริง”</strong>
-    — วันนี้จึงฝึกทั้ง <strong>validation</strong> (สร้างของที่ใช่: spec ตรงความต้องการจริงไหม) และ <strong>verification</strong> (สร้างถูกวิธี: โค้ดตรง spec ไหม)</p>
+    <p>เมื่อ AI เขียนโค้ดแทนได้ ส่วนที่ยากที่สุดจึงไม่ใช่การเขียนโค้ด แต่เป็นการ <strong>“บอกให้ชัดว่าต้องการอะไร”</strong> และ <strong>“ตรวจให้แน่ใจว่าสิ่งที่ได้ถูกต้อง”</strong>
+    วันนี้จึงฝึกทั้ง <strong>validation</strong> (ตรวจว่า spec ตรงกับความต้องการจริงของผู้ใช้ไหม) และ <strong>verification</strong> (ตรวจว่าโค้ดทำงานตรงตาม spec ไหม)</p>
   </div>
 
   <h2 id="objectives">จุดประสงค์การเรียนรู้</h2>
   <ol>
-    <li><strong>อธิบาย SDLC</strong> และบอกได้ว่าแต่ละ phase ผลิตอะไร AI เข้ามาช่วยหรือเปลี่ยนอะไร</li>
-    <li><strong>หาความต้องการจริง</strong>: ระบุ stakeholder ถามเจ้าของโจทย์ เขียน use case, user story, FR/NFR ที่<strong>มีที่มาและวัดได้</strong></li>
-    <li><strong>เขียน Spec ที่ตรวจสอบได้</strong>: acceptance criteria แบบ Given/When/Then ตารางตัวอย่าง และตามรอย requirement → test ด้วย <code>npm run trace</code></li>
-    <li><strong>ออกแบบเบื้องต้น</strong>: สถาปัตยกรรม ที่ deploy tech stack ข้อมูล API และบันทึกเหตุผลเป็น ADR</li>
-    <li><strong>แตกงานเป็น WBS</strong> และใช้ <strong>Agent &amp; Skill</strong> ให้ทำงานทีละ task อย่างมีวินัย (เข้าใจ ADLC)</li>
-    <li><strong>ใช้คำสั่ง Cloudflare เอง</strong> ตั้งแต่สร้างโปรเจกต์ ฐานข้อมูล migration deploy rollback จนตรวจ log</li>
+    <li><strong>อธิบาย SDLC</strong> และบอกได้ว่าแต่ละขั้น (phase) ได้ผลงานอะไรออกมา และ AI เข้ามาช่วยหรือเปลี่ยนอะไร</li>
+    <li><strong>หาความต้องการจริง</strong>: ระบุ stakeholder (ผู้ที่เกี่ยวข้องกับระบบ) ถามเจ้าของโจทย์ เขียน use case, user story และ FR/NFR (ความต้องการด้านฟังก์ชัน / ด้านคุณภาพ) ที่<strong>มีที่มาและวัดได้</strong></li>
+    <li><strong>เขียน Spec ที่ตรวจสอบได้</strong>: acceptance criteria (AC: เกณฑ์ตรวจรับ) แบบ Given/When/Then (กำหนดให้… เมื่อ… แล้วต้อง…), ตารางตัวอย่าง และตามรอยว่าทุก requirement มี test ด้วย <code>npm run trace</code></li>
+    <li><strong>ออกแบบเบื้องต้น</strong>: สถาปัตยกรรม ที่ที่จะ deploy, tech stack, ข้อมูล, API และบันทึกเหตุผลของการตัดสินใจเป็น ADR (Architecture Decision Record)</li>
+    <li><strong>แตกงานเป็น WBS</strong> และใช้ <strong>Agent &amp; Skill</strong> ให้ทำงานทีละ task อย่างมีวินัย (เข้าใจ ADLC — วงจรการพัฒนา agent และ skill)</li>
+    <li><strong>ใช้คำสั่ง Cloudflare เอง</strong> ตั้งแต่สร้างโปรเจกต์ ฐานข้อมูล migration (เปลี่ยนโครงสร้างตาราง) deploy (นำขึ้นออนไลน์) rollback (ย้อนเวอร์ชัน) จนตรวจ log</li>
   </ol>
 
   <h2 id="day">ภาพรวมวัน</h2>
   <div class="table-wrap"><table>
-    <thead><tr><th>เวลา</th><th>ช่วง</th><th>ผลลัพธ์ในมือผู้เรียน</th></tr></thead>
+    <thead><tr><th>เวลา</th><th>ช่วง</th><th>ผลลัพธ์ที่ผู้เรียนได้</th></tr></thead>
     <tbody>
       <tr><td>09:00–09:20</td><td>เปิด + <a href="setup.html#morning">ตั้งค่าเครื่อง Lab</a></td><td>ล็อกอิน ZCode และ Cloudflare บนเครื่อง Lab</td></tr>
-      <tr><td>09:20–09:40</td><td><a href="theory-1-sdlc.html">ทฤษฎี 1 · Vibe coding กับ SDLC</a></td><td>แผนที่ของทั้งวัน</td></tr>
-      <tr><td>09:40–10:35</td><td><a href="lab-1.html">Lab 1 · Vibe warm-up + Starter</a></td><td>URL จริง 2 ตัว · ฐานข้อมูล D1 · admin คนแรก · ลอง rollback</td></tr>
+      <tr><td>09:20–09:40</td><td><a href="theory-1-sdlc.html">ทฤษฎี 1 · Vibe coding กับ SDLC</a></td><td>เห็นภาพรวมขั้นตอนของทั้งวัน</td></tr>
+      <tr><td>09:40–10:35</td><td><a href="lab-1.html">Lab 1 · Vibe warm-up + Starter</a></td><td>เว็บออนไลน์ 2 URL · ฐานข้อมูล D1 · บัญชี admin คนแรก · ได้ลอง rollback</td></tr>
       <tr><td>10:50–11:15</td><td><a href="theory-2-requirements.html">ทฤษฎี 2 · Requirements &amp; Design</a></td><td>รู้วิธีเขียน requirement ที่ตรวจสอบได้</td></tr>
       <tr><td>11:15–12:00</td><td><a href="lab-2.html">Lab 2 · SRS + design กับ Gemini/ChatGPT</a> (<a href="brief.html">โจทย์</a>)</td><td>SRS และ DESIGN ฉบับของตัวเอง</td></tr>
-      <tr><td>13:00–13:30</td><td><a href="baseline.html">Spec Review + Baseline</a></td><td>รู้ว่าตกหล่น/แต่งเพิ่มอะไร · spec กลางในโปรเจกต์</td></tr>
-      <tr><td>13:30–14:40</td><td><a href="theory-3-agent-skill.html">ทฤษฎี 3 · WBS, Agent &amp; Skill</a> → <a href="lab-3.html">Lab 3 · ZCode สร้าง MVP</a></td><td>ระบบจองรถที่กันเวลาซ้อน ผ่าน smoke + trace</td></tr>
-      <tr><td>14:55–15:45</td><td><a href="theory-4-verify-release.html">ทฤษฎี 4 · Verify &amp; Release</a> → <a href="lab-4.html">Lab 4 · ตรวจรับ</a></td><td>release v1.0 · ผลตรวจรับเทียบโจทย์ต้นฉบับ</td></tr>
-      <tr><td>15:45–16:00</td><td>Retro + <a href="setup.html#signout">ออกจากระบบ</a></td><td>เส้นทางต่อยอด</td></tr>
+      <tr><td>13:00–13:30</td><td><a href="baseline.html">Spec Review + Baseline</a></td><td>รู้ว่า SRS ของตัวเองตกหล่นหรือแต่งเพิ่มอะไร และมี spec กลางอยู่ในโปรเจกต์</td></tr>
+      <tr><td>13:30–14:40</td><td><a href="theory-3-agent-skill.html">ทฤษฎี 3 · WBS, Agent &amp; Skill</a> → <a href="lab-3.html">Lab 3 · ZCode สร้าง MVP</a></td><td>ระบบจองรถที่กันการจองเวลาซ้อน ผ่านการทดสอบ smoke และ trace</td></tr>
+      <tr><td>14:55–15:50</td><td><a href="theory-4-verify-release.html">ทฤษฎี 4 · Verify &amp; Release</a> → <a href="lab-4.html">Lab 4 · ตรวจรับ</a></td><td>release v1.0 · ผลตรวจรับเทียบโจทย์ต้นฉบับ · ลอง deploy ด้วย agent</td></tr>
+      <tr><td>15:50–16:00</td><td>Retro (ทบทวนบทเรียน) + <a href="setup.html#signout">ออกจากระบบ</a></td><td>แนวทางเรียนรู้ต่อ</td></tr>
     </tbody>
   </table></div>
   <p class="small">ละเอียดรายช่วง: <a href="schedule.html">ตารางเวลา</a></p>
 
   <h2 id="principles">หลักการ 5 ข้อ</h2>
   <div class="grid">
-    <div class="card"><h4>1 · คำสั่ง Cloudflare คนพิมพ์เอง</h4><p>สร้างโปรเจกต์ ฐานข้อมูล migration deploy rollback — agent ห้ามรันคำสั่งแทน (เขียนไว้ใน AGENTS.md)</p></div>
+    <div class="card"><h4>1 · คำสั่ง Cloudflare คนพิมพ์เอง</h4><p>สร้างโปรเจกต์ ฐานข้อมูล migration deploy rollback — agent ห้ามรันคำสั่งแทน (กติกานี้เขียนไว้ในไฟล์ AGENTS.md ที่ agent อ่านทุกครั้ง)</p></div>
     <div class="card"><h4>2 · ทุก requirement มีที่มา</h4><p>มาจากโจทย์หรือคำตอบของเจ้าของโจทย์ ข้อที่ AI เดาเองติดป้าย [สมมติฐาน] จนกว่าจะยืนยัน</p></div>
-    <div class="card"><h4>3 · ทุก AC ตรวจได้</h4><p>Given/When/Then มีผลลัพธ์เป็นรูปธรรม ทุก AC มี smoke test — <code>npm run trace</code> เป็นคนตัดสิน</p></div>
-    <div class="card"><h4>4 · 1 task = 1 prompt</h4><p>สั่ง agent ทีละ task จาก TASKS.md เช่น <code>ทำ task T1.1 ใน TASKS.md</code> แล้วคนตรวจ diff ก่อน commit</p></div>
-    <div class="card"><h4>5 · Deploy เร็ว ถอยได้</h4><p>ได้ URL จริงตั้งแต่ชั่วโมงแรก และรู้วิธี rollback ก่อนจะต้องใช้จริง</p></div>
+    <div class="card"><h4>3 · ทุก AC ตรวจได้</h4><p>AC ทุกข้อเขียนแบบ Given/When/Then ที่ตรวจผลได้ชัดเจน และทุกข้อมี smoke test (สคริปต์ที่เรียก API จริงเพื่อทดสอบ) โดยใช้ <code>npm run trace</code> ตรวจว่าครบไหม</p></div>
+    <div class="card"><h4>4 · สั่งงานครั้งละ 1 task</h4><p>สั่ง agent ทีละ task จาก TASKS.md เช่น <code>ทำ task T1.1 ใน TASKS.md</code> แล้วคนตรวจ diff (ส่วนที่โค้ดเปลี่ยน) ก่อน commit</p></div>
+    <div class="card"><h4>5 · Deploy ให้เร็ว และย้อนกลับได้</h4><p>ได้ URL จริงตั้งแต่ชั่วโมงแรก และรู้วิธี rollback ก่อนจะต้องใช้จริง</p></div>
   </div>
 
   <h2 id="token">งบ token</h2>
@@ -102,20 +103,20 @@
       <tr><td>Lab 1a vibe warm-up</td><td>ZCode Flash</td><td>~20–50K</td></tr>
       <tr><td>Lab 1b starter</td><td>– (คนพิมพ์คำสั่ง)</td><td>0</td></tr>
       <tr><td>Lab 2 SRS + design</td><td>Gemini / ChatGPT (ฟรี ผ่านเบราว์เซอร์)</td><td>0</td></tr>
-      <tr><td>Lab 3 สร้าง MVP 6 task</td><td>ZCode Flash (GLM-5.3 เมื่อติดเท่านั้น)</td><td>~200–400K</td></tr>
+      <tr><td>Lab 3 สร้าง MVP 6 task</td><td>ZCode Flash (ใช้ GLM-5.3 เฉพาะตอนติดปัญหาที่ Flash แก้ไม่ได้)</td><td>~200–400K</td></tr>
       <tr><td>Lab 4 ตรวจรับ</td><td>ZCode เฉพาะตอนแก้บั๊ก</td><td>~0–50K</td></tr>
       <tr><td colspan="2"><strong>รวมต่อคน</strong> (โควต้าฟรี GLM-5.3 ~3M + Flash ~5M)</td><td><strong>~0.3–0.5M</strong></td></tr>
     </tbody>
   </table></div>
-  <div class="box warn"><span class="label">⚠ ตัวเลขเป็นประมาณการ</span><p>ยังไม่ได้วัดจากห้องจริง — ผู้สอนควรจดตอนซ้อมแล้วแก้ตารางนี้</p></div>
+  <div class="box warn"><span class="label">⚠ ตัวเลขเป็นประมาณการ</span><p>ยังไม่ได้วัดจากห้องจริง — ผู้สอนควรจดตอนซ้อมแล้วแก้ตารางนี้ (K = พัน, M = ล้าน token)</p></div>
 
   <h2 id="tools">เครื่องมือ</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>เครื่องมือ</th><th>ใช้ทำอะไร</th><th>ค่าใช้จ่าย</th></tr></thead>
     <tbody>
-      <tr><td>ZCode (Z.ai)</td><td>AI coding agent — warm-up และสร้าง MVP ทีละ task</td><td>โควต้าฟรี</td></tr>
+      <tr><td>ZCode (Z.ai)</td><td>AI ที่เขียนโค้ดในโปรเจกต์ให้ — ใช้ตอน warm-up และสร้าง MVP ทีละ task</td><td>โควต้าฟรี</td></tr>
       <tr><td>Gemini หรือ ChatGPT</td><td>ร่าง SRS และ design ผ่าน prompt</td><td>ฟรี</td></tr>
-      <tr><td>Node.js, Git, VS Code</td><td>รันเครื่องมือ · checkpoint · อ่านโค้ดและ diff</td><td>ฟรี (ติดตั้งในเครื่อง Lab แล้ว)</td></tr>
+      <tr><td>Node.js, Git, VS Code</td><td>รันเครื่องมือ · บันทึกงานเป็นจุด ๆ (checkpoint) · อ่านโค้ดและ diff</td><td>ฟรี (ติดตั้งในเครื่อง Lab แล้ว)</td></tr>
       <tr><td>Cloudflare Workers + D1</td><td>รันแอป + ฐานข้อมูลบนคลาวด์</td><td>Free plan ไม่ผูกบัตร</td></tr>
     </tbody>
   </table></div>
@@ -137,7 +138,7 @@
   <div class="table-wrap"><table>
     <thead><tr><th>โค้ด</th><th>สำหรับ</th><th>มีอะไร</th></tr></thead>
     <tbody>
-      <tr><td><a href="https://github.com/werapango/workers-app-starter">github.com/werapango/workers-app-starter</a><br><span class="small">(ในเครื่อง: <code>workers-app-starter/</code>)</span></td><td>ผู้เรียน</td><td>starter กลางที่ไม่ผูกโจทย์: Workers + Hono + D1, ระบบผู้ใช้/ล็อกอิน/จัดการผู้ใช้, smoke + trace, template เอกสาร SDLC, skill และ prompt สร้าง starter เอง</td></tr>
+      <tr><td><a href="https://github.com/werapango/workers-app-starter">github.com/werapango/workers-app-starter</a><br><span class="small">(ในเครื่อง: <code>workers-app-starter/</code>)</span></td><td>ผู้เรียน</td><td>โปรเจกต์ตั้งต้น (starter) ที่ใช้ได้กับทุกโจทย์:Workers + Hono + D1, ระบบผู้ใช้/ล็อกอิน/จัดการผู้ใช้, smoke + trace, template เอกสาร SDLC, skill และ prompt สร้าง starter เอง</td></tr>
     </tbody>
   </table></div>
 </main>

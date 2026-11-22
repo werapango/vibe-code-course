@@ -13,45 +13,45 @@
 <main>
   <p class="eyebrow">ทฤษฎี 1 · 09:20–09:40 · 20 นาที</p>
   <h1>Vibe coding กับ SDLC</h1>
-  <p class="lede">AI เขียนโค้ดได้เร็วจนแทบฟรี แต่ซอฟต์แวร์ที่ใช้งานได้จริงยังต้องผ่านวงจรเดิม: รู้ว่าต้องการอะไร → ออกแบบ → สร้าง → ตรวจ → ส่งมอบ
-  ช่วงนี้วางแผนที่ของทั้งวัน ว่าแต่ละช่วงอยู่ตรงไหนของวงจร และใครเป็นคนตัดสินใจ</p>
+  <p class="lede">ทุกวันนี้ AI เขียนโค้ดได้เร็วมาก แต่ถ้าจะได้ซอฟต์แวร์ที่ใช้งานได้จริง ก็ยังต้องทำตามขั้นตอนเดิม คือ รู้ว่าต้องการอะไร ออกแบบ สร้าง ตรวจ แล้วส่งมอบ
+  ช่วงนี้จะอธิบายภาพรวมของทั้งวัน ว่าแต่ละช่วงอยู่ขั้นตอนไหน และใครเป็นคนตัดสินใจ</p>
 
   <div class="meta">
     <span class="chip">📖 บรรยาย 20 นาที</span>
-    <span class="chip">🧭 SDLC · AI-native SDLC</span>
+    <span class="chip">🧭 SDLC · SDLC ยุค AI</span>
     <span class="chip">➡ ต่อด้วย Lab 1a vibe warm-up</span>
   </div>
 
   <div class="toc">
     <b>ในหน้านี้</b>
     <ol>
-      <li><a href="#spectrum">Vibe coding → Agentic engineering</a></li>
+      <li><a href="#spectrum">จาก Vibe coding ถึง Agentic engineering</a></li>
       <li><a href="#sdlc">SDLC: 6 phase และชิ้นงานของแต่ละ phase</a></li>
-      <li><a href="#ai-native">AI-native SDLC: คอขวดย้ายไปไหน</a></li>
-      <li><a href="#web">ระบบเว็บในหนึ่งภาพ: client–server, local–production</a></li>
-      <li><a href="#day">วันนี้เดินวงจรอย่างไร</a></li>
+      <li><a href="#ai-native">SDLC ยุค AI: AI ช่วยแต่ละ phase ได้แค่ไหน และ ADLC</a></li>
+      <li><a href="#web">ภาพรวมระบบเว็บ: client–server, local–production</a></li>
+      <li><a href="#day">ลำดับงานของวันนี้ในแต่ละ phase</a></li>
       <li><a href="#discuss">คำถามชวนคุย</a></li>
       <li><a href="#lab">เชื่อมกับ Lab</a></li>
     </ol>
   </div>
 
-  <h2 id="spectrum">Vibe coding → Agentic engineering</h2>
-  <p><strong>Vibe coding</strong> คือการบอก AI ด้วยภาษาธรรมชาติแล้ว “รับของที่ได้” โดยแทบไม่อ่านโค้ด — เร็วมาก และเหมาะกับต้นแบบหรือของใช้ครั้งเดียว
-  whitepaper ของ Google <em>The New SDLC With Vibe Coding</em> (หน้า 10–14) มองเป็น spectrum สามระดับ:</p>
+  <h2 id="spectrum">จาก Vibe coding ถึง Agentic engineering</h2>
+  <p><strong>Vibe coding</strong> คือการสั่ง AI ด้วยภาษาธรรมชาติแล้วนำผลที่ได้ไปใช้เลย โดยแทบไม่อ่านโค้ด — เร็วมาก และเหมาะกับงานต้นแบบหรืองานที่ใช้ครั้งเดียว
+  whitepaper ของ Google <em>The New SDLC With Vibe Coding</em> (หน้า 10–14) แบ่งวิธีใช้ AI เขียนโค้ดเป็นสามระดับ ไล่จาก “ปล่อยให้ AI ทำเกือบหมด” ไปจนถึง “คนวางแผนและตรวจอย่างเป็นระบบ”:</p>
   <div class="table-wrap"><table>
-    <thead><tr><th>มิติ</th><th>Vibe coding</th><th>Structured AI-assisted</th><th>Agentic engineering</th></tr></thead>
+    <thead><tr><th>เรื่อง</th><th>Vibe coding</th><th>Structured AI-assisted (ใช้ AI แบบมีขั้นตอน)</th><th>Agentic engineering (ให้ agent ทำงานแบบวิศวกรรม)</th></tr></thead>
     <tbody>
-      <tr><td>ระบุความต้องการ</td><td>ประโยคเดียว</td><td>spec สั้น + ข้อจำกัด</td><td>spec เป็นเอกสาร + eval</td></tr>
-      <tr><td>การตรวจ</td><td>ดูด้วยตา</td><td>ทดสอบทุกฟีเจอร์</td><td>tests + evals อัตโนมัติ</td></tr>
-      <tr><td>ความเข้าใจโค้ด</td><td>ไม่จำเป็น</td><td>อ่าน flow หลัก</td><td>เข้าใจเชิงสถาปัตยกรรม</td></tr>
-      <tr><td>เหมาะกับ</td><td>ของเล่น, ต้นแบบ</td><td>ฟีเจอร์จริง</td><td>ระบบ production</td></tr>
+      <tr><td>ระบุความต้องการ</td><td>ประโยคเดียว</td><td>spec สั้น + ข้อจำกัด</td><td>spec เป็นเอกสารเต็ม + ชุดวัดผลอัตโนมัติ (eval)</td></tr>
+      <tr><td>การตรวจ</td><td>ดูด้วยตา</td><td>ทดสอบทุกฟีเจอร์</td><td>test และ eval รันเองอัตโนมัติ</td></tr>
+      <tr><td>ความเข้าใจโค้ด</td><td>ไม่จำเป็น</td><td>อ่านลำดับการทำงานหลัก</td><td>เข้าใจโครงสร้างทั้งระบบ</td></tr>
+      <tr><td>เหมาะกับ</td><td>งานทดลอง, ต้นแบบ</td><td>ฟีเจอร์จริง</td><td>ระบบที่มีผู้ใช้จริงจำนวนมาก (production)</td></tr>
     </tbody>
   </table></div>
-  <p>วันนี้เราจะ<strong>ลองซ้ายสุดก่อน</strong> (Lab 1a: สั่ง ZCode สร้างหน้าเว็บไฟล์เดียวแล้ว deploy) เพื่อสัมผัสว่ามันเร็วแค่ไหน
-  แล้วใช้ทั้งวันที่เหลือขยับมา<strong>ระดับกลาง</strong>: มี SRS, มี spec ที่ตรวจได้, มี WBS, มี test, มี checkpoint</p>
+  <p>วันนี้เราจะ<strong>ลองระดับแรก (Vibe coding) ก่อน</strong> (Lab 1a: สั่ง ZCode สร้างหน้าเว็บไฟล์เดียวแล้ว deploy) เพื่อให้เห็นว่าเร็วแค่ไหน
+  แล้วใช้เวลาที่เหลือของวันฝึก<strong>ระดับกลาง (ใช้ AI แบบมีขั้นตอน)</strong>: มีเอกสารความต้องการ (SRS), มี spec ที่ตรวจได้, มีรายการแตกงาน (WBS), มี test และมีจุดหยุดตรวจงาน (checkpoint)</p>
 
   <h2 id="sdlc">SDLC: 6 phase และชิ้นงานของแต่ละ phase</h2>
-  <p><strong>SDLC</strong> (Software Development Life Cycle) คือวงจรที่ทุกซอฟต์แวร์ต้องผ่าน ไม่ว่าจะใช้ AI หรือไม่ หัวใจคือ<strong>ทุก phase มีชิ้นงานที่ตรวจได้</strong></p>
+  <p><strong>SDLC</strong> (Software Development Life Cycle) คือวงจรที่ทุกซอฟต์แวร์ต้องผ่าน ไม่ว่าจะใช้ AI หรือไม่ แบ่งเป็นขั้นตอนย่อยเรียกว่า phase สิ่งสำคัญคือ<strong>ทุก phase ต้องมีชิ้นงานที่คนอื่นหยิบมาตรวจได้</strong></p>
   <div class="flow">
     <div class="node"><b>1 Requirements</b>ต้องการอะไร</div><div class="arrow">→</div>
     <div class="node"><b>2 Design</b>สร้างอย่างไร</div><div class="arrow">→</div>
@@ -63,42 +63,68 @@
   <div class="table-wrap"><table>
     <thead><tr><th>Phase</th><th>คำถามหลัก</th><th>ชิ้นงานวันนี้</th></tr></thead>
     <tbody>
-      <tr><td>Requirements</td><td>ใครใช้ ต้องการอะไร วัดความสำเร็จอย่างไร</td><td><code>docs/SRS.md</code> · user story + AC ใน <code>SPEC.md</code></td></tr>
-      <tr><td>Design</td><td>สถาปัตยกรรม ข้อมูล API เลือกอะไรเพราะอะไร</td><td><code>docs/DESIGN.md</code> (ADR, data model, API contract)</td></tr>
+      <tr><td>Requirements</td><td>ใครใช้ ต้องการอะไร วัดความสำเร็จอย่างไร</td><td><code>docs/SRS.md</code> · user story (ความต้องการเล่าจากมุมผู้ใช้) + AC (เกณฑ์ตรวจรับ) ใน <code>SPEC.md</code></td></tr>
+      <tr><td>Design</td><td>ระบบมีส่วนประกอบอะไร เก็บข้อมูลแบบไหน API หน้าตาอย่างไร และเลือกแบบนี้เพราะอะไร</td><td><code>docs/DESIGN.md</code> (ADR = บันทึกเหตุผลการตัดสินใจ, data model = โครงสร้างข้อมูล, API contract = ข้อตกลงหน้าตา API)</td></tr>
       <tr><td>Implementation</td><td>แตกงานแล้วสร้างทีละชิ้น</td><td><code>TASKS.md</code> (WBS) · โค้ดใน <code>src/</code>, <code>public/</code>, <code>migrations/</code></td></tr>
-      <tr><td>Testing</td><td>ตรงตาม AC ไหม ตามรอยครบไหม</td><td><code>npm run smoke</code> · <code>npm run trace</code> · เช็กลิสต์</td></tr>
-      <tr><td>Deployment</td><td>ขึ้น production อย่างปลอดภัย ถอยกลับได้ไหม</td><td><code>wrangler deploy</code> · <code>rollback</code> · URL จริง</td></tr>
-      <tr><td>Maintenance</td><td>รู้ไหมว่าพัง แก้ได้เร็วไหม</td><td><code>wrangler tail</code> · git history · backlog รอบถัดไป</td></tr>
+      <tr><td>Testing</td><td>ทำงานตรงตาม AC ไหม และทุก requirement มี test รองรับครบไหม</td><td><code>npm run smoke</code> · <code>npm run trace</code> · เช็กลิสต์</td></tr>
+      <tr><td>Deployment</td><td>นำขึ้นระบบจริง (production) อย่างปลอดภัยไหม ถ้าพังย้อนกลับเวอร์ชันเดิมได้ไหม</td><td><code>wrangler deploy</code> · <code>rollback</code> · URL จริง</td></tr>
+      <tr><td>Maintenance</td><td>ถ้าระบบพังเราจะรู้ไหม และแก้ได้เร็วแค่ไหน</td><td><code>wrangler tail</code> · git history · backlog (รายการงานที่เหลือ) รอบถัดไป</td></tr>
     </tbody>
   </table></div>
-  <p class="small">Waterfall เดินครบทีละ phase ครั้งเดียว · Agile/iterative วนรอบสั้น ๆ หลายรอบ — วันนี้เราวน 1 รอบเต็มแบบย่อ และจบด้วย backlog สำหรับรอบถัดไป</p>
+  <p class="small">แบบ Waterfall ทำครบทีละ phase ตามลำดับเพียงรอบเดียว ส่วนแบบ Agile/iterative ทำเป็นรอบสั้น ๆ แล้ววนซ้ำหลายรอบ — วันนี้เราวน 1 รอบเต็มแบบย่อ และจบด้วย backlog สำหรับรอบถัดไป</p>
 
-  <h2 id="ai-native">AI-native SDLC: คอขวดย้ายไปไหน</h2>
-  <p>AI บีบเวลาทุก phase แต่<strong>บีบไม่เท่ากัน</strong> (whitepaper หน้า 19–25):</p>
+  <h2 id="ai-native">SDLC ยุค AI: AI ช่วยแต่ละ phase ได้แค่ไหน และ ADLC</h2>
+  <p>AI ช่วยลดเวลาได้ทุก phase แต่<strong>ลดได้ไม่เท่ากัน</strong> ส่วนที่ใช้เวลามากที่สุดของงานจึงเปลี่ยนไปจากเดิม (whitepaper หน้า 19–25):</p>
   <div class="table-wrap"><table>
     <thead><tr><th>Phase</th><th>AI ช่วยได้</th><th>สิ่งที่ยังต้องเป็นคน</th></tr></thead>
     <tbody>
-      <tr><td>Requirements</td><td>ช่วยตั้งคำถาม ร่างเอกสารเร็ว</td><td><strong>ยืนยันกับเจ้าของโจทย์</strong> — AI ไม่รู้ปัญหาของหน่วยงานเรา และมัก “แต่ง” requirement อย่างมั่นใจ</td></tr>
+      <tr><td>Requirements</td><td>ช่วยตั้งคำถาม ร่างเอกสารเร็ว</td><td><strong>ยืนยันกับเจ้าของโจทย์</strong> — AI ไม่รู้ปัญหาของหน่วยงานเรา และมักเขียน requirement ที่ไม่มีใครพูดไว้ขึ้นมาเองอย่างมั่นใจ</td></tr>
       <tr><td>Design</td><td>เสนอ schema / API / ทางเลือก</td><td>เลือกทางเลือก บันทึกเหตุผล (ADR)</td></tr>
-      <tr><td>Implementation</td><td><strong>มากที่สุด</strong> — เขียนเร็วกว่าคนหลายเท่า</td><td>แตกงานให้พอดี อ่าน diff</td></tr>
-      <tr><td>Testing</td><td>เขียน test ให้ได้</td><td>ตัดสินว่าผลถูกไหม — AI ตรวจงานตัวเองแล้วมักเชื่อตัวเอง</td></tr>
-      <tr><td>Deployment</td><td>อ่าน error ช่วยวินิจฉัย</td><td>กด deploy รับผิดชอบ production</td></tr>
+      <tr><td>Implementation</td><td><strong>มากที่สุด</strong> — เขียนเร็วกว่าคนหลายเท่า</td><td>แบ่งงานเป็นชิ้นขนาดพอดี และอ่าน diff (ส่วนของโค้ดที่ถูกแก้) ก่อนรับงาน</td></tr>
+      <tr><td>Testing</td><td>เขียน test ให้ได้</td><td>ตัดสินว่าผลถูกไหม — ถ้าให้ AI ตรวจงานของตัวเอง มักสรุปว่าถูก</td></tr>
+      <tr><td>Deployment</td><td>อ่าน error ช่วยวินิจฉัย</td><td>เป็นคนกด deploy (นำขึ้นระบบจริง) และรับผิดชอบเมื่อระบบจริงมีปัญหา</td></tr>
     </tbody>
   </table></div>
 
   <div class="box theory">
-    <span class="label">📖 แนวคิดหลัก: คอขวดย้ายที่</span>
-    <p>เมื่อการเขียนโค้ดเกือบฟรี สิ่งที่แพงขึ้นคือ (1) <strong>บอกให้ชัดว่าต้องการอะไร</strong> และ (2) <strong>ตรวจว่าที่ได้มาถูกจริง</strong>
-    whitepaper สรุปว่า “Verification, judgment, and direction are the new craft.” (หน้า 48)
+    <span class="label">📖 แนวคิดหลัก: งานที่ยากไม่ใช่การเขียนโค้ดแล้ว แต่เป็นการสั่งงานและการตรวจงาน</span>
+    <p>เมื่อ AI เขียนโค้ดได้เร็วและใช้ต้นทุนน้อย งานที่ต้องใช้เวลาและความรู้มากขึ้นคือ (1) <strong>บอกให้ชัดว่าต้องการอะไร</strong> และ (2) <strong>ตรวจว่าผลที่ได้ถูกต้องจริง</strong>
+    whitepaper สรุปว่า “Verification, judgment, and direction are the new craft.” (หน้า 48) แปลว่า การตรวจ การใช้วิจารณญาณ และการกำหนดทิศทาง คือทักษะที่นักพัฒนาต้องมีในปัจจุบัน
     วันนี้จึงใช้เวลากับ SRS, spec ที่ตรวจได้, WBS และการตรวจรับ มากกว่าการพิมพ์ prompt</p>
   </div>
+  <h3 id="adlc">เมื่อใช้ agent มีวงจรเพิ่มอีกหนึ่งวง: ADLC</h3>
+  <p>ถ้าให้ agent ช่วยเขียนโค้ด คำสั่งและกติกาที่เราเขียนให้ agent ก็เป็นงานที่ต้องพัฒนาเหมือนกัน
+  วงจรนี้เรียกว่า <strong>ADLC</strong> (Agent Development Life Cycle — วงจรการพัฒนา agent)
+  ยังไม่มีนิยามมาตรฐานเดียว แต่หลักการคือ คำสั่งของ agent ต้องเขียน ลองใช้ ตรวจผล แล้วปรับปรุงเป็นรอบ ๆ แบบเดียวกับโค้ด</p>
+  <div class="flow">
+    <div class="node"><b>Define</b>กำหนดว่าให้ agent ทำงานอะไร</div><div class="arrow">→</div>
+    <div class="node"><b>Design</b>กติกา ขั้นตอน สิ่งที่ห้ามทำ</div><div class="arrow">→</div>
+    <div class="node"><b>Build</b>เขียนเป็นไฟล์ AGENTS.md / SKILL.md</div><div class="arrow">→</div>
+    <div class="node hl"><b>Eval</b>ลองสั่งงานหลายครั้ง ดูว่าทำตามกติกาไหม</div><div class="arrow">→</div>
+    <div class="node"><b>Deploy</b>ใช้กับงานจริง</div><div class="arrow">→</div>
+    <div class="node"><b>Improve</b>agent พลาดตรงไหน แก้คำสั่งตรงนั้น</div>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>SDLC</th><th>ADLC</th></tr></thead>
+    <tbody>
+      <tr><td>พัฒนาอะไร</td><td>ตัวแอป (วันนี้คือระบบจองรถ)</td><td>คำสั่งและกติกาของ agent</td></tr>
+      <tr><td>ชิ้นงาน</td><td>SRS, SPEC, โค้ดใน <code>src/</code> <code>public/</code></td><td><code>AGENTS.md</code> (กติกาที่ agent อ่านทุกครั้ง) และ <code>SKILL.md</code> (ขั้นตอนของงานที่ทำซ้ำ)</td></tr>
+      <tr><td>ตรวจอย่างไร</td><td>test — รันกี่ครั้งผลก็เหมือนเดิม</td><td>eval — ลองหลายครั้งแล้วนับว่าทำถูกกี่ครั้ง เพราะคำตอบของ AI ไม่เหมือนเดิมทุกครั้ง</td></tr>
+      <tr><td>เมื่อผลผิด</td><td>แก้โค้ด</td><td>แก้คำสั่ง กติกา หรือเพิ่มตัวอย่าง</td></tr>
+    </tbody>
+  </table></div>
+  <p>วันนี้ใช้ทั้งสองวงจร: <code>AGENTS.md</code> มากับ starter ใน <a href="lab-1.html#b">Lab 1b</a> ·
+  <a href="theory-3-agent-skill.html#adlc">ทฤษฎี 3</a> อธิบาย agent, skill และ ADLC ละเอียดขึ้น ·
+  ใน <a href="lab-3.html">Lab 3</a> ถ้า agent ทำผิดกติกาซ้ำ ๆ ให้แก้ที่ <code>AGENTS.md</code> ซึ่งก็คือขั้น Improve ของ ADLC</p>
+
   <div class="box token">
     <span class="label">🪙 ทำไมเรื่องนี้เกี่ยวกับ token</span>
-    <p>ทุกครั้งที่ agent ต้องเดาว่าเราต้องการอะไร หรือวนแก้ config ที่คนรันเองได้ในคำสั่งเดียว เราจ่าย token
+    <p>token คือหน่วยนับปริมาณข้อความที่ AI อ่านและเขียน ยิ่งใช้มากยิ่งเปลืองโควตา
+    ทุกครั้งที่ agent (AI ที่ลงมือแก้ไฟล์และรันคำสั่งเองได้) ต้องเดาว่าเราต้องการอะไร หรือวนแก้ไฟล์ตั้งค่า (config) ทั้งที่คนพิมพ์คำสั่งเดียวก็เสร็จ เราก็เสีย token ไปเปล่า ๆ
     วันนี้จึงแบ่งงาน: <strong>คนรันคำสั่ง Cloudflare เอง</strong> · <strong>SRS/design ร่างกับ Gemini/ChatGPT</strong> (ไม่ใช้โควต้า ZCode) · <strong>ZCode เขียนโค้ดทีละ task</strong> จาก spec ที่ชัดแล้ว</p>
   </div>
 
-  <h2 id="web">ระบบเว็บในหนึ่งภาพ: client–server, local–production</h2>
+  <h2 id="web">ภาพรวมระบบเว็บ: client–server, local–production</h2>
   <div class="flow">
     <div class="node"><b>Client</b>เบราว์เซอร์ · <code>public/</code></div><div class="arrow">⇄ HTTP</div>
     <div class="node hl"><b>Server</b>Worker + Hono · <code>src/</code></div><div class="arrow">⇄</div>
@@ -106,53 +132,53 @@
   </div>
   <ul>
     <li>client ส่ง <strong>request</strong> (method + path + body) · server ตอบ <strong>status code + JSON</strong> เช่น <code>200</code> สำเร็จ, <code>201</code> สร้างแล้ว, <code>400</code> ข้อมูลผิด, <code>401</code> ยังไม่ล็อกอิน, <code>403</code> ไม่มีสิทธิ์, <code>404</code> ไม่พบ, <code>409</code> ขัดแย้ง (เช่น ซ้ำ/ซ้อน)</li>
-    <li><strong>local</strong> = <code>npm run dev</code> บนเครื่องเรา ฐานข้อมูลจำลองใน <code>.wrangler/</code> · <strong>production</strong> = <code>wrangler deploy</code> ขึ้น Cloudflare ฐานข้อมูลจริงอีกก้อน — สองที่นี้แยกกัน ต้อง migrate ทั้งคู่</li>
+    <li><strong>local</strong> คือรันบนเครื่องเราด้วย <code>npm run dev</code> ใช้ฐานข้อมูลจำลองใน <code>.wrangler/</code> ส่วน <strong>production</strong> คือระบบจริงบน Cloudflare ที่ขึ้นด้วย <code>wrangler deploy</code> และใช้ฐานข้อมูลจริงอีกชุดหนึ่ง — สองที่นี้แยกกัน จึงต้องสร้างตาราง (migrate) ทั้งสองที่</li>
   </ul>
-  <p class="small">ไม่ต้องจำตอนนี้ — Lab 1b จะให้เห็นของจริงทั้งหมด (F12 → Network, <code>/api/health</code>, local vs production, rollback)</p>
+  <p class="small">ไม่ต้องจำตอนนี้ — Lab 1b จะได้ลองทำจริงทั้งหมด (F12 → Network, <code>/api/health</code>, local vs production, rollback)</p>
   <div class="box theory"><span class="label">☁️ แต่ละกล่องคือบริการไหนของ Cloudflare</span><p>Worker = <b>Workers</b> · ไฟล์หน้าเว็บ = <b>Static Assets</b> · ฐานข้อมูล = <b>D1</b> · URL = <b>workers.dev</b> · สั่งทั้งหมดด้วย <b>wrangler</b> — อธิบายละเอียด พร้อมโควตาฟรีและสิ่งที่ไม่ต้องกด ใน <a href="cloudflare.html">Cloudflare ที่ใช้ในหลักสูตร</a></p></div>
 
-  <h2 id="day">วันนี้เดินวงจรอย่างไร</h2>
+  <h2 id="day">ลำดับงานของวันนี้ในแต่ละ phase</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>ช่วง</th><th>Phase</th><th>ใครเป็นเจ้าของ</th><th>เครื่องมือ</th></tr></thead>
     <tbody>
-      <tr><td>Lab 1a vibe warm-up</td><td>(ข้าม requirements!) → Impl. → Deploy</td><td>ผู้เรียน + ZCode</td><td>ZCode Flash · wrangler</td></tr>
+      <tr><td>Lab 1a vibe warm-up</td><td>ข้าม Requirements ไปเขียนโค้ด (Implementation) แล้ว Deploy เลย</td><td>ผู้เรียน + ZCode</td><td>ZCode Flash · wrangler</td></tr>
       <tr><td>Lab 1b starter</td><td>Deployment · Maintenance (rollback, log)</td><td>ผู้เรียน</td><td>wrangler (0 token)</td></tr>
       <tr><td>Lab 2 SRS + design</td><td>Requirements · Design</td><td><strong>ผู้เรียน</strong> — ถามเจ้าของโจทย์เอง</td><td>Gemini / ChatGPT</td></tr>
-      <tr><td>13:00 Baseline</td><td>Requirements sign-off</td><td>ทีม (ทั้งห้อง) ตกลงใช้ spec เดียว</td><td><code>git diff</code></td></tr>
-      <tr><td>Lab 3 build MVP</td><td>Implementation · Testing</td><td>คนแตกงาน/ตรวจ · ZCode เขียนโค้ด</td><td>ZCode · smoke · trace</td></tr>
-      <tr><td>Lab 4 ตรวจรับ</td><td>Testing (validation) · Deployment</td><td>ผู้เรียน + “ผู้ใช้”</td><td>เช็กลิสต์ · มือถือ</td></tr>
+      <tr><td>13:00 Baseline</td><td>Requirements sign-off (อนุมัติ requirement)</td><td>ทีม (ทั้งห้อง) ตกลงใช้ spec เดียวกัน</td><td><code>git diff</code></td></tr>
+      <tr><td>Lab 3 build MVP</td><td>Implementation · Testing</td><td>คนแตกงานและตรวจงาน ส่วน ZCode เขียนโค้ด</td><td>ZCode · smoke · trace</td></tr>
+      <tr><td>Lab 4 ตรวจรับ</td><td>Testing (validation = ตรวจว่าตรงกับที่ผู้ใช้ต้องการจริง) · Deployment</td><td>ผู้เรียน + “ผู้ใช้”</td><td>เช็กลิสต์ · มือถือ</td></tr>
     </tbody>
   </table></div>
   <div class="box why">
     <span class="label">ทำไมช่วงบ่ายทุกคนใช้ spec เดียวกัน</span>
     <p>ในงานจริง แต่ละคนเข้าใจความต้องการไม่เหมือนกัน แต่ก่อนสร้าง ทีมต้องตกลง<strong>ฉบับเดียวที่อนุมัติแล้ว (baseline)</strong>
-    เช้านี้คุณจะได้ฝึกเขียนเอง — ตอน 13:00 เอาไปเทียบกับฉบับอ้างอิง ส่วนที่ต่างกันคือบทเรียนที่ดีที่สุดของวัน</p>
+    เช้านี้คุณจะได้ฝึกเขียนเอง — ตอน 13:00 เอาไปเทียบกับฉบับอ้างอิง แล้วดูว่าต่างกันตรงไหนและเพราะอะไร</p>
   </div>
 
   <h2 id="discuss">คำถามชวนคุย</h2>
   <ol>
-    <li>ใครเคยให้ AI เขียนอะไรแล้วส่งต่อโดยไม่ได้อ่าน? ตอนนั้นอยู่จุดไหนของ spectrum และถ้าพังใครรับผิดชอบ?</li>
-    <li>ระบบจองรถของหน่วยงาน ถ้าข้าม Requirements ไปเลย agent จะเดาอะไรผิดได้บ้าง?</li>
-    <li>ทำไม “รันได้ ไม่มี error” ยังไม่พอสำหรับระบบที่มีข้อมูลของคนอื่น?</li>
+    <li>เคยให้ AI เขียนงาน (โค้ด รายงาน หรืออีเมล) แล้วส่งต่อให้คนอื่นเลยโดยไม่ได้อ่านไหม? ถ้าเทียบกับ 3 ระดับในตารางแรก (Vibe coding / ใช้ AI แบบมีขั้นตอน / Agentic engineering) ตอนนั้นคุณอยู่ระดับไหน? และถ้างานนั้นผิดพลาด ใครต้องรับผิดชอบ — AI หรือคนที่ส่งงาน?</li>
+    <li>ถ้าจะทำระบบจองรถของหน่วยงาน แต่ข้ามขั้น Requirements ไปสั่ง agent เขียนเลย agent อาจเดาอะไรผิดได้บ้าง? (เช่น ใครมีสิทธิ์อนุมัติ จองซ้อนเวลาได้ไหม)</li>
+    <li>ทำไมแค่ “รันได้ ไม่มี error” ยังไม่พอ สำหรับระบบที่เก็บข้อมูลของคนอื่น? (เช่น คนหนึ่งอาจแอบเห็นหรือแก้ข้อมูลของอีกคนได้)</li>
   </ol>
 
   <h2 id="lab">เชื่อมกับ Lab</h2>
   <p><a href="lab-1.html">Lab 1</a> มี 2 ช่วง: <strong>1a</strong> ลอง vibe coding จริง (ZCode สร้างหน้าเว็บไฟล์เดียว → deploy คำสั่งเดียว) แล้วถามตัวเองว่า “วิธีนี้พอสำหรับระบบจริงไหม”
-  จากนั้น <strong>1b</strong> เริ่มจาก starter ที่มีฐานข้อมูลและระบบผู้ใช้ — deploy, สร้าง admin, ลอง rollback และดู log สด โดยไม่ใช้ token</p>
+  จากนั้น <strong>1b</strong> เริ่มจากโปรเจกต์ตั้งต้น (starter) ที่มีฐานข้อมูลและระบบผู้ใช้ให้แล้ว — deploy, สร้าง admin, ลอง rollback และดู log สด โดยไม่ใช้ token</p>
 
   <div class="box check">
     <span class="label">✅ สรุป 3 บรรทัด</span>
     <ul>
-      <li>SDLC = Requirements → Design → Implementation → Testing → Deployment → Maintenance และทุก phase มีชิ้นงานที่ตรวจได้</li>
-      <li>AI เร่ง Implementation มากที่สุด คอขวดจึงย้ายไปอยู่ที่ spec และ verification ซึ่งยังต้องเป็นคน</li>
-      <li>วันนี้: เช้าเราเป็นเจ้าของ requirements/design · 13:00 ตกลง baseline · บ่ายให้ agent สร้างตาม spec แล้วตรวจรับ</li>
+      <li>SDLC ประกอบด้วย Requirements → Design → Implementation → Testing → Deployment → Maintenance และทุก phase มีชิ้นงานที่ตรวจได้</li>
+      <li>AI ช่วยให้ Implementation เร็วขึ้นมากที่สุด งานที่ยังช้าและยากจึงเป็นการเขียน spec ให้ชัด และการตรวจว่าผลถูกจริง (verification) ซึ่งยังต้องเป็นคนทำ</li>
+      <li>วันนี้: ช่วงเช้าเราเขียน requirements และ design เอง · 13:00 ทั้งห้องตกลงใช้ spec ฉบับเดียวกัน (baseline) · ช่วงบ่ายให้ agent สร้างตาม spec แล้วเราตรวจรับ</li>
     </ul>
   </div>
 
   <details>
     <summary>บันทึกผู้สอน</summary>
     <ul>
-      <li>ช่วงนี้สั้น (20 นาที) — เน้นตาราง “วันนี้เดินวงจรอย่างไร” ให้ผู้เรียนเห็นภาพรวม ไม่ต้องลงรายละเอียด HTTP (Lab 1b สาธิต)</li>
+      <li>ช่วงนี้สั้น (20 นาที) — เน้นตาราง “ลำดับงานของวันนี้ในแต่ละ phase” ให้ผู้เรียนเห็นภาพรวม ไม่ต้องลงรายละเอียด HTTP (Lab 1b สาธิต)</li>
       <li>ถามยกมือ: “ใครเคยใช้ AI เขียนโค้ด” — ใช้คำตอบจัดคู่คนเคย/ไม่เคยสำหรับ Lab 1</li>
       <li>ปิดด้วยคำถามที่จะกลับมาตอน Lab 1a: “ถ้าต้องมีฐานข้อมูล ล็อกอิน และ 30 คนใช้พร้อมกัน วิธี vibe พอไหม?”</li>
     </ul>

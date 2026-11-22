@@ -13,7 +13,7 @@
 <main>
   <p class="eyebrow">กำหนดการ</p>
   <h1>ตารางเวลา 09:00–16:00</h1>
-  <p class="lede">เช้าผู้เรียนเป็นเจ้าของงาน — บ่ายทุกคนใช้ spec กลางเดียวกัน แต่ละช่วงต่อยอดจากช่วงก่อนหน้าในโปรเจกต์เดียว</p>
+  <p class="lede">ช่วงเช้าผู้เรียนแต่ละคนเขียนความต้องการของตัวเอง ช่วงบ่ายทุกคนใช้ spec ฉบับกลางเดียวกัน ทุกช่วงทำต่อกันในโปรเจกต์เดียว</p>
 
   <div class="meta">
     <span class="chip">📖 ทฤษฎี 85 นาที</span>
@@ -27,7 +27,7 @@
     <ol>
       <li><a href="#short">ฉบับย่อ (แจกผู้เรียน / ประชาสัมพันธ์)</a></li>
       <li><a href="#detail">ฉบับละเอียดสำหรับผู้สอน</a></li>
-      <li><a href="#control">จุดคุมเวลาและสวิตช์ลดเนื้อหา</a></li>
+      <li><a href="#control">จุดตรวจเวลาและการตัดเนื้อหาเมื่อเวลาไม่พอ</a></li>
     </ol>
   </div>
 
@@ -48,8 +48,8 @@
       <tr><td>13:45–14:40</td><td>ปฏิบัติการที่ 3: ให้ AI Agent สร้างระบบทีละงาน</td><td>ปฏิบัติ</td></tr>
       <tr><td>14:40–14:55</td><td>พักเบรก</td><td>—</td></tr>
       <tr><td>14:55–15:20</td><td>การตรวจสอบคุณภาพและการนำระบบขึ้นใช้งานจริง</td><td>บรรยาย</td></tr>
-      <tr><td>15:20–15:45</td><td>ปฏิบัติการที่ 4: ตรวจสอบและตรวจรับระบบกับผู้ใช้</td><td>ปฏิบัติ</td></tr>
-      <tr><td>15:45–16:00</td><td>ทบทวนบทเรียน สรุป และประเมินผล</td><td>ทั้งห้อง</td></tr>
+      <tr><td>15:20–15:50</td><td>ปฏิบัติการที่ 4: ตรวจสอบและตรวจรับระบบกับผู้ใช้ และลอง deploy ด้วย agent</td><td>ปฏิบัติ</td></tr>
+      <tr><td>15:50–16:00</td><td>ทบทวนบทเรียน สรุป และประเมินผล</td><td>ทั้งห้อง</td></tr>
     </tbody>
   </table></div>
   <p><strong>ผลลัพธ์:</strong> ระบบจองรถออนไลน์ของตัวเอง (มีระบบผู้ใช้ กันการจองซ้อนเวลา) พร้อมเอกสาร SRS, Design, Spec และผลการตรวจรับ</p>
@@ -60,20 +60,20 @@
     <thead><tr><th>เวลา</th><th>ช่วง</th><th>สิ่งที่ทำ</th><th>เป้าหมาย / จุดสังเกต</th></tr></thead>
     <tbody>
       <tr><td>09:00–09:20<br><span class="small">20 นาที</span></td><td>🎤 เปิด</td>
-        <td>แนะนำหลักสูตรและหลักการ 5 ข้อ · ผู้เรียนทำ <a href="setup.html#morning">setup PART C</a>: ล็อกอิน ZCode · <code>npx wrangler login</code> · <code>whoami</code> ต้องเป็นอีเมลตัวเอง</td>
-        <td>ใครยังไม่สมัครบัญชี ทำ PART B ก่อน · จับคู่คนเก่ง+มือใหม่</td></tr>
+        <td>แนะนำหลักสูตรและหลักการ 5 ข้อ · ผู้เรียนทำ <a href="setup.html#morning">setup PART C</a>: ล็อกอิน ZCode, รัน <code>npx wrangler login</code> และตรวจว่า <code>whoami</code> แสดงอีเมลของตัวเอง</td>
+        <td>ใครยังไม่สมัครบัญชี ให้ทำ PART B ก่อน · จับคู่คนที่คล่องกับมือใหม่</td></tr>
       <tr><td>09:20–09:40<br><span class="small">20 นาที</span></td><td>📖 <a href="theory-1-sdlc.html">ทฤษฎี 1</a></td>
-        <td>vibe coding กับ agentic engineering · SDLC และ artifact · แผนที่ของทั้งวัน</td><td>ผู้เรียนรู้ว่าเช้าเป็นเจ้าของ requirement บ่ายใช้ baseline</td></tr>
+        <td>vibe coding (สั่ง AI เขียนโค้ดโดยไม่วางแผน) เทียบกับ agentic engineering (ใช้ agent อย่างมีขั้นตอนและตรวจผล) · SDLC และผลงานที่ได้ในแต่ละขั้น (artifact) · ภาพรวมขั้นตอนของทั้งวัน</td><td>ผู้เรียนรู้ว่าช่วงเช้าเขียน requirement เอง ช่วงบ่ายใช้ baseline (spec ฉบับกลาง)</td></tr>
       <tr><td>09:40–10:00<br><span class="small">20 นาที</span></td><td>🔧 <a href="lab-1.html#a">Lab 1a</a></td>
-        <td>ZCode Flash สร้างหน้าเว็บไฟล์เดียว → สังเกต agent loop → <code>wrangler deploy --assets</code></td><td>deploy ครั้งแรก + ตั้ง subdomain จบที่นี่</td></tr>
+        <td>ให้ ZCode Flash สร้างหน้าเว็บไฟล์เดียว → สังเกตว่า agent วางแผน ลงมือ และตรวจผลวนเป็นรอบ (agent loop) → deploy ด้วย <code>wrangler deploy --assets</code></td><td>deploy ครั้งแรกและตั้งชื่อ subdomain ให้เสร็จในช่วงนี้</td></tr>
       <tr><td>10:00–10:35<br><span class="small">35 นาที</span></td><td>🔧 <a href="lab-1.html#b">Lab 1b</a></td>
-        <td>ดึง starter → <code>db: no-binding</code> → <code>d1 create</code> → migration → สร้าง admin ในเครื่อง → smoke/trace → git → migration remote → deploy → <strong>สร้าง admin บน production ทันที</strong> → rollback → tail</td>
-        <td><strong>ทุกคนต้องมี URL + admin ก่อนเบรก</strong> · 0 token</td></tr>
+        <td>ดึง starter (โปรเจกต์ตั้งต้น) → เห็น <code>db: no-binding</code> (ยังไม่มีฐานข้อมูล) → สร้างฐานข้อมูลด้วย <code>d1 create</code> → รัน migration → สร้าง admin ในเครื่อง → รัน smoke/trace → เริ่มใช้ git → รัน migration บน remote → deploy → <strong>สร้าง admin บน production ทันที</strong> → ลอง rollback → ดู log ด้วย tail</td>
+        <td><strong>ทุกคนต้องมี URL + admin ก่อนเบรก</strong> · ช่วงนี้ไม่ใช้ token ของ AI เลย</td></tr>
       <tr><td>10:35–10:50</td><td>☕</td><td colspan="2">เบรก — ผู้สอนช่วยคนที่ยัง deploy ไม่ได้ (checkpoint <code>lab1-done</code>)</td></tr>
       <tr><td>10:50–11:15<br><span class="small">25 นาที</span></td><td>📖 <a href="theory-2-requirements.html">ทฤษฎี 2</a></td>
-        <td>stakeholder · elicitation · use case · story + AC · FR/NFR วัดได้ · verification vs validation · MoSCoW · traceability · ADR · data model</td><td>กิจกรรม "ล่าคำกำกวม"</td></tr>
+        <td>stakeholder (ผู้เกี่ยวข้อง) · elicitation (การถามหาความต้องการ) · use case · user story + AC (เกณฑ์ตรวจรับ) · FR/NFR ที่วัดได้ · verification กับ validation · MoSCoW (การจัดลำดับความสำคัญ) · traceability (การตามรอย requirement ถึง test) · ADR (บันทึกการตัดสินใจออกแบบ) · data model</td><td>กิจกรรม "หาคำกำกวม" (หาคำในโจทย์ที่ตีความได้หลายแบบ)</td></tr>
       <tr><td>11:15–12:00<br><span class="small">45 นาที</span></td><td>🔧 <a href="lab-2.html">Lab 2</a></td>
-        <td>อ่าน <a href="brief.html">โจทย์</a> → ชุด prompt กับ Gemini/ChatGPT → <strong>ถามผู้สอน (เจ้าของโจทย์)</strong> → SRS + DESIGN → รีวิวกับเพื่อน → commit</td>
+        <td>อ่าน <a href="brief.html">โจทย์</a> → ใช้ชุด prompt ที่เตรียมไว้กับ Gemini/ChatGPT → <strong>ถามผู้สอน (เจ้าของโจทย์)</strong> → เขียน SRS + DESIGN → รีวิวกับเพื่อน → commit</td>
         <td>ผู้สอนตอบตามชุดคำตอบ Q1–Q12 ของผู้สอน · ไม่ใช้โควต้า ZCode</td></tr>
     </tbody>
   </table></div>
@@ -82,27 +82,27 @@
   <div class="table-wrap"><table>
     <thead><tr><th>เวลา</th><th>ช่วง</th><th>สิ่งที่ทำ</th><th>เป้าหมาย / จุดสังเกต</th></tr></thead>
     <tbody>
-      <tr><td>12:00–13:00</td><td>🍚</td><td colspan="2">พักกลางวัน — วาง <code>baseline-pack</code> ในไดรฟ์ร่วมของห้อง</td></tr>
+      <tr><td>12:00–13:00</td><td>🍚</td><td colspan="2">พักกลางวัน — ผู้สอนวาง <code>baseline-pack</code> (spec อ้างอิงสำหรับช่วง 13:00) ในไดรฟ์ร่วมของห้อง</td></tr>
       <tr><td>13:00–13:30<br><span class="small">30 นาที</span></td><td>🤝 <a href="baseline.html">Baseline</a></td>
-        <td>คัดลอก spec อ้างอิงทับ → <code>git diff</code> → ตาราง 4 ช่อง (ตรง/ตกหล่น/แต่งเพิ่ม/ดีกว่า) → walkthrough ทั้งห้อง → commit "adopt baseline spec"</td>
-        <td>บทเรียน: ถ้าไม่ถาม จะสร้างผิด · LLM แต่ง requirement ได้</td></tr>
+        <td>คัดลอก spec อ้างอิงทับไฟล์ของตัวเอง → ดูจุดที่ต่างด้วย <code>git diff</code> → กรอกตาราง 4 ช่อง (ตรง/ตกหล่น/แต่งเพิ่ม/ดีกว่า) → ไล่ดูพร้อมกันทั้งห้อง → commit "adopt baseline spec"</td>
+        <td>บทเรียน: ถ้าไม่ถามเจ้าของโจทย์ จะสร้างผิด และ LLM แต่ง requirement ขึ้นมาเองได้</td></tr>
       <tr><td>13:30–13:45<br><span class="small">15 นาที</span></td><td>📖 <a href="theory-3-agent-skill.html">ทฤษฎี 3</a></td>
-        <td>WBS → task · agent loop · AGENTS.md / Skill / SPEC · ADLC</td><td>ผู้เรียนอ่าน TASKS.md ของ baseline ออก</td></tr>
+        <td>แตก spec เป็น task ด้วย WBS · agent loop · AGENTS.md / Skill / SPEC ต่างกันอย่างไร · ADLC</td><td>ผู้เรียนอ่าน TASKS.md ของ baseline แล้วเข้าใจว่าแต่ละ task ต้องทำอะไร</td></tr>
       <tr><td>13:45–14:40<br><span class="small">55 นาที</span></td><td>🔧 <a href="lab-3.html">Lab 3</a></td>
-        <td>ZCode ทำ T1.1 → T1.2 → T2.1 → T2.2 → T2.3 → T2.4 · คนรัน migration/smoke/trace/diff/commit คั่นทุก task · release</td>
-        <td>จุดเสี่ยง: ลืม migration (<code>no such table</code>) · agent ทำเกิน Release 1</td></tr>
-      <tr><td>14:40–14:55</td><td>☕</td><td colspan="2">เบรก — แจก <code>build-cars</code> / <code>final</code> ให้คนที่ต้องการ</td></tr>
+        <td>ZCode ทำ T1.1 → T1.2 → T2.1 → T2.2 → T2.3 → T2.4 ทีละ task · ระหว่าง task คนรัน migration, smoke, trace, อ่าน diff และ commit เอง · จบด้วย release</td>
+        <td>จุดเสี่ยง: ลืมรัน migration (จะเห็น error <code>no such table</code>) และ agent ทำงานเกินขอบเขต Release 1</td></tr>
+      <tr><td>14:40–14:55</td><td>☕</td><td colspan="2">เบรก — แจก checkpoint <code>build-cars</code> / <code>final</code> (โค้ดที่ทำเสร็จถึงจุดนั้นแล้ว) ให้คนที่ทำไม่ทัน</td></tr>
       <tr><td>14:55–15:20<br><span class="small">25 นาที</span></td><td>📖 <a href="theory-4-verify-release.html">ทฤษฎี 4</a></td>
-        <td>ระดับการทดสอบ · test กับ eval · อ่าน auth ของ starter 5 แนวคิด · release / rollback / log</td><td>ผู้เรียนรู้ว่าระบบ "ยังไม่พร้อม production เพราะอะไร"</td></tr>
-      <tr><td>15:20–15:45<br><span class="small">25 นาที</span></td><td>🔧 <a href="lab-4.html">Lab 4</a></td>
-        <td>เช็กลิสต์บน production · ตรวจรับกับ "ผู้ใช้" เทียบ <a href="brief.html">โจทย์</a> · แยก bug กับ requirement gap · <code>git tag v1.0</code></td>
-        <td>กลุ่มเร็ว: change request FR-11/FR-12 หรือบั๊กปลูก</td></tr>
-      <tr><td>15:45–16:00<br><span class="small">15 นาที</span></td><td>🎤 Retro</td>
-        <td>วาง commit ของตัวเองบนแผนผัง SDLC · exit ticket · <strong>ออกจากระบบทุกบริการ</strong> (<a href="setup.html#signout">PART D</a>) แล้วผู้สอนเดินตรวจ</td><td>เส้นทางต่อยอด</td></tr>
+        <td>ระดับการทดสอบ · test กับ eval · 5 แนวคิดของระบบล็อกอิน (auth) ใน starter · release / rollback / log</td><td>ผู้เรียนรู้ว่าระบบ "ยังไม่พร้อม production เพราะอะไร"</td></tr>
+      <tr><td>15:20–15:50<br><span class="small">30 นาที</span></td><td>🔧 <a href="lab-4.html">Lab 4</a></td>
+        <td>ทำเช็กลิสต์ตรวจบน production · ตรวจรับกับ "ผู้ใช้" เทียบ <a href="brief.html">โจทย์</a> · แยก bug กับ requirement gap (ความต้องการที่ spec ไม่ได้เขียนไว้) · <code>git tag v1.0</code> · <strong>ลอง deploy v1.1 ด้วย agent</strong> (Cloudflare agent setup) หลังจากพิมพ์คำสั่งเองมาทั้งวัน</td>
+        <td>ถ้ายังมีเวลา: ทำ change request (คำขอเปลี่ยนแปลง) FR-11/FR-12 หรือหาบั๊กที่ผู้สอนตั้งใจใส่ไว้</td></tr>
+      <tr><td>15:50–16:00<br><span class="small">10 นาที</span></td><td>🎤 Retro (ทบทวนบทเรียน)</td>
+        <td>นำ commit ของตัวเองไปวางบนแผนผัง SDLC ว่าอยู่ขั้นไหน · exit ticket (ตอบคำถามสั้น ๆ ก่อนออกจากห้อง) · <strong>ออกจากระบบทุกบริการ</strong> (<a href="setup.html#signout">PART D</a>) แล้วผู้สอนเดินตรวจ</td><td>แนวทางเรียนรู้ต่อ</td></tr>
     </tbody>
   </table></div>
 
-  <h3>สรุปงบเวลา</h3>
+  <h3>สรุปเวลา</h3>
   <div class="table-wrap"><table>
     <thead><tr><th>ประเภท</th><th>นาที</th></tr></thead>
     <tbody>
@@ -114,19 +114,19 @@
     </tbody>
   </table></div>
 
-  <h2 id="control">จุดคุมเวลาและสวิตช์ลดเนื้อหา</h2>
+  <h2 id="control">จุดตรวจเวลาและการตัดเนื้อหาเมื่อเวลาไม่พอ</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>เวลาเช็ก</th><th>ต้องถึงจุดนี้</th><th>ถ้าไม่ถึง</th></tr></thead>
     <tbody>
-      <tr><td>10:35</td><td>80% ของห้องมี URL starter + admin บน production</td><td>ข้ามขั้น rollback/tail ไปสาธิตบนจอผู้สอน · คนที่ติดใช้ <code>lab1-done</code></td></tr>
+      <tr><td>10:35</td><td>80% ของห้องมี URL starter + admin บน production</td><td>ข้ามขั้น rollback/tail ให้ผู้สอนสาธิตบนจอแทน · คนที่ติดอยู่ให้ใช้ checkpoint <code>lab1-done</code></td></tr>
       <tr><td>11:50</td><td>SRS มี FR พร้อมที่มา + NFR วัดได้</td><td>ข้ามการร่าง DESIGN (ดูฉบับอ้างอิงตอน 13:00 แทน) · ห้ามข้ามขั้นถามเจ้าของโจทย์</td></tr>
-      <tr><td>14:10</td><td>T2.1 (จอง + กันซ้อน) ผ่าน smoke</td><td>ข้าม T1.2/T2.4 (หน้าเว็บ) · คัดลอก <code>public/</code> จาก <code>final</code> · ทดสอบด้วย smoke</td></tr>
-      <tr><td>15:35</td><td>เช็กลิสต์ข้อ 1–5 ผ่านบน production</td><td>ตัดกิจกรรมกลุ่มเร็ว · ทำตรวจรับกับ "ผู้ใช้" อย่างน้อย B2, B3, B5</td></tr>
+      <tr><td>14:10</td><td>T2.1 (จอง + กันซ้อน) ผ่าน smoke</td><td>ข้าม T1.2/T2.4 (หน้าเว็บ) แล้วคัดลอกโฟลเดอร์ <code>public/</code> จาก <code>final</code> มาใช้แทน · ทดสอบด้วย smoke</td></tr>
+      <tr><td>15:35</td><td>เช็กลิสต์ข้อ 1–5 ผ่านบน production</td><td>ตัดกิจกรรมกลุ่มเร็ว · ทำตรวจรับกับ "ผู้ใช้" อย่างน้อยข้อ B2, B3, B5 ในเช็กลิสต์ Lab 4</td></tr>
     </tbody>
   </table></div>
   <div class="box warn">
     <span class="label">⚠ ห้ามตัด</span>
-    <p>การถามเจ้าของโจทย์ใน Lab 2 · การเทียบ spec ตอน 13:00 · smoke + trace ทุก task · การตรวจรับเทียบโจทย์ต้นฉบับ · การออกจากระบบตอนเลิก — ตัดหน้าเว็บ (UI) ก่อนเสมอ</p>
+    <p>การถามเจ้าของโจทย์ใน Lab 2 · การเทียบ spec ตอน 13:00 · smoke + trace ทุก task · การตรวจรับเทียบโจทย์ต้นฉบับ · การออกจากระบบตอนเลิก — ถ้าต้องตัด ให้ตัดงานหน้าเว็บ (UI) ก่อนเสมอ</p>
   </div>
 </main>
 </body>

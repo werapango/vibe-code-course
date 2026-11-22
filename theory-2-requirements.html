@@ -13,8 +13,8 @@
 <main>
   <p class="eyebrow">ทฤษฎี 2 · 10:50–11:15 · 25 นาที</p>
   <h1>Requirements &amp; Design: spec ที่ตรวจสอบได้</h1>
-  <p class="lede">spec ที่ดีไม่ใช่เอกสารที่ยาว แต่เป็นเอกสารที่<strong>ทุกข้อพิสูจน์ได้</strong>ว่าทำแล้วหรือยัง และ<strong>ทุกข้อบอกได้ว่ามาจากใคร</strong>
-  ช่วงนี้ให้เครื่องมือครบสำหรับ Lab 2 ที่คุณจะเขียน SRS และร่าง design ร่วมกับ Gemini/ChatGPT</p>
+  <p class="lede">spec (เอกสารที่บอกว่าระบบต้องทำอะไร) ที่ดีไม่ใช่เอกสารที่ยาว แต่เป็นเอกสารที่<strong>ทุกข้อตรวจได้</strong>ว่าทำแล้วหรือยัง และ<strong>ทุกข้อบอกได้ว่ามาจากใคร</strong>
+  ช่วงนี้ให้ความรู้ที่ต้องใช้ใน Lab 2 ซึ่งคุณจะเขียน SRS (เอกสารความต้องการของระบบฉบับเต็ม) และร่าง design ร่วมกับ Gemini/ChatGPT</p>
 
   <div class="meta">
     <span class="chip">📖 บรรยาย 25 นาที</span>
@@ -29,10 +29,10 @@
       <li><a href="#usecase">Use case และ user story</a></li>
       <li><a href="#ac">Acceptance criteria และ Specification by Example</a></li>
       <li><a href="#frnfr">FR กับ NFR: NFR ต้องวัดได้</a></li>
-      <li><a href="#quality">requirement ที่ดี + แบบฝึกล่าคำกำกวม</a></li>
+      <li><a href="#quality">requirement ที่ดี และแบบฝึกหาคำกำกวม</a></li>
       <li><a href="#vv">Verification กับ Validation · วิธีตรวจ 4 แบบ</a></li>
       <li><a href="#moscow">จัดลำดับด้วย MoSCoW และตามรอย (traceability)</a></li>
-      <li><a href="#design">Design: constraint → สถาปัตยกรรม → ADR → ข้อมูล → API</a></li>
+      <li><a href="#design">Design: ข้อจำกัด → ภาพรวมระบบ → ADR → ข้อมูล → API</a></li>
       <li><a href="#discuss">คำถามชวนคุย</a></li>
       <li><a href="#lab">เชื่อมกับ Lab</a></li>
     </ol>
@@ -40,17 +40,17 @@
 
   <h2 id="stakeholder">Stakeholder และการถามก่อนเขียน (elicitation)</h2>
   <p><strong>Stakeholder</strong> คือทุกคนที่ได้รับผลจากระบบ — ไม่ใช่แค่คนกดใช้ เช่น ระบบจองรถ: เจ้าของโจทย์ (หัวหน้างาน), คนดูแลข้อมูล, พนักงานผู้จอง, และฝ่ายที่ “ไม่ได้ใช้แต่ได้รับผล” อย่างฝ่ายการเงินที่บอกว่าไม่มีงบ</p>
-  <p><strong>Elicitation</strong> = การดึงความต้องการออกมาจากคน ไม่ใช่การเดา โจทย์จากผู้ใช้จริงมัก<strong>กำกวมเสมอ</strong> เพราะผู้ใช้เขียนด้วยภาษาของงาน ไม่ใช่ภาษาของระบบ</p>
+  <p><strong>Elicitation</strong> คือการถามและพูดคุยเพื่อดึงความต้องการออกมาจากคน แทนการเดาเอง โจทย์จากผู้ใช้จริงมัก<strong>กำกวม</strong> เพราะผู้ใช้เขียนด้วยภาษาของงาน ไม่ใช่ภาษาของระบบ</p>
   <div class="box warn">
-    <span class="label">⚠ กับดักของ LLM</span>
-    <p>ถ้าแปะโจทย์ให้ Gemini/ChatGPT แล้วสั่ง “เขียน SRS ให้หน่อย” มันจะเขียนออกมาสวยและ<strong>มั่นใจมาก</strong> — รวมถึงกติกาที่ไม่มีใครเคยพูด
-    (เช่น จองได้ไม่เกิน 4 ชั่วโมง, ต้องได้รับอนุมัติ) วิธีที่ถูกคือ: ให้ LLM <strong>ตั้งคำถาม</strong>ก่อน → คนเลือกคำถามไปถามเจ้าของโจทย์ → แล้วค่อยให้ช่วยเขียน
+    <span class="label">⚠ ข้อควรระวังเมื่อใช้ AI แชต (LLM)</span>
+    <p>ถ้าแปะโจทย์ให้ Gemini/ChatGPT แล้วสั่ง “เขียน SRS ให้หน่อย” มันจะเขียนออกมาดูดีและ<strong>มั่นใจมาก</strong> — รวมถึงกติกาที่ไม่มีใครเคยพูด
+    (เช่น จองได้ไม่เกิน 4 ชั่วโมง, ต้องได้รับอนุมัติ) วิธีที่ถูกคือ ให้ AI <strong>ตั้งคำถาม</strong>ก่อน แล้วเราเลือกคำถามที่สำคัญไปถามเจ้าของโจทย์ ได้คำตอบแล้วจึงค่อยให้ AI ช่วยเขียน
     ข้อไหนยังไม่มีคนยืนยัน ให้ติดป้าย <strong>[สมมติฐาน]</strong></p>
   </div>
 
   <h2 id="usecase">Use case และ user story</h2>
   <h3>Use case — มองเป็น “การใช้งานหนึ่งเรื่อง”</h3>
-  <p>เริ่มจากรายการ use case (UC-01, UC-02 …) แล้วเขียน <strong>use case หลัก 1 ตัวแบบเต็ม</strong> (fully dressed) ตัวอย่างโครงจาก SRS อ้างอิง:</p>
+  <p>use case คือการเล่าทีละขั้นว่าผู้ใช้ทำงานหนึ่งเรื่องกับระบบอย่างไร เริ่มจากทำรายการ use case (UC-01, UC-02 …) แล้วเขียน <strong>use case หลัก 1 ตัวแบบเต็ม</strong> (fully dressed = ครบทุกหัวข้อ) ตัวอย่างโครงจาก SRS อ้างอิง:</p>
   <pre data-nocopy><code>UC-02 จองรถ
 Actor: พนักงาน
 เงื่อนไขก่อนเริ่ม: ล็อกอินแล้ว · มีรถในระบบอย่างน้อย 1 คัน
@@ -62,10 +62,10 @@ Actor: พนักงาน
 ทางเลือก / กรณีผิดปกติ:
   3a. ถ้า ... ระบบปฏิเสธพร้อมแจ้งเหตุผล → กลับไปขั้น 1
 ผลลัพธ์: การจองถูกบันทึก ช่วงเวลานั้นแสดงว่า "ไม่ว่าง"</code></pre>
-  <p class="small">ส่วน <strong>ทางเลือก/กรณีผิดปกติ</strong> คือขุมทรัพย์ — แต่ละข้อมักกลายเป็น requirement และเคสทดสอบ ส่วน “กรอกรายละเอียดอะไรบ้าง” และ “กติกาอะไร” คุณต้องไปถามเองใน Lab 2</p>
+  <p class="small">ส่วน <strong>ทางเลือก/กรณีผิดปกติ</strong> สำคัญที่สุด เพราะแต่ละข้อมักกลายเป็น requirement และเคสทดสอบ ส่วน “กรอกรายละเอียดอะไรบ้าง” และ “กติกาอะไร” คุณต้องไปถามเองใน Lab 2</p>
 
-  <h3>User story — มองจากคุณค่าที่ผู้ใช้ได้</h3>
-  <p>รูปแบบ: <strong>ในฐานะ</strong> [ใคร] <strong>ฉันต้องการ</strong> [ทำอะไร] <strong>เพื่อ</strong> [ได้ประโยชน์อะไร] · story ที่ดีผ่านเกณฑ์ <strong>INVEST</strong>:</p>
+  <h3>User story — มองจากประโยชน์ที่ผู้ใช้ได้รับ</h3>
+  <p>user story คือความต้องการ 1 ข้อที่เล่าจากมุมผู้ใช้ รูปแบบ: <strong>ในฐานะ</strong> [ใคร] <strong>ฉันต้องการ</strong> [ทำอะไร] <strong>เพื่อ</strong> [ได้ประโยชน์อะไร] และ story ที่ดีควรผ่านเกณฑ์ <strong>INVEST</strong>:</p>
   <div class="table-wrap"><table>
     <thead><tr><th>ตัวอักษร</th><th>ความหมาย</th><th>ถามตัวเอง</th></tr></thead>
     <tbody>
@@ -79,10 +79,10 @@ Actor: พนักงาน
   </table></div>
 
   <h2 id="ac">Acceptance criteria และ Specification by Example</h2>
-  <p>AC เขียนแบบ <strong>Given / When / Then</strong> — สถานะก่อน · การกระทำ · ผลที่<strong>ตรวจได้</strong> ตัวอย่างจริงจาก starter:</p>
+  <p>AC (acceptance criteria = เกณฑ์ตรวจรับ บอกว่าแบบไหนถือว่าผ่าน) เขียนแบบ <strong>Given / When / Then</strong> คือ Given = สถานการณ์ตั้งต้น, When = สิ่งที่ผู้ใช้ทำ, Then = ผลที่<strong>ตรวจได้</strong> ตัวอย่างจริงจากโปรเจกต์ตั้งต้น (starter):</p>
   <pre data-nocopy><code>- **AC-A2.2** Given รหัสผิด หรือไม่มีชื่อนี้ When ล็อกอิน
   Then ได้ 401 ด้วยข้อความเดียวกันทั้งสองกรณี</code></pre>
-  <p>รหัส AC ตัวหนา <code>**AC-x.y**</code> จะกลายเป็นชื่อเคสใน <code>scripts/smoke.mjs</code> และ <code>npm run trace</code> ตรวจว่า AC ทุกข้อมีเคสทดสอบ</p>
+  <p>รหัส AC ตัวหนา <code>**AC-x.y**</code> จะถูกใช้เป็นชื่อเคสทดสอบใน <code>scripts/smoke.mjs</code> แล้วคำสั่ง <code>npm run trace</code> จะเช็กว่า AC ทุกข้อมีเคสทดสอบครบ</p>
 
   <h3>Specification by Example: เขียน “ผลที่คาดหวัง” ก่อนโค้ด</h3>
   <p>กติกาที่มีหลายกรณี เขียนเป็นประโยคเดียวจะกำกวม ให้เขียนเป็น<strong>ตารางตัวอย่าง</strong> แล้วเติมผลที่คาดหวังเองก่อนให้ใครเขียนโค้ด เช่น กติกา “ชื่อผู้ใช้”:</p>
@@ -99,20 +99,20 @@ Actor: พนักงาน
 
   <h2 id="frnfr">FR กับ NFR: NFR ต้องวัดได้</h2>
   <div class="grid">
-    <div class="card"><h4>Functional (FR) — ระบบ “ทำอะไร”</h4><p>“ระบบต้อง…” 1 ข้อ = 1 ความสามารถ เช่น ระบบต้องให้ admin เพิ่ม แก้ ลบข้อมูลรถ · ทุกข้อมี<strong>ที่มา</strong> (ย่อหน้าในโจทย์ หรือคำตอบของเจ้าของโจทย์)</p></div>
-    <div class="card"><h4>Non-functional (NFR) — ระบบ “ดีแค่ไหน”</h4><p>ความปลอดภัย การใช้งาน ประสิทธิภาพ ค่าใช้จ่าย — <strong>ต้องมีเกณฑ์ตัวเลขหรือวิธีตรวจ</strong> ไม่งั้นตรวจรับไม่ได้</p></div>
+    <div class="card"><h4>Functional (FR) — ระบบ “ทำอะไร”</h4><p>“ระบบต้อง…” 1 ข้อต่อ 1 ความสามารถ เช่น ระบบต้องให้ admin เพิ่ม แก้ ลบข้อมูลรถ และทุกข้อต้องบอก<strong>ที่มา</strong>ได้ (ย่อหน้าในโจทย์ หรือคำตอบของเจ้าของโจทย์)</p></div>
+    <div class="card"><h4>Non-functional (NFR) — ระบบ “ดีแค่ไหน”</h4><p>ความปลอดภัย การใช้งาน ประสิทธิภาพ ค่าใช้จ่าย — <strong>ต้องมีเกณฑ์ตัวเลขหรือวิธีตรวจ</strong> ไม่อย่างนั้นจะตรวจรับไม่ได้</p></div>
   </div>
   <div class="table-wrap"><table>
     <thead><tr><th>❌ NFR ที่ตรวจไม่ได้</th><th>✅ NFR ที่วัดได้</th><th>วิธีตรวจ</th></tr></thead>
     <tbody>
       <tr><td>ใช้บนมือถือได้</td><td>ใช้ทุกหน้าได้บนจอกว้าง 375px โดยไม่มี scroll แนวนอน</td><td>สาธิต</td></tr>
       <tr><td>ใช้งานง่าย</td><td>ผู้ใช้ที่เคยใช้แล้วทำรายการหลักเสร็จภายใน 1 นาที</td><td>สาธิต + จับเวลา</td></tr>
-      <tr><td>ปลอดภัย</td><td>รหัสผ่านเก็บเป็น hash + salt ไม่มีรหัสจริงในฐานข้อมูล</td><td>ตรวจข้อมูล (inspection)</td></tr>
-      <tr><td>ประหยัด</td><td>ใช้เฉพาะบริการฟรีที่ไม่ต้องผูกบัตร</td><td>ตรวจ dashboard</td></tr>
+      <tr><td>ปลอดภัย</td><td>รหัสผ่านเก็บเป็น hash + salt (แปลงเป็นรหัสที่ย้อนกลับไม่ได้) ไม่มีรหัสจริงในฐานข้อมูล</td><td>ตรวจข้อมูล (inspection)</td></tr>
+      <tr><td>ประหยัด</td><td>ใช้เฉพาะบริการฟรีที่ไม่ต้องผูกบัตร</td><td>ตรวจหน้าจัดการบัญชี (dashboard)</td></tr>
     </tbody>
   </table></div>
 
-  <h2 id="quality">requirement ที่ดี + แบบฝึกล่าคำกำกวม</h2>
+  <h2 id="quality">requirement ที่ดี และแบบฝึกหาคำกำกวม</h2>
   <p>คุณสมบัติของ requirement ที่ดี (แนวคิดจากมาตรฐาน IEEE 29148):</p>
   <div class="table-wrap"><table>
     <thead><tr><th>คุณสมบัติ</th><th>ถามตัวเอง</th></tr></thead>
@@ -126,7 +126,7 @@ Actor: พนักงาน
   </table></div>
 
   <div class="box intent">
-    <span class="label">🎯 แบบฝึก 3 นาที: ล่าคำกำกวม</span>
+    <span class="label">🎯 แบบฝึก 3 นาที: หาคำกำกวม</span>
     <p>แต่ละประโยค มีคำไหนที่ต้องถามต่อ? ถามว่าอะไร? (ตอบกับเพื่อนข้าง ๆ)</p>
     <ol>
       <li>“พนักงานต้อง<strong>จองล่วงหน้า</strong>ได้”</li>
@@ -135,18 +135,18 @@ Actor: พนักงาน
       <li>“หน้าเว็บต้อง<strong>โหลดเร็ว</strong>”</li>
       <li>“<strong>ผู้ดูแล</strong>จัดการข้อมูลได้”</li>
     </ol>
-    <p class="small">ใบ้: แต่ละคำซ่อนคำถามอย่างน้อย 1 ข้อ เช่น “ล่วงหน้า” → กี่วัน? ย้อนหลังได้ไหม? · “ผู้ดูแล” → ใคร? จัดการอะไรได้บ้าง? — คำตอบจริงต้องได้จากเจ้าของโจทย์ใน Lab 2</p>
+    <p class="small">ใบ้: แต่ละคำต้องถามต่ออย่างน้อย 1 ข้อ เช่น “ล่วงหน้า” ต้องถามว่า ล่วงหน้ากี่วัน? จองย้อนหลังได้ไหม? ส่วน “ผู้ดูแล” ต้องถามว่า คือใคร? จัดการอะไรได้บ้าง? — คำตอบจริงต้องได้จากเจ้าของโจทย์ใน Lab 2</p>
   </div>
 
   <h2 id="vv">Verification กับ Validation · วิธีตรวจ 4 แบบ</h2>
   <div class="grid">
-    <div class="card"><h4>Verification — “สร้างถูกวิธีไหม”</h4><p>ระบบตรงกับ <strong>spec</strong> หรือไม่ · ตรวจด้วย smoke test, trace, เช็กลิสต์ · ทำทุก task ในช่วงบ่าย</p></div>
-    <div class="card"><h4>Validation — “สร้างของที่ถูกไหม”</h4><p>spec ตรงกับ<strong>ความต้องการจริง</strong>หรือไม่ · ตรวจด้วยการถามเจ้าของโจทย์ (Lab 2) และตรวจรับกับผู้ใช้เทียบโจทย์ต้นฉบับ (Lab 4)</p></div>
+    <div class="card"><h4>Verification — “สร้างถูกวิธีไหม”</h4><p>เช็กว่าระบบทำได้ตรงกับ <strong>spec</strong> หรือไม่ ตรวจด้วย smoke test, trace และเช็กลิสต์ ช่วงบ่ายจะทำทุกครั้งที่จบแต่ละงานย่อย (task)</p></div>
+    <div class="card"><h4>Validation — “สร้างของที่ถูกไหม”</h4><p>เช็กว่า spec ตรงกับ<strong>ความต้องการจริง</strong>หรือไม่ ตรวจด้วยการถามเจ้าของโจทย์ (Lab 2) และให้ผู้ใช้ลองใช้เทียบกับโจทย์ต้นฉบับ (Lab 4)</p></div>
   </div>
   <div class="box theory">
     <span class="label">📖 แนวคิดหลัก</span>
-    <p>ระบบที่ผ่าน test ครบ 100% ก็ยังล้มได้ ถ้า spec ผิดตั้งแต่ต้น — test ตรวจได้แค่ว่าโค้ดตรงกับ spec
-    <strong>spec ที่ดีจึงต้องผ่านทั้งสองทาง:</strong> validate กับคน (ถูกเรื่องไหม) และเขียนให้ verify ได้ (ทุกข้อมีวิธีตรวจ)</p>
+    <p>ระบบที่ผ่าน test ครบ 100% ก็ยังใช้งานจริงไม่ได้ ถ้า spec ผิดตั้งแต่ต้น — test ตรวจได้แค่ว่าโค้ดตรงกับ spec
+    <strong>spec ที่ดีจึงต้องผ่านการตรวจทั้งสองแบบ:</strong> เอาไปถามคนให้ยืนยันว่าถูกเรื่อง (validate) และเขียนให้ทุกข้อมีวิธีตรวจ (verify ได้)</p>
   </div>
   <p>ไม่ใช่ทุก requirement ที่ตรวจด้วย test อัตโนมัติได้ แต่<strong>ทุกข้อต้องมีวิธีตรวจ</strong>:</p>
   <div class="table-wrap"><table>
@@ -155,13 +155,14 @@ Actor: พนักงาน
       <tr><td><strong>Test</strong> ทดสอบ</td><td>ผลเป็นข้อมูลที่เช็กอัตโนมัติได้</td><td>smoke test: จองชน → 409</td></tr>
       <tr><td><strong>Demonstration</strong> สาธิต</td><td>ต้องดูด้วยตาหรือจับเวลา</td><td>ใช้บนมือถือ 375px · จองใน 1 นาที</td></tr>
       <tr><td><strong>Inspection</strong> ตรวจ</td><td>ดูโค้ด/ข้อมูล/การตั้งค่า</td><td>เปิดตาราง users เห็นแต่ hash</td></tr>
-      <tr><td><strong>Analysis</strong> วิเคราะห์</td><td>ต้องคำนวณหรือให้เหตุผล</td><td>free plan รองรับปริมาณการใช้ได้ไหม</td></tr>
+      <tr><td><strong>Analysis</strong> วิเคราะห์</td><td>ต้องคำนวณหรือให้เหตุผล</td><td>แพ็กเกจฟรี (free plan) รองรับปริมาณการใช้ได้ไหม</td></tr>
     </tbody>
   </table></div>
 
   <h2 id="moscow">จัดลำดับด้วย MoSCoW และตามรอย (traceability)</h2>
   <p>ความต้องการมักมากกว่าเวลาที่มีเสมอ ใช้ <strong>MoSCoW</strong> แบ่ง: <strong>Must</strong> ต้องมี (Release 1) · <strong>Should</strong> ควรมี · <strong>Could</strong> อาจทำ · <strong>Won't</strong> ยังไม่ทำรอบนี้
-  — การเขียน “ยังไม่ทำ” ไว้ชัด ๆ สำคัญพอ ๆ กับสิ่งที่ทำ เพราะกัน agent (และทีม) ทำเกิน</p>
+  — การเขียน “ยังไม่ทำ” ไว้ชัด ๆ สำคัญพอ ๆ กับสิ่งที่ทำ เพราะช่วยกันไม่ให้ agent (AI ที่ลงมือเขียนโค้ดให้) และทีม ทำงานเกินขอบเขต</p>
+  <p>การตามรอย (traceability) คือการโยงได้ว่า requirement แต่ละข้อมาจากไหน และถูกทดสอบด้วยเคสไหน:</p>
   <div class="flow">
     <div class="node"><b>โจทย์ B# / คำตอบ Q#</b>ที่มา</div><div class="arrow">→</div>
     <div class="node"><b>FR-xx</b>docs/SRS.md</div><div class="arrow">→</div>
@@ -169,23 +170,23 @@ Actor: พนักงาน
     <div class="node hl"><b>เคสทดสอบ</b>smoke.mjs</div><div class="arrow">→</div>
     <div class="node"><b>✅ / ❌</b>ผลทดสอบ</div>
   </div>
-  <p><code>npm run trace</code> ตรวจโซ่นี้ให้อัตโนมัติ: AC ทุกข้อมีเคสทดสอบไหม · เคสไหนอ้าง AC ที่ไม่มีจริง · FR ไหนใน SRS ไม่ถูกอ้างใน SPEC (แปลว่าตกหล่น หรือลืมเขียนว่าเลื่อนไปรอบหน้า)</p>
+  <p><code>npm run trace</code> ตรวจความเชื่อมโยงนี้ให้อัตโนมัติ 3 เรื่อง: (1) AC ทุกข้อมีเคสทดสอบไหม (2) มีเคสไหนอ้างถึง AC ที่ไม่มีอยู่จริง (3) มี FR ไหนใน SRS ที่ไม่ถูกอ้างถึงใน SPEC เลย ซึ่งแปลว่าตกหล่น หรือลืมเขียนว่าเลื่อนไปรอบหน้า</p>
 
-  <h2 id="design">Design: constraint → สถาปัตยกรรม → ADR → ข้อมูล → API</h2>
+  <h2 id="design">Design: ข้อจำกัด → ภาพรวมระบบ → ADR → ข้อมูล → API</h2>
   <ol>
-    <li><strong>Constraint ก่อน</strong> — ข้อจำกัดที่เลือกไม่ได้ เช่น ไม่มีงบ ไม่ผูกบัตร ต้องเสร็จใน 1 วัน มีระบบผู้ใช้จาก starter แล้ว</li>
-    <li><strong>สถาปัตยกรรม</strong> — กล่องกับลูกศรพอ:
+    <li><strong>ข้อจำกัด (constraint) ก่อน</strong> — สิ่งที่เราเลือกไม่ได้ เช่น ไม่มีงบ ไม่ผูกบัตร ต้องเสร็จใน 1 วัน มีระบบผู้ใช้จาก starter แล้ว</li>
+    <li><strong>สถาปัตยกรรม</strong> (ภาพรวมว่าระบบมีส่วนไหนบ้างและเชื่อมกันอย่างไร) — วาดแค่กล่องกับลูกศรก็พอ:
 <pre data-nocopy><code>[เบราว์เซอร์บนมือถือ] ──HTTPS──▶ [Cloudflare Worker: public/ + Hono API src/] ──▶ [D1: app-db]</code></pre></li>
-    <li><strong>ADR</strong> (Architecture Decision Record) — การตัดสินใจสำคัญ 1 ข้อ = 1 ADR: <em>บริบท · ตัวเลือก · ตัดสินใจ · เหตุผล · ผลที่ตามมา</em>
-      เช่น “ที่ deploy: Cloudflare Workers + D1 เทียบกับ VPS และ Google Sheets” — ส่วน “ทางเลือกที่ไม่เลือก” คือส่วนที่มีค่าที่สุดเวลาย้อนกลับมาอ่าน</li>
-    <li><strong>ข้อมูล</strong> — หา entity จาก<strong>คำนาม</strong>ใน use case (รถ, การจอง, ผู้ใช้) → ความสัมพันธ์ (ผู้ใช้ 1 คนมีหลายการจอง) → ตาราง + constraint (ทะเบียนห้ามซ้ำ, เวลาเริ่มก่อนเวลาจบ)</li>
-    <li><strong>API contract</strong> — หาจาก<strong>คำกริยา</strong>ใน use case: method, path, สิทธิ์, body, ผลสำเร็จ, error แต่ละแบบ</li>
-    <li><strong>NFR → design</strong> — แต่ละ NFR แก้ด้วยอะไร เช่น “เห็นการจองของคนอื่นไม่ได้” → ทุก query กรอง <code>user_id</code> จาก session</li>
+    <li><strong>ADR</strong> (Architecture Decision Record = บันทึกการตัดสินใจเรื่องโครงสร้างระบบ) — การตัดสินใจสำคัญ 1 ข้อเขียนเป็น 1 ADR มีหัวข้อ <em>บริบท · ตัวเลือก · ตัดสินใจ · เหตุผล · ผลที่ตามมา</em>
+      เช่น “จะ deploy ที่ไหน: Cloudflare Workers + D1 เทียบกับเช่าเซิร์ฟเวอร์ (VPS) และ Google Sheets” — ส่วน “ทางเลือกที่ไม่ได้เลือก และเพราะอะไร” มีประโยชน์ที่สุดเมื่อกลับมาอ่านภายหลัง</li>
+    <li><strong>ข้อมูล</strong> — หาสิ่งที่ต้องเก็บ (entity) จาก<strong>คำนาม</strong>ใน use case เช่น รถ, การจอง, ผู้ใช้ จากนั้นดูความสัมพันธ์ (ผู้ใช้ 1 คนมีหลายการจอง) แล้วออกแบบเป็นตารางพร้อมกฎของข้อมูล (ทะเบียนห้ามซ้ำ, เวลาเริ่มต้องก่อนเวลาจบ)</li>
+    <li><strong>API contract</strong> (ข้อตกลงว่า API แต่ละตัวรับและส่งอะไร) — หาจาก<strong>คำกริยา</strong>ใน use case แล้วระบุ method, path, ใครมีสิทธิ์เรียก, body, ผลเมื่อสำเร็จ และ error แต่ละแบบ</li>
+    <li><strong>NFR กับ design</strong> — ระบุว่าแต่ละ NFR แก้ด้วยการออกแบบอะไร เช่น “เห็นการจองของคนอื่นไม่ได้” แก้โดยให้ทุกคำสั่งดึงข้อมูล (query) กรองด้วย <code>user_id</code> ของคนที่ล็อกอินอยู่ (จาก session)</li>
   </ol>
   <div class="box token">
     <span class="label">🪙 SRS กับ SPEC ต่างกันอย่างไร</span>
-    <p><code>docs/SRS.md</code> + <code>docs/DESIGN.md</code> = ฉบับเต็มสำหรับคน · <code>SPEC.md</code> = ฉบับย่อสำหรับ agent (AC + data model + API)
-    agent อ่าน SPEC.md ทุก task — ยิ่งสั้นและชัด ยิ่งประหยัด token</p>
+    <p><code>docs/SRS.md</code> และ <code>docs/DESIGN.md</code> คือฉบับเต็มสำหรับคนอ่าน ส่วน <code>SPEC.md</code> คือฉบับย่อสำหรับ agent (มีแค่ AC + data model + API)
+    agent ต้องอ่าน SPEC.md ทุกครั้งที่เริ่มงานย่อย ยิ่งสั้นและชัดก็ยิ่งประหยัด token (หน่วยนับข้อความที่ AI อ่าน/เขียน ซึ่งกินโควตา)</p>
   </div>
 
   <h2 id="discuss">คำถามชวนคุย</h2>
@@ -196,8 +197,8 @@ Actor: พนักงาน
   </ol>
 
   <h2 id="lab">เชื่อมกับ Lab</h2>
-  <p><a href="lab-2.html">Lab 2</a> (45 นาที): อ่าน <a href="brief.html">โจทย์จากหัวหน้างานยานพาหนะ</a> → ใช้ชุด prompt กับ Gemini/ChatGPT ให้ช่วย<strong>ตั้งคำถาม</strong>
-  → นำคำถามมาถามผู้สอน (รับบทเจ้าของโจทย์) → ร่าง SRS และ design ลง <code>docs/SRS.md</code>, <code>docs/DESIGN.md</code> → ตรวจคุณภาพ → commit
+  <p><a href="lab-2.html">Lab 2</a> (45 นาที): อ่าน <a href="brief.html">โจทย์จากหัวหน้างานยานพาหนะ</a> แล้วใช้ชุด prompt กับ Gemini/ChatGPT ให้ช่วย<strong>ตั้งคำถาม</strong>
+  นำคำถามมาถามผู้สอน (ซึ่งรับบทเจ้าของโจทย์) จากนั้นร่าง SRS และ design ลง <code>docs/SRS.md</code>, <code>docs/DESIGN.md</code> ตรวจคุณภาพ แล้ว commit (บันทึกลง git)
   ตอน 13:00 เราจะเอาไปเทียบกับฉบับอ้างอิง</p>
 
   <div class="box check">
@@ -205,7 +206,7 @@ Actor: พนักงาน
     <ul>
       <li>ถามก่อนเขียน: ทุก requirement ต้องมีที่มา ข้อที่ยังไม่มีคนยืนยันคือ [สมมติฐาน] — โดยเฉพาะข้อที่ LLM เสนอ</li>
       <li>ทุกข้อต้องตรวจได้: AC แบบ Given/When/Then + ตารางตัวอย่าง · NFR มีตัวเลข · ระบุวิธีตรวจ (test/demo/inspection/analysis)</li>
-      <li>Verification = ตรงกับ spec · Validation = spec ตรงกับความต้องการจริง — spec ที่ดีต้องผ่านทั้งสองทาง</li>
+      <li>Verification คือตรวจว่าระบบตรงกับ spec · Validation คือตรวจว่า spec ตรงกับความต้องการจริง — spec ที่ดีต้องผ่านทั้งสองแบบ</li>
     </ul>
   </div>
 
@@ -213,7 +214,7 @@ Actor: พนักงาน
     <summary>บันทึกผู้สอน</summary>
     <ul>
       <li>ห้ามเฉลยคำตอบ Q1–Q12 ในช่วงนี้ — ตัวอย่างทั้งหมดในหน้านี้เลือกให้ไม่บอกคำตอบของโจทย์ (ตารางตัวอย่างใช้กติกาชื่อผู้ใช้ของ starter)</li>
-      <li>แบบฝึกล่าคำกำกวม: ให้คู่ช่วยกัน 3 นาที แล้วสุ่ม 2–3 คู่ตอบ ชมคนที่ถาม “ถ้า…แล้ว…” (กรณีขอบ)</li>
+      <li>แบบฝึกหาคำกำกวม: ให้คู่ช่วยกัน 3 นาที แล้วสุ่ม 2–3 คู่ตอบ ชมคนที่ถาม “ถ้า…แล้ว…” (กรณีขอบ)</li>
       <li>ถ้าเวลาไม่พอ ย่อหัวข้อ Design เหลือ ADR + data model — Lab 2 มี prompt ให้ร่าง design ทีละขั้นอยู่แล้ว</li>
     </ul>
   </details>

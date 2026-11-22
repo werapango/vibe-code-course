@@ -13,8 +13,8 @@
 <main>
   <p class="eyebrow">13:00–13:30 · 30 นาที · เปิดหลังพักกลางวัน</p>
   <h1>Spec Review แล้วรับ Baseline ร่วมกัน</h1>
-  <p class="lede">เช้านี้แต่ละคนเขียน SRS ของตัวเอง — ออกมาไม่เหมือนกันเลย ในงานจริงทีมต้อง<strong>ตกลงใช้ spec ฉบับเดียวที่เจ้าของโจทย์รับรองแล้ว</strong>
-  ก่อนเริ่มสร้าง เรียกว่า <strong>requirements baseline</strong> (หรือ sign-off) ครึ่งชั่วโมงนี้เราเทียบงานของเรากับฉบับอ้างอิง แล้วทุกคนเริ่มช่วงบ่ายจากจุดเดียวกัน</p>
+  <p class="lede">เช้านี้แต่ละคนเขียน SRS (เอกสารรวบรวมความต้องการของระบบ) ของตัวเอง ซึ่งออกมาไม่เหมือนกันเลย ในงานจริง ก่อนเริ่มเขียนโค้ด ทีมต้อง<strong>ตกลงใช้ spec (เอกสารบอกว่าระบบต้องทำอะไร) ฉบับเดียวที่เจ้าของโจทย์รับรองแล้ว</strong>
+  ขั้นนี้เรียกว่า <strong>requirements baseline</strong> หรือ sign-off (เซ็นรับรองความต้องการ) ในครึ่งชั่วโมงนี้ เราจะเทียบงานของเรากับฉบับอ้างอิงที่ผู้สอนเตรียมไว้ แล้วทุกคนจะเริ่มช่วงบ่ายจาก spec ชุดเดียวกัน</p>
 
   <div class="meta">
     <span class="chip">⏱ 30 นาที</span>
@@ -28,7 +28,7 @@
       <li><a href="#why">Baseline คืออะไร ทำไมต้องมี</a></li>
       <li><a href="#copy">รับ spec อ้างอิงเข้าโปรเจกต์</a></li>
       <li><a href="#compare">เทียบด้วย git diff + ตาราง 4 ช่อง</a></li>
-      <li><a href="#walk">Walkthrough ฉบับอ้างอิง</a></li>
+      <li><a href="#walk">ผู้สอนพาอ่านฉบับอ้างอิง</a></li>
       <li><a href="#commit">Commit baseline แล้วดูงานที่เหลือ</a></li>
     </ol>
   </div>
@@ -41,70 +41,72 @@
     <div class="arrow">→</div>
     <div class="node"><b>บ่าย</b>ทุกคนสร้างจาก spec เดียวกัน</div>
     <div class="arrow">→</div>
-    <div class="node"><b>ภายหลัง</b>เปลี่ยน = change request</div>
+    <div class="node"><b>ภายหลัง</b>ถ้าจะแก้ ต้องยื่นขอเปลี่ยน (change request)</div>
   </div>
   <div class="box theory"><span class="label">📖 แนวคิด</span>
-    <p><strong>Baseline</strong> = ฉบับของความต้องการที่ “ล็อก” ไว้ ณ จุดหนึ่ง ใช้เป็นตัววัดว่าสร้างครบและถูกไหม (verification)
-    ถ้าจะเปลี่ยนหลังจากนี้ ต้องผ่านการขอเปลี่ยนอย่างเป็นทางการ ไม่ใช่แก้กันเงียบ ๆ — ไม่มี baseline ทีมจะสร้างตาม spec คนละฉบับโดยไม่รู้ตัว
-    และ agent ก็จะสร้างตามฉบับไหนก็ได้ที่มันอ่านเจอ</p>
+    <p><strong>Baseline</strong> คือ spec ฉบับที่ “ล็อก” ไว้ ณ เวลาหนึ่ง แล้วใช้เป็นเกณฑ์ตรวจว่าระบบที่สร้างออกมาครบและถูกตาม spec ไหม (การวัดแบบนี้เรียกว่า verification)
+    ถ้าจะเปลี่ยนหลังจากนี้ ต้องขอเปลี่ยนอย่างเป็นทางการ ไม่ใช่แก้เองโดยไม่แจ้งทีม ถ้าไม่มี baseline แต่ละคนในทีมจะสร้างตาม spec คนละฉบับโดยไม่รู้ตัว
+    และ agent (AI ที่เขียนโค้ดให้เรา) ก็จะสร้างตาม spec ฉบับไหนก็ได้ที่มันบังเอิญอ่านเจอ</p>
   </div>
-  <div class="box why"><span class="label">งานเช้าไม่ได้สูญเปล่า</span>
-    <p>การเทียบคือการ <strong>validate</strong> ตัวเอง: เห็นว่าข้อไหนจับได้ ข้อไหนตกหล่น และข้อไหน AI แต่งขึ้น
-    ส่วนไอเดียที่ดีกว่าฉบับอ้างอิงจะกลายเป็น <strong>backlog</strong> ของรอบถัดไป</p>
+  <div class="box why"><span class="label">งานเช้ายังมีประโยชน์</span>
+    <p>การเทียบกับฉบับอ้างอิงคือการตรวจงานตัวเอง (<strong>validate</strong>) ว่าข้อไหนเราเขียนไว้ถูก ข้อไหนตกหล่น และข้อไหน AI แต่งขึ้นเอง
+    ส่วนไอเดียที่ดีกว่าฉบับอ้างอิง ให้จดเก็บไว้ใน <strong>backlog</strong> (รายการงานที่จะทำในรอบถัดไป)</p>
   </div>
 
   <h2 id="copy">รับ spec อ้างอิงเข้าโปรเจกต์ (5 นาที)</h2>
   <div class="step"><div class="step-num">1</div><div class="step-body">
     <h3>ตรวจว่างานเช้า commit แล้ว</h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span><p>ก่อนคัดลอกทับ งานของคุณต้องอยู่ใน git แล้ว — จะได้เทียบและย้อนดูได้เสมอ</p></div>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span><p>เดี๋ยวเราจะคัดลอกไฟล์ฉบับอ้างอิงทับไฟล์ของคุณ จึงต้องบันทึกงานเช้าเข้า git ก่อน (commit) จะได้เทียบและย้อนกลับมาดูได้เสมอ</p></div>
+    <p>เปิด Git Bash ในโฟลเดอร์ <code>my-app</code> แล้วพิมพ์</p>
 <pre><code>git status</code></pre>
-    <p>ถ้ายังมีไฟล์ค้าง ให้ <code>git add .</code> แล้ว <code>git commit -m "lab 2: my SRS + design draft"</code></p>
+    <p>ถ้าขึ้นว่า <code>nothing to commit, working tree clean</code> แปลว่าบันทึกครบแล้ว ถ้ายังมีรายชื่อไฟล์ค้างอยู่ ให้รัน <code>git add .</code> แล้วตามด้วย <code>git commit -m "lab 2: my SRS + design draft"</code></p>
   </div></div>
 
   <div class="step"><div class="step-num">2</div><div class="step-body">
     <h3>คัดลอก 4 ไฟล์จาก <code>baseline-pack</code></h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span><p>วาง spec อ้างอิงทับไฟล์เดิมในโปรเจกต์ <code>my-app</code> — ชื่อไฟล์และตำแหน่งต้องตรงกัน</p></div>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span><p>วาง spec อ้างอิงทับไฟล์เดิมในโปรเจกต์ <code>my-app</code> — ชื่อไฟล์และตำแหน่งต้องตรงกัน</p></div>
     <p>เปิดโฟลเดอร์ <code>baseline-pack</code> ในไดรฟ์ร่วมของห้อง (ผู้สอนจะบอกตำแหน่ง) แล้วคัดลอกด้วย File Explorer:</p>
     <div class="table-wrap"><table>
       <thead><tr><th>จาก baseline-pack</th><th>ไปที่ my-app</th><th>คืออะไร</th></tr></thead>
       <tbody>
-        <tr><td><code>docs/SRS.md</code></td><td><code>docs/SRS.md</code></td><td>ความต้องการฉบับเต็ม (คน)</td></tr>
-        <tr><td><code>docs/DESIGN.md</code></td><td><code>docs/DESIGN.md</code></td><td>การออกแบบ + ADR</td></tr>
-        <tr><td><code>SPEC.md</code></td><td><code>SPEC.md</code></td><td>AC + data model + API (agent)</td></tr>
-        <tr><td><code>TASKS.md</code></td><td><code>TASKS.md</code></td><td>WBS ของช่วงบ่าย</td></tr>
+        <tr><td><code>docs/SRS.md</code></td><td><code>docs/SRS.md</code></td><td>ความต้องการฉบับเต็ม เขียนให้คนอ่าน</td></tr>
+        <tr><td><code>docs/DESIGN.md</code></td><td><code>docs/DESIGN.md</code></td><td>การออกแบบระบบ + ADR (บันทึกว่าตัดสินใจเลือกเทคโนโลยีอะไร เพราะอะไร)</td></tr>
+        <tr><td><code>SPEC.md</code></td><td><code>SPEC.md</code></td><td>เกณฑ์ตรวจรับ (acceptance criteria หรือ AC) + โครงสร้างข้อมูล + API เขียนให้ agent อ่าน</td></tr>
+        <tr><td><code>TASKS.md</code></td><td><code>TASKS.md</code></td><td>รายการงานย่อย (WBS) ที่จะทำช่วงบ่าย</td></tr>
       </tbody>
     </table></div>
-    <p class="small">ไม่มีไดรฟ์ร่วม? ขอโฟลเดอร์ checkpoint <code>baseline</code> จากผู้สอนแล้วคัดลอก 4 ไฟล์เดียวกันจากในนั้น หรือคัดลอกจากเนื้อหาด้านล่างของหน้านี้</p>
+    <p class="small">ไม่มีไดรฟ์ร่วม? ขอโฟลเดอร์สำรอง (checkpoint) ชื่อ <code>baseline</code> จากผู้สอน แล้วคัดลอก 4 ไฟล์เดียวกันจากในนั้น หรือคัดลอกจากเนื้อหาด้านล่างของหน้านี้</p>
   </div></div>
 
   <h2 id="compare">เทียบด้วย git diff + ตาราง 4 ช่อง (10 นาที)</h2>
   <div class="step"><div class="step-num">3</div><div class="step-body">
     <h3>ให้ git บอกว่าต่างกันตรงไหน</h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span>
-      <p><code>git diff</code> คือเครื่องมือเทียบ spec ที่ละเอียดที่สุด — บรรทัดสีแดง (<code>-</code>) คือของคุณ บรรทัดสีเขียว (<code>+</code>) คือฉบับอ้างอิง</p>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+      <p><code>git diff</code> คือคำสั่งที่แสดงว่าไฟล์เปลี่ยนไปจาก commit ล่าสุดตรงไหนบ้าง ใช้เทียบ spec ได้ละเอียดทีละบรรทัด บรรทัดสีแดง (<code>-</code>) คือของคุณ บรรทัดสีเขียว (<code>+</code>) คือฉบับอ้างอิง</p>
     </div>
+    <p>พิมพ์ใน Git Bash คำสั่งแรกสรุปว่าไฟล์ไหนต่างกันกี่บรรทัด คำสั่งที่สองแสดงความต่างของ SRS ทีละบรรทัด</p>
 <pre><code>git diff --stat</code></pre>
 <pre><code>git diff docs/SRS.md</code></pre>
-    <p class="small">กด <kbd>Space</kbd> เลื่อนหน้า · <kbd>q</kbd> ออก · อ่านใน VS Code ง่ายกว่า: แท็บ Source Control → คลิกไฟล์ จะเห็นสองฝั่งคู่กัน</p>
+    <p class="small">ระหว่างอ่าน กด <kbd>Space</kbd> เพื่อเลื่อนหน้า และกด <kbd>q</kbd> เพื่อออก ถ้าอยากอ่านง่ายกว่านี้ ให้เปิด VS Code ไปที่แท็บ Source Control แล้วคลิกชื่อไฟล์ จะเห็นของเดิมกับของใหม่วางคู่กัน</p>
   </div></div>
 
   <div class="step"><div class="step-num">4</div><div class="step-body">
     <h3>จดตาราง 4 ช่อง</h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span><p>แยกให้ชัดว่า spec ของเรา “พลาดแบบไหน” — แต่ละแบบมีบทเรียนต่างกัน</p></div>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span><p>แยกให้ชัดว่า spec ของเราต่างจากฉบับอ้างอิงแบบไหน เพราะแต่ละแบบบอกเราคนละเรื่อง จดลงกระดาษหรือไฟล์โน้ตของคุณเองก็ได้</p></div>
     <div class="table-wrap"><table>
       <thead><tr><th>ช่อง</th><th>ความหมาย</th><th>คำถามนำ</th><th>ของฉัน (จดอย่างน้อยช่องละ 1)</th></tr></thead>
       <tbody>
-        <tr><td>✅ ตรงกัน</td><td>requirement ที่จับได้ถูก</td><td>ข้อไหนที่เราได้มาจากการถามเจ้าของโจทย์?</td><td></td></tr>
+        <tr><td>✅ ตรงกัน</td><td>requirement ที่เราเขียนไว้ถูก</td><td>ข้อไหนที่เราได้มาจากการถามเจ้าของโจทย์?</td><td></td></tr>
         <tr><td>❌ ตกหล่น</td><td>ฉบับอ้างอิงมี แต่ของเราไม่มี</td><td>กรณี “ต่อคิวพอดี” · “คนเกินที่นั่ง” · “ห้ามจองย้อนหลัง” · “เห็นแค่ช่วงเวลาไม่เห็นชื่อ” — เรามีครบไหม? ถ้าไม่ถามจะสร้างผิดอย่างไร?</td><td></td></tr>
-        <tr><td>⚠ แต่งเพิ่ม</td><td>อยู่ในของเรา แต่ไม่มีที่มาในโจทย์หรือคำตอบ</td><td>AI เพิ่มอะไรเอง? (แจ้งเตือน LINE, รายงานสถิติ, OTP…) เราจับได้ไหมว่ามันไม่มีที่มา?</td><td></td></tr>
-        <tr><td>💡 ดีกว่า</td><td>ไอเดียดีที่ฉบับอ้างอิงไม่มี</td><td>มีอะไรที่เจ้าของโจทย์น่าจะอยากได้? → เขียนเป็น backlog ไว้เสนอรอบหน้า</td><td></td></tr>
+        <tr><td>⚠ แต่งเพิ่ม</td><td>อยู่ในของเรา แต่ไม่มีที่มาในโจทย์หรือคำตอบ</td><td>AI เพิ่มอะไรเอง? (แจ้งเตือน LINE, รายงานสถิติ, OTP…) เราสังเกตเห็นไหมว่าข้อนั้นไม่มีที่มา?</td><td></td></tr>
+        <tr><td>💡 ดีกว่า</td><td>ไอเดียดีที่ฉบับอ้างอิงไม่มี</td><td>มีอะไรที่เจ้าของโจทย์น่าจะอยากได้? ให้จดไว้ใน backlog เพื่อเสนอในรอบหน้า</td><td></td></tr>
       </tbody>
     </table></div>
     <p>แชร์กับเพื่อนข้าง ๆ: <strong>1 ข้อที่ตกหล่นแล้วจะทำให้ระบบผิด</strong> และ <strong>1 ข้อที่ AI แต่งเพิ่ม</strong></p>
   </div></div>
 
-  <h2 id="walk">Walkthrough ฉบับอ้างอิง (10 นาที · ทั้งห้อง)</h2>
-  <p>ผู้สอนเดินผ่านจุดสำคัญด้วยกัน — เนื้อหาด้านล่างตัดมาจากไฟล์ใน <code>baseline-pack</code></p>
+  <h2 id="walk">ผู้สอนพาอ่านฉบับอ้างอิง (10 นาที · ทั้งห้อง)</h2>
+  <p>ผู้สอนจะพาอ่านจุดสำคัญไปพร้อมกันทั้งห้อง เนื้อหาด้านล่างตัดมาจาก 4 ไฟล์ใน <code>baseline-pack</code> ที่คุณเพิ่งคัดลอก (§ คือเลขหัวข้อในไฟล์นั้น)</p>
 
   <h3>คำตอบของเจ้าของโจทย์ (SRS §8)</h3>
   <div class="table-wrap"><table>
@@ -126,6 +128,7 @@
   </table></div>
 
   <h3>Functional Requirements + ลำดับความสำคัญ (SRS §4)</h3>
+  <p class="small">Functional requirement (FR) คือสิ่งที่ระบบต้อง “ทำได้” ช่อง “ที่มา” บอกว่าข้อนั้นมาจากไหน: B2, B3… คือย่อหน้าในโจทย์ต้นฉบับ และ Q1, Q2… คือคำตอบของเจ้าของโจทย์ในตารางด้านบน</p>
   <div class="table-wrap"><table>
     <thead><tr><th>รหัส</th><th>ระบบต้อง...</th><th>ที่มา</th><th>ความสำคัญ</th></tr></thead>
     <tbody>
@@ -147,10 +150,11 @@
     </tbody>
   </table></div>
   <div class="box theory"><span class="label">📖 สังเกต</span>
-    <p>ทุก FR มีที่มา · ความต้องการที่เจ้าของโจทย์บอกว่า “รอบหน้า” <strong>ไม่ได้หายไป</strong> แต่ถูกจัดลำดับ (MoSCoW) — Release 1 สร้างเฉพาะ “ต้องมี”</p>
+    <p>ทุก FR บอกที่มาได้เสมอ ส่วนความต้องการที่เจ้าของโจทย์บอกว่า “รอบหน้า” <strong>ไม่ได้หายไป</strong> แต่ถูกจัดลำดับความสำคัญเป็น ต้องมี / ควรมี / อาจทำ / ยังไม่ทำ (วิธีนี้เรียกว่า MoSCoW) วันนี้เราสร้าง Release 1 (เวอร์ชันแรก) ซึ่งทำเฉพาะข้อ “ต้องมี”</p>
   </div>
 
   <h3>Non-functional Requirements + วิธีตรวจ (SRS §5)</h3>
+  <p class="small">Non-functional requirement (NFR) คือคุณภาพที่ระบบต้องมี เช่น ใช้บนมือถือได้ เร็วพอ ปลอดภัย ไม่ใช่ฟีเจอร์ที่กดใช้ได้โดยตรง</p>
   <div class="table-wrap"><table>
     <thead><tr><th>รหัส</th><th>เกณฑ์ที่วัดได้</th><th>วิธีตรวจ</th></tr></thead>
     <tbody>
@@ -162,10 +166,11 @@
       <tr><td>NFR-06</td><td>เวลาไทย <code>YYYY-MM-DDTHH:MM</code> ทั้งระบบ</td><td>ทดสอบ (AC-2.5) + ตรวจข้อมูล</td></tr>
     </tbody>
   </table></div>
-  <p class="small">ไม่ใช่ทุก requirement ตรวจด้วย test อัตโนมัติได้ — แต่ทุกข้อต้องมีวิธีตรวจ (test · demonstration · inspection · analysis)</p>
+  <p class="small">ไม่ใช่ทุก requirement จะตรวจด้วยโปรแกรมทดสอบอัตโนมัติได้ แต่ทุกข้อต้องมีวิธีตรวจ ได้แก่ ทดสอบ (test) · สาธิตให้ดู (demonstration) · เปิดดูโดยตรง (inspection) · วิเคราะห์ (analysis)</p>
 
   <h3>ตารางตัวอย่าง: กติกาเวลาซ้อน (SPEC US-2)</h3>
-  <p>มีการจองเดิม: <strong>รถ A 10:00–12:00</strong> · ช่วงเวลาแบบ [เริ่ม, จบ)</p>
+  <p>สมมติมีการจองเดิมอยู่แล้ว: <strong>รถ A 10:00–12:00</strong> โดยนับเวลาเริ่มเป็นของการจองนั้น แต่ไม่นับเวลาจบ (เขียนแบบคณิตศาสตร์ว่า [เริ่ม, จบ)) ดังนั้นคนถัดไปรับรถตอน 12:00 ได้พอดี</p>
+  <p class="small">ช่อง “ผลที่คาดหวัง” คือรหัสตอบกลับของ API: 201 คือจองสำเร็จ · 409 คือปฏิเสธเพราะเวลาชน</p>
   <div class="table-wrap"><table>
     <thead><tr><th>#</th><th>จองใหม่</th><th>ผลที่คาดหวัง</th><th>เหตุผล</th><th>AC</th></tr></thead>
     <tbody>
@@ -173,22 +178,23 @@
       <tr><td>2</td><td>รถ A 09:00–11:00</td><td>409</td><td>ทับช่วงต้น</td><td>AC-2.2</td></tr>
       <tr><td>3</td><td>รถ A 10:30–11:30</td><td>409</td><td>อยู่ข้างใน</td><td>AC-2.2</td></tr>
       <tr><td>4</td><td>รถ A 09:00–13:00</td><td>409</td><td>คลุมทั้งช่วง</td><td>AC-2.2</td></tr>
-      <tr><td>5</td><td>รถ A 10:00–12:00</td><td>409</td><td>ช่วงเดียวกันเป๊ะ</td><td>AC-2.2</td></tr>
+      <tr><td>5</td><td>รถ A 10:00–12:00</td><td>409</td><td>ช่วงเวลาเดียวกันทั้งหมด</td><td>AC-2.2</td></tr>
       <tr><td>6</td><td>รถ A 12:00–14:00</td><td>201</td><td>ต่อคิวพอดีด้านหลัง</td><td>AC-2.3</td></tr>
       <tr><td>7</td><td>รถ A 08:00–10:00</td><td>201</td><td>ต่อคิวพอดีด้านหน้า</td><td>AC-2.3</td></tr>
       <tr><td>8</td><td>รถ B 10:00–12:00</td><td>201</td><td>คนละคัน</td><td>AC-2.3</td></tr>
     </tbody>
   </table></div>
   <div class="box theory"><span class="label">📖 Specification by Example</span>
-    <p>8 แถวนี้เขียน<strong>ก่อน</strong>มีโค้ด และจะกลายเป็น smoke test 8 เคสตอนบ่าย — ถ้า agent เขียนเงื่อนไขผิดแม้แต่เครื่องหมายเดียว (<code>&lt;</code> กับ <code>&lt;=</code>) แถว 6–7 จะจับได้ทันที</p>
+    <p>การเขียน spec เป็นตัวอย่างจริงแบบนี้เรียกว่า Specification by Example 8 แถวนี้เขียน<strong>ก่อน</strong>มีโค้ด และตอนบ่ายจะกลายเป็น smoke test (ชุดทดสอบสั้น ๆ ที่เรียก API แล้วเช็กผล) 8 เคส ถ้า agent เขียนเงื่อนไขผิดแม้แต่เครื่องหมายเดียว (ใช้ <code>&lt;=</code> แทน <code>&lt;</code>) แถว 6–7 จะไม่ผ่านทันที</p>
   </div>
 
   <h3>การตัดสินใจทางสถาปัตยกรรม (DESIGN §3)</h3>
+  <p class="small">ADR (Architecture Decision Record) คือบันทึกสั้น ๆ ว่าเราเลือกอะไร ไม่เลือกอะไร และเพราะอะไร เพื่อให้คนที่มาทีหลัง (และ agent) ไม่ต้องเดา</p>
   <div class="table-wrap"><table>
     <thead><tr><th>ADR</th><th>ตัดสินใจ</th><th>ทางเลือกที่ไม่เลือก</th><th>เหตุผลหลัก</th></tr></thead>
     <tbody>
       <tr><td>ADR-01 ที่ deploy</td><td>Cloudflare Workers + Hono + D1</td><td>VPS + Node + MySQL · Google Sheets + Apps Script</td><td>ฟรีไม่ผูกบัตร ไม่มีเซิร์ฟเวอร์ให้ดูแล deploy คำสั่งเดียว</td></tr>
-      <tr><td>ADR-02 ตรวจเวลาซ้อน</td><td>ตรวจที่ API ทุกครั้งด้วย <code>start_at &lt; :end AND end_at &gt; :start</code></td><td>ตรวจในหน้าเว็บ · constraint ของฐานข้อมูล</td><td>หน้าเว็บถูกข้ามได้ · SQLite ไม่มี constraint ช่วงเวลา (ยอมรับความเสี่ยง race condition)</td></tr>
+      <tr><td>ADR-02 ตรวจเวลาซ้อน</td><td>ตรวจที่ API ทุกครั้งด้วย <code>start_at &lt; :end AND end_at &gt; :start</code></td><td>ตรวจในหน้าเว็บ · constraint ของฐานข้อมูล</td><td>การตรวจในหน้าเว็บถูกข้ามได้ (เรียก API โดยตรง) · SQLite ไม่มีกฎกันช่วงเวลาซ้อนในตัว (ยอมรับความเสี่ยงที่สองคนกดจองในเวลาเดียวกันพอดีแล้วผ่านทั้งคู่ เรียกว่า race condition)</td></tr>
       <tr><td>ADR-03 เก็บเวลา</td><td>ข้อความเวลาไทย <code>YYYY-MM-DDTHH:MM</code></td><td>เก็บ UTC แปลงตอนแสดง</td><td>ผู้ใช้อยู่ไทยทั้งหมด เทียบด้วย <code>&lt; &gt;</code> ได้ตรง (ต้องระวัง +7 ชั่วโมงตอนหา “เวลาปัจจุบัน”)</td></tr>
     </tbody>
   </table></div>
@@ -203,6 +209,7 @@ bookings  id, car_id → cars (ลบรถ = ลบการจอง), user_id
           passengers (&gt; 0), purpose, created_at</code></pre>
 
   <h3>งานช่วงบ่าย (TASKS.md)</h3>
+  <p class="small">migration คือไฟล์ SQL ที่สร้างหรือแก้ตารางในฐานข้อมูล ส่วน smoke คือเคสทดสอบของ task นั้น</p>
   <div class="table-wrap"><table>
     <thead><tr><th>Task</th><th>ทำอะไร</th><th>AC</th></tr></thead>
     <tbody>
@@ -217,21 +224,24 @@ bookings  id, car_id → cars (ลบรถ = ลบการจอง), user_id
 
   <h2 id="commit">Commit baseline แล้วดูงานที่เหลือ (3 นาที)</h2>
   <div class="step"><div class="step-num">5</div><div class="step-body">
-    <h3>ประกาศ baseline</h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span>
-      <p>บันทึกจุดที่ทุกคนตกลงใช้ spec เดียวกัน — commit นี้คือ “sign-off” ในโปรเจกต์ของคุณ ส่วนงานเช้ายังอยู่ใน commit ก่อนหน้า</p>
+    <h3>บันทึก baseline</h3>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+      <p>บันทึกจุดที่ทุกคนตกลงใช้ spec เดียวกัน commit นี้เทียบได้กับการเซ็นรับรอง (sign-off) ในโปรเจกต์ของคุณ ส่วนงานเช้าของคุณยังเก็บอยู่ใน commit ก่อนหน้า ไม่หายไปไหน</p>
     </div>
+    <p>พิมพ์ใน Git Bash</p>
 <pre><code>git add .</code></pre>
 <pre><code>git commit -m "adopt baseline spec"</code></pre>
   </div></div>
 
   <div class="step"><div class="step-num">6</div><div class="step-body">
     <h3>ให้ trace บอกว่าเหลืองานอะไร</h3>
-    <div class="box intent"><span class="label">🎯 เจตนา</span>
-      <p>ตอนนี้ SPEC มี AC ของโจทย์แล้ว แต่ยังไม่มีโค้ดและเคสทดสอบ — <code>trace</code> จะแสดง <strong>❌ ขาด</strong> ทุก AC ของระบบจองรถ นั่นคือรายการงานของช่วงบ่าย</p>
+    <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
+      <p><code>trace</code> คือสคริปต์ในโปรเจกต์ที่ไล่ดูว่า AC แต่ละข้อใน SPEC มีเคสทดสอบรองรับแล้วหรือยัง ตอนนี้ SPEC มี AC ของระบบจองรถแล้ว แต่ยังไม่มีโค้ดและเคสทดสอบ
+      <code>trace</code> จึงจะแสดง <strong>❌ ขาด</strong> ทุก AC ของระบบจองรถ รายการ ❌ เหล่านี้คืองานที่ต้องทำช่วงบ่าย</p>
     </div>
+    <p>พิมพ์ใน Git Bash</p>
 <pre><code>npm run trace</code></pre>
-    <p>ต้องเห็น AC ของ starter (<code>AC-0.1</code>, <code>AC-A…</code>) เป็น ✅ และ <code>AC-1.x</code> – <code>AC-4.x</code> เป็น ❌ หลายข้อ ส่วน FR ทุกข้อใน SRS ถูกอ้างใน SPEC แล้ว</p>
+    <p>ถือว่าถูกต้องเมื่อเห็น AC ที่มากับโปรเจกต์ตั้งต้น (starter) เช่น <code>AC-0.1</code>, <code>AC-A…</code> เป็น ✅ และ <code>AC-1.x</code> – <code>AC-4.x</code> เป็น ❌ หลายข้อ และ trace บอกว่า FR ทุกข้อใน SRS ถูกอ้างถึงใน SPEC แล้ว</p>
   </div></div>
 
   <div class="box check"><span class="label">✅ ผ่านช่วงนี้เมื่อ</span>

@@ -127,6 +127,8 @@ winget install --id Google.Chrome -e --silent --scope machine --accept-package-a
       <tr><td><code>registry.npmjs.org</code></td><td>ติดตั้ง dependency (<code>npm create cloudflare</code>, <code>npm install</code>)</td></tr>
       <tr><td><code>github.com</code>, <code>codeload.github.com</code>, <code>objects.githubusercontent.com</code></td><td>ดึง starter จาก <code>github.com/werapango/workers-app-starter</code></td></tr>
       <tr><td><code>dash.cloudflare.com</code>, <code>api.cloudflare.com</code>, <code>*.cloudflare.com</code></td><td>สมัคร/ล็อกอิน, <code>wrangler login</code>, deploy, ฐานข้อมูล D1</td></tr>
+      <tr><td><code>workers.cloudflare.com</code></td><td><code>npm run dev</code> ดาวน์โหลดข้อมูลตัวอย่าง <code>cf.json</code> ตอนเริ่ม (ถ้าบล็อก แอปยังรันได้ แต่ขึ้นคำเตือนยาวทุกครั้ง)</td></tr>
+      <tr><td><code>developers.cloudflare.com</code>, <code>mcp.cloudflare.com</code></td><td>Lab 4 ข้อ 4: agent อ่านขั้นตอนตั้งค่าของ Cloudflare และเชื่อมกับบัญชีผ่าน MCP (อยู่ใน <code>*.cloudflare.com</code> แล้ว)</td></tr>
       <tr><td><code>*.workers.dev</code></td><td>เปิดแอปที่ผู้เรียน deploy</td></tr>
       <tr><td><code>z.ai</code>, <code>*.z.ai</code> (รวม <code>zcode.z.ai</code>, <code>cdn-zcode.z.ai</code>)</td><td>ZCode ล็อกอิน เรียกโมเดล และอัปเดต</td></tr>
       <tr><td><code>gemini.google.com</code>, <code>accounts.google.com</code>, <code>chatgpt.com</code>, <code>*.openai.com</code></td><td>Lab 2 เขียนเอกสารความต้องการด้วย chat LLM ผ่านเบราว์เซอร์</td></tr>
@@ -158,7 +160,7 @@ winget install --id Google.Chrome -e --silent --scope machine --accept-package-a
   <p>ดาวน์โหลด <a href="assets/check-lab.ps1" download><strong>check-lab.ps1</strong></a> ไว้ในโฟลเดอร์ใดก็ได้
   แล้วรันด้วย<strong>บัญชีผู้ใช้ที่ผู้เรียนจะใช้</strong> (ไม่ต้องเป็น admin):</p>
 <pre><code>powershell -NoProfile -ExecutionPolicy Bypass -File check-lab.ps1</code></pre>
-  <p>สคริปต์ตรวจ 20 ข้อ: เวอร์ชันของ Node/npm/Git/Git Bash/VS Code/ZCode · การเข้าถึงโดเมนในข้อ 4 ·
+  <p>สคริปต์ตรวจ 23 ข้อ: เวอร์ชันของ Node/npm/Git/Git Bash/VS Code/ZCode · การเข้าถึงโดเมนในข้อ 4 ·
   พอร์ต 8976 และ 8787 ว่าง · npm ดึงแพ็กเกจได้จริง · ไม่มีบัญชี Cloudflare ค้างบนเครื่อง ·
   แล้วบันทึกผลเป็นไฟล์ <code>check-lab-&lt;ชื่อเครื่อง&gt;.txt</code> ไว้ข้างสคริปต์</p>
   <p>✅ <strong>ผ่านเมื่อ</strong>บรรทัดสุดท้ายขึ้น “พร้อมใช้ (PASS ทุกข้อ)” · ถ้าไม่ผ่าน ดูคอลัมน์ Detail ของข้อที่ FAIL</p>
