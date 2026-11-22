@@ -9,18 +9,10 @@
   <link rel="stylesheet" href="assets/style.css?v=2439dd60">
   <script src="assets/site.js?v=2439dd60" defer></script>
   <style>
-    .mock { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; font-size: 13px; line-height: 1.45; margin: 16px 0; }
-    .mock .bar { background: var(--surface-2); padding: 6px 10px; display: flex; justify-content: space-between; color: var(--muted); }
-    .mock .body { display: grid; grid-template-columns: 30% 1fr; min-height: 210px; }
-    .mock .side { border-right: 1px solid var(--line); padding: 10px; background: #fafbfc; }
-    .mock .side b, .mock .chat b { display: block; color: var(--ink); margin-bottom: 4px; }
-    .mock .chat { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-    .mock .msg { background: #e8f0fe; border-radius: 6px; padding: 6px 8px; }
-    .mock .msg.ai { background: var(--surface-2); }
-    .mock .input { margin-top: auto; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; color: var(--muted); }
-    .mock .tag { display: inline-block; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 0 8px; margin: 4px 4px 0 0; font-size: 12px; color: var(--ink-2); }
-    .mock .n { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--brand); color: #fff; font-size: 11px; margin-right: 4px; }
-    @media (max-width: 560px) { .mock .body { grid-template-columns: 1fr; } .mock .side { border-right: 0; border-bottom: 1px solid var(--line); } }
+    figure.shot { margin: 16px 0; }
+    figure.shot img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--shadow-card); }
+    figure.shot.sm img { max-width: 440px; }
+    figure.shot figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
   </style>
 </head>
 <body data-page="zcode.html">
@@ -59,31 +51,26 @@
   </div>
 
   <h2 id="screen">หน้าจอ ZCode</h2>
-  <div class="mock" aria-label="ภาพจำลองหน้าจอ ZCode แบบย่อ">
-    <div class="bar"><span>ZCode</span><span><span class="n">5</span>terminal</span></div>
-    <div class="body">
-      <div class="side"><b><span class="n">1</span>แถบซ้าย</b>โปรเจกต์ (เช่น my-app)<br>└ งาน (task) แต่ละครั้ง<br><span class="small">ปักหมุด / เก็บถาวรได้</span></div>
-      <div class="chat">
-        <b><span class="n">2</span>บทสนทนา</b>
-        <div class="msg">ทำ task T1.1 ใน TASKS.md</div>
-        <div class="msg ai">วางแผน 3 ขั้น… แก้ 2 ไฟล์ · <u>สรุปไฟล์ที่เปลี่ยน</u></div>
-        <div class="input"><span class="n">3</span>ช่องพิมพ์ prompt — ปุ่ม <b style="display:inline">+</b> แนบไฟล์ / @ / $ / /
-          <div><span class="tag"><span class="n">4</span>โมเดล: GLM-5.3-Flash</span><span class="tag">โหมด: Ask before changes</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <p class="small">ภาพจำลองเพื่ออธิบายตำแหน่ง — หน้าจอจริงอาจต่างไปตามเวอร์ชัน</p>
+  <figure class="shot">
+    <a href="assets/zcode/zcode-main.png" target="_blank" rel="noopener"><img src="assets/zcode/zcode-main.png" width="1280" height="688" loading="lazy"
+      alt="หน้าจอ ZCode: แถบซ้ายมี New task, Automations, Plugin Marketplace, Task list และ Projects · ตรงกลางเป็นบทสนทนา · ด้านล่างเป็นช่องพิมพ์พร้อมปุ่ม +, ตัวเลือกโหมด, Computer Use และตัวเลือกโมเดล GLM-5.3-Flash · มุมขวาบนมีปุ่ม terminal"></a>
+    <figcaption>หน้าจอ ZCode จริง (พ.ย. 2569) — เบลอข้อความส่วนตัวแล้ว · คลิกภาพเพื่อดูขนาดเต็ม · <strong>ภาพนี้ถ่ายจากเครื่องผู้สอนที่ตั้งโหมดเป็น Full access — ผู้เรียนต้องใช้ Ask before changes</strong></figcaption>
+  </figure>
   <div class="table-wrap"><table>
     <thead><tr><th>#</th><th>ส่วน</th><th>ใช้ทำอะไร</th></tr></thead>
     <tbody>
-      <tr><td>1</td><td>แถบซ้าย</td><td>รายการโปรเจกต์ และ <strong>task</strong> (= 1 session ของการคุย) · ปุ่มสร้าง task ใหม่อยู่ข้างคำว่า Tasks</td></tr>
-      <tr><td>2</td><td>บทสนทนา</td><td>เห็นแผน การเรียกเครื่องมือ คำขออนุญาต และ<strong>สรุปไฟล์ที่เปลี่ยน</strong>ท้ายแต่ละคำตอบ</td></tr>
-      <tr><td>3</td><td>ช่องพิมพ์ + ปุ่ม <code>+</code></td><td>แนบไฟล์ · <code>@</code> อ้างไฟล์/โฟลเดอร์ · <code>#</code> อ้างบทสนทนาเก่า · <code>/</code> คำสั่ง · <code>$</code> เรียก skill</td></tr>
-      <tr><td>4</td><td>ตัวเลือกโมเดล + โหมด</td><td>อยู่ใต้ช่องพิมพ์ · สลับโหมดด้วย <kbd>Shift</kbd>+<kbd>Tab</kbd></td></tr>
-      <tr><td>5</td><td>terminal</td><td>ปุ่มเปิดที่มุมขวาบน — <strong>วันนี้ไม่ใช้</strong> คำสั่งทั้งหมดพิมพ์ใน Git Bash</td></tr>
+      <tr><td>1</td><td><strong>แถบซ้าย</strong></td><td><strong>New task</strong> (<kbd>Ctrl</kbd>+<kbd>N</kbd>) สร้างงานใหม่ · <strong>Projects</strong> คือโฟลเดอร์งาน ใต้แต่ละโปรเจกต์คือ <strong>task</strong> (1 task = 1 บทสนทนา) ปักหมุดหรือเก็บถาวรได้ · ล่างสุดคือโปรไฟล์ผู้ใช้ (log out ก่อนกลับ) และ ⚙ Settings · Automations / Plugin Marketplace วันนี้ไม่ใช้</td></tr>
+      <tr><td>2</td><td><strong>บทสนทนา</strong></td><td>เห็นแผน การเรียกเครื่องมือ (เช่น <em>Explored</em>, <em>Ran 1 command</em>, <em>Skill</em>) คำขออนุญาต และ<strong>สรุปไฟล์ที่เปลี่ยน</strong>ท้ายแต่ละคำตอบ — อ่านทุกครั้ง แล้วยืนยันด้วย <code>git diff</code></td></tr>
+      <tr><td>3</td><td><strong>ช่องพิมพ์ + ปุ่ม <code>+</code></strong></td><td>พิมพ์งานเป็นภาษาคน เช่น <code>ทำ task T1.1 ใน TASKS.md</code> · ปุ่ม <code>+</code> แนบไฟล์ · <code>@</code> อ้างไฟล์/โฟลเดอร์ · <code>#</code> อ้างบทสนทนาเก่า · <code>/</code> คำสั่ง · <code>$</code> เรียก skill</td></tr>
+      <tr><td>4</td><td><strong>โหมด · Computer Use · โมเดล</strong></td><td>ใต้ช่องพิมพ์ ซ้าย: <strong>ปุ่มโหมด</strong> (ไอคอนเปลี่ยนตามโหมด — ✋ = Ask before changes · กดเลือก หรือ <kbd>Shift</kbd>+<kbd>Tab</kbd>) · <strong>Computer Use</strong> (ไอคอนจอ) = ให้ agent ควบคุมหน้าจอ <strong>วันนี้ไม่เปิด</strong> ·
+        ขวา: <strong>โมเดล</strong> <code>GLM-5.3-Flash Max</code> (คำท้าย <em>Max</em> คือระดับการคิด) กดเปลี่ยนเป็น GLM-5.3 เมื่อ task ยาก · วงกลมเล็กข้างชื่อโมเดล = สัดส่วน context ที่ใช้ไปใน task นี้</td></tr>
+      <tr><td>5</td><td><strong>ปุ่ม terminal</strong></td><td>มุมขวาบนมี 4 ปุ่ม: เปิดโฟลเดอร์ใน Explorer · แชร์ · ช่วยเหลือ · <strong>terminal</strong> (ไอคอน <code>&gt;_</code>) — terminal <strong>วันนี้ไม่ใช้</strong> คำสั่ง wrangler / npm / git พิมพ์เองใน Git Bash เสมอ</td></tr>
     </tbody>
   </table></div>
+  <div class="box token">
+    <span class="label">🪙 วงกลม context คือมิเตอร์ค่าใช้จ่าย</span>
+    <p>ยิ่งวงกลมเต็ม แปลว่า task นี้สะสมข้อความไว้มาก ทุกรอบที่ agent คิดต้องอ่านทั้งหมดซ้ำ = เปลือง token — เต็มเกินครึ่งแล้วงานยังไม่จบ ให้เริ่ม task ใหม่</p>
+  </div>
 
   <h2 id="start">เริ่มงาน: โปรเจกต์ และ task ใหม่</h2>
   <div class="step"><div class="step-num">1</div><div class="step-body">
@@ -93,39 +80,56 @@
   </div></div>
   <div class="step"><div class="step-num">2</div><div class="step-body">
     <h3>สร้าง task ใหม่ = context สะอาด</h3>
-    <p>agent <strong>ไม่มีความจำข้าม task</strong> มันรู้แค่สิ่งที่อยู่ใน context ตอนนั้น — task ยาว = ทุกรอบต้องอ่านของเก่าซ้ำ = เปลือง token
+    <p>กด <strong>New task</strong> ที่แถบซ้าย (หรือ <kbd>Ctrl</kbd>+<kbd>N</kbd>) · agent <strong>ไม่มีความจำข้าม task</strong> มันรู้แค่สิ่งที่อยู่ใน context ตอนนั้น — task ยาว = ทุกรอบต้องอ่านของเก่าซ้ำ = เปลือง token
     กติกา: <strong>เริ่ม task ใหม่เมื่อขึ้น lab ใหม่</strong> หรือเมื่อบทสนทนายาวจนวกวน</p>
   </div></div>
   <div class="step"><div class="step-num">3</div><div class="step-body">
     <h3>เลือกโมเดล และตรวจโหมด</h3>
-    <p>ใต้ช่องพิมพ์: เลือกโมเดลตามตารางในขั้นตอนถัดไป และดูว่าโหมดเป็น <strong>Ask before changes</strong> (ค่าเริ่มต้น)</p>
+    <p>ใต้ช่องพิมพ์: ปุ่มที่ 2 จากซ้ายต้องเป็น<strong>ไอคอนมือ ✋</strong> (= Ask before changes) และโมเดลเป็น <code>GLM-5.3-Flash</code></p>
+  <figure class="shot sm">
+    <img src="assets/zcode/zcode-input.png" width="566" height="147" loading="lazy" alt="ช่องพิมพ์ของ ZCode: ปุ่ม +, ปุ่มโหมดรูปมือ, ปุ่ม Computer Use, วงกลม context และตัวเลือกโมเดล GLM-5.3-Flash Max">
+    <figcaption>ช่องพิมพ์ที่พร้อมใช้: <code>+</code> · ✋ โหมด Ask before changes · 🖥 Computer Use (ไม่เปิด) · วงกลม context · โมเดล</figcaption>
+  </figure>
   </div></div>
 
   <h2 id="models">โมเดลและโควต้า</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>โมเดล</th><th>จุดเด่น</th><th>วันนี้ใช้เมื่อ</th></tr></thead>
     <tbody>
-      <tr><td><strong>GLM-5.3</strong></td><td>เก่งที่สุด context ยาว (1M) ใช้โควต้ามากกว่า · ตั้ง Thought level ได้ Low / High / Max (ค่าเริ่มต้น Max)</td><td>task ยาก เช่น T2.1 กติกาการจองทั้งหมด หรือเมื่อ Flash แก้ไม่ผ่าน</td></tr>
-      <tr><td><strong>GLM-5.3-Flash</strong></td><td>เร็ว ประหยัด</td><td>ค่าเริ่มต้นของ Lab 1a และ Lab 3</td></tr>
-      <tr><td>GLM-5-Turbo</td><td>คำถามสั้น ๆ</td><td>ถามเรื่องเล็ก ไม่ต้องแก้หลายไฟล์</td></tr>
+      <tr><td><strong>GLM-5.3</strong></td><td>เก่งที่สุด context ยาว (1M) ใช้โควต้ามากกว่า</td><td>task ยาก เช่น T2.1 กติกาการจองทั้งหมด หรือเมื่อ Flash แก้ไม่ผ่าน</td></tr>
+      <tr><td><strong>GLM-5.3-Flash</strong> <span class="small">Vision</span></td><td>เร็ว ประหยัด และอ่านรูปภาพได้</td><td>ค่าเริ่มต้นของ Lab 1a และ Lab 3</td></tr>
     </tbody>
   </table></div>
+  <figure class="shot sm">
+    <img src="assets/zcode/zcode-model.png" width="370" height="347" loading="lazy" alt="เมนูเลือกโมเดลของ ZCode: GLM-5.3 และ GLM-5.3-Flash (Vision, เลือกอยู่) และแถบ Effort ตั้งไว้ที่ Max ปรับด้วย Ctrl+T">
+    <figcaption>กดชื่อโมเดลใต้ช่องพิมพ์ → เลือกโมเดล · แถบ <strong>Effort</strong> = ระดับการคิด (ค่าเริ่มต้น Max · ปรับด้วย <kbd>Ctrl</kbd>+<kbd>T</kbd>)</figcaption>
+  </figure>
+  <div class="box why">
+    <span class="label">💡 Effort คืออะไร</span>
+    <p>Effort สูง = agent คิดนานและละเอียดก่อนตอบ ได้ผลดีขึ้นกับงานยาก แต่ใช้เวลาและ token มากขึ้น
+    งานเล็ก (แก้ข้อความ ปรับหน้าเว็บ) ลด Effort ลงได้ · งานที่มีกติกาเยอะ (T2.1) คงไว้ที่ Max</p>
+  </div>
   <div class="box token">
     <span class="label">🪙 ดูโควต้าที่เหลือ</span>
     <p>หน้า <strong>Usage Stats</strong> ในโปรแกรมแสดงโควต้าและการใช้แยกตามโมเดล — เปิดดู<strong>ก่อนและหลังแต่ละ lab</strong>
-    เอกสารทางการระบุว่าบัญชีทดลองได้ <strong>5 วัน วันละ 5M token</strong> (GLM-5.3 3M + GLM-5-Turbo 2M) ใช้ได้เฉพาะช่วง 5 วันนั้น
+    เอกสารทางการระบุว่าบัญชีทดลองได้ <strong>5 วัน วันละ 5M token</strong> (GLM-5.3 3M + โมเดลรอง 2M) ใช้ได้เฉพาะช่วง 5 วันนั้น
     — ตรวจตัวเลขจริงของบัญชีตัวเองในหน้า Usage Stats เพราะเงื่อนไขอาจเปลี่ยน</p>
   </div>
 
   <h2 id="modes">โหมดการทำงาน 4 แบบ</h2>
-  <p>กด <kbd>Shift</kbd>+<kbd>Tab</kbd> เพื่อสลับ — โหมดคือ “agent ทำเองได้แค่ไหนก่อนต้องถามเรา”</p>
+  <p>กด<strong>ปุ่มโหมด</strong>ใต้ช่องพิมพ์ (หรือ <kbd>Shift</kbd>+<kbd>Tab</kbd>) — โหมดคือ “agent ทำเองได้แค่ไหนก่อนต้องถามเรา”</p>
+  <figure class="shot sm">
+    <img src="assets/zcode/zcode-modes.png" width="546" height="370" loading="lazy" alt="เมนูโหมดของ ZCode: Plan mode, Ask before changes (เลือกอยู่), Autonomous mode และ Full access">
+    <figcaption>เมนูโหมดจริง — เครื่องหมาย ✓ อยู่ที่ Ask before changes คือสิ่งที่ต้องเห็นวันนี้</figcaption>
+  </figure>
+
   <div class="table-wrap"><table>
     <thead><tr><th>โหมด</th><th>พฤติกรรม</th><th>วันนี้</th></tr></thead>
     <tbody>
-      <tr><td><strong>Ask before changes</strong> (ค่าเริ่มต้น)</td><td>ถามก่อน<strong>ทุก</strong>การแก้ไฟล์และทุกคำสั่ง</td><td>✅ <strong>ใช้โหมดนี้</strong> — เห็นทุกอย่างก่อนเกิด</td></tr>
-      <tr><td><strong>Plan</strong></td><td>วางแผนก่อน แล้วรอเรายืนยันจึงลงมือ</td><td>✅ ใช้ได้กับ task ใหญ่ เช่น T2.1 — อ่านแผนเทียบกับ AC ก่อนให้ทำ</td></tr>
-      <tr><td>Edit automatically</td><td>แก้ไฟล์เองโดยไม่ถาม แต่คำสั่งยังต้องขออนุญาต</td><td>⚠ ใช้ได้เมื่อคล่องแล้ว แต่ต้องอ่านสรุปไฟล์ที่เปลี่ยนทุกครั้ง</td></tr>
-      <tr><td>Full access</td><td>ถามน้อยที่สุด</td><td>❌ <strong>ห้ามใช้</strong> — agent อาจรัน deploy / migration / git แทนคนได้</td></tr>
+      <tr><td>💡 <strong>Plan mode</strong></td><td><em>Plan before editing</em> — วางแผนก่อน แล้วรอเรายืนยันจึงลงมือ</td><td>✅ ใช้ได้กับ task ใหญ่ เช่น T2.1 — อ่านแผนเทียบกับ AC ก่อนให้ทำ</td></tr>
+      <tr><td>✋ <strong>Ask before changes</strong> (ค่าเริ่มต้น)</td><td><em>Ask before file changes</em> — ถามก่อนแก้ไฟล์และก่อนรันคำสั่ง</td><td>✅ <strong>ใช้โหมดนี้</strong> — เห็นทุกอย่างก่อนเกิด</td></tr>
+      <tr><td>🛡 Autonomous mode</td><td><em>Ask when there’s risk</em> — ทำเองเป็นส่วนใหญ่ ถามเฉพาะเมื่อโปรแกรมประเมินว่าเสี่ยง</td><td>⚠ <strong>วันนี้ไม่ใช้</strong> — โปรแกรมเป็นคนตัดสินว่าอะไรเสี่ยง ไม่ใช่เรา</td></tr>
+      <tr><td>❗ Full access</td><td><em>Run with fewer confirmations</em> — ถามน้อยที่สุด</td><td>❌ <strong>ห้ามใช้</strong> — agent อาจรัน deploy / migration / git แทนคนได้</td></tr>
     </tbody>
   </table></div>
 
@@ -165,10 +169,15 @@
   <h2 id="undo">ตรวจผล และย้อนกลับ</h2>
   <ul>
     <li>ท้ายแต่ละคำตอบมี <strong>สรุปไฟล์ที่เปลี่ยน</strong> — อ่านทุกครั้ง แล้วดูรายละเอียดด้วย <code>git diff</code> ใน Git Bash หรือ VS Code</li>
+    <li>ใน ZCode เองก็ดู diff ได้: เปิด<strong>แผงด้านขวา</strong> → แท็บใหม่ → <strong>Review</strong> (<em>Review code changes and diffs</em>) เห็นทีละบรรทัดว่าเพิ่ม/ลบอะไร</li>
     <li>ปุ่ม <strong>Undo</strong> ของ ZCode ย้อนไฟล์ที่ agent แก้ในคำตอบนั้นได้ (ย้อนทั้งชุด ไม่เลือกทีละไฟล์) และกด Reapply คืนได้</li>
     <li>แก้ข้อความล่าสุดที่ส่งไป แล้วเลือก <strong>Reset chat + files</strong> = ย้อนไฟล์ของรอบนั้นแล้วส่งใหม่</li>
     <li>สิ่งที่<strong>เกิดจากคำสั่งใน terminal ย้อนด้วย Undo ไม่ได้</strong> — อีกเหตุผลที่คนรันคำสั่งเอง</li>
   </ul>
+  <figure class="shot ">
+    <img src="assets/zcode/zcode-tabs.png" width="990" height="779" loading="lazy" alt="แผงด้านขวาของ ZCode หน้า New tab: Files, Terminal, Sites, Browser, Review, Side conversation และ App plugins">
+    <figcaption>แผงด้านขวา → New tab · ที่ใช้วันนี้: <strong>Review</strong> (ดู diff) และ <strong>Files</strong> (ดูไฟล์) · <strong>ไม่ใช้</strong>: Terminal (พิมพ์ใน Git Bash แทน) · <strong>Sites</strong> (เว็บของ Z.ai — วันนี้ deploy ขึ้น Cloudflare ด้วย wrangler) · Browser · App plugins</figcaption>
+  </figure>
   <div class="box check">
     <span class="label">✅ ตาข่ายนิรภัยหลักของวันนี้คือ Git</span>
     <p>commit หลังทุก task ที่ผ่าน · ถ้า agent ทำพังหรือทำเกิน task: <code>git restore .</code> (ทิ้งการแก้ที่ยังไม่ commit) แล้วสั่งใหม่ให้ชัดขึ้น</p>
