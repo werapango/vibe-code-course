@@ -319,12 +319,59 @@
 
   <!-- ═════════════════ FUTURE ═════════════════ -->
   <h2 id="future">สร้าง starter นี้เองในอนาคต</h2>
-  <p>ในโปรเจกต์ของคุณมีไฟล์ <code>docs/STARTER-PROMPT.md</code> — ชุด prompt สำหรับสั่ง AI agent สร้าง starter แบบนี้ขึ้นใหม่เอง
-  (เช่น อยากเปลี่ยนชุดเทคโนโลยีที่ใช้ (stack) หรืออยากเข้าใจทุกบรรทัด) เขียนแบบ <strong>spec + WBS</strong> (WBS = แตกงานใหญ่เป็นงานย่อย):
-  ส่งข้อมูลพื้นหลังของโปรเจกต์ (บริบท) ให้ AI ครั้งเดียว แล้วสั่งทีละงานย่อย (task) โดยคนเป็นผู้รันคำสั่งเอง และตรวจด้วย smoke/trace หลังจบทุก task</p>
-  <div class="box token"><span class="label">🪙 ใช้เมื่อมีโควต้าเหลือ ไม่ใช่ในวันอบรม</span>
-    <p>ประมาณการ ~300–600K token ถ้าทำครบ (ยังไม่ได้วัดจริง) · ใช้โมเดลเก่ง (เช่น GLM-5.3) กับ T3–T4 ที่เป็นโค้ดความปลอดภัย ข้ออื่นใช้ Flash</p>
+  <p>starter ที่ใช้วันนี้สร้างด้วย AI agent ได้เองทั้งหมด มี prompt ให้ 2 แบบ เลือกตามโควต้าที่มี (ใช้หลังจบหลักสูตร ไม่ใช่ในวันอบรม)
+  ไฟล์เดียวกันนี้อยู่ใน <code>docs/STARTER-PROMPT.md</code> ของโปรเจกต์ของคุณด้วย</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>แบบด่วน</th><th>แบบทีละ task</th></tr></thead>
+    <tbody>
+      <tr><td>เหมาะกับ</td><td>คนที่มีโควต้าแบบเสียเงิน อยากได้ผลเร็ว</td><td>คนที่อยากเข้าใจทีละส่วน หรือโควต้าจำกัด</td></tr>
+      <tr><td>คนต้องทำ</td><td>ส่ง prompt เดียว อ่านคำสั่งแล้วกด Allow · deploy เอง</td><td>ส่งทีละ task · รันคำสั่งเองทุกขั้น · ตรวจและ commit ทุก task</td></tr>
+      <tr><td>token</td><td><strong>มากกว่า</strong> (ผลของคำสั่งเข้าไปอยู่ใน context และงานยาวรวดเดียวมีโอกาสวนแก้)</td><td>น้อยกว่า · ประมาณ 300–600K (ยังไม่ได้วัดจริง)</td></tr>
+      <tr><td>โมเดล</td><td>GLM-5.3</td><td>GLM-5.3 กับ T3–T4 (โค้ดความปลอดภัย) ข้ออื่นใช้ Flash</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="future-quick">แบบด่วน — prompt เดียว ให้ agent ทำเองจนจบ</h3>
+  <p>ทำในโฟลเดอร์ว่าง บนเครื่องและบัญชี Cloudflare ของตัวเอง · รัน <code>npx wrangler login</code> ไว้ก่อน (ต้องล็อกอินผ่านเบราว์เซอร์ agent ทำแทนไม่ได้)
+  · ใช้โหมด <strong>Ask before changes</strong> แล้วอ่านคำสั่งก่อนกด Allow ทุกครั้ง</p>
+<pre><code>สร้าง "starter" เว็บแอปบน Cloudflare ในโฟลเดอร์นี้ให้เสร็จจนใช้งานได้
+คุณทำเองได้ทั้งหมด รวมถึงรันคำสั่ง npm, npx wrangler และ git — ยกเว้น ห้าม deploy ขึ้น production จนกว่าฉันจะสั่ง
+
+สิ่งที่ต้องได้:
+1. โปรเจกต์ Cloudflare Workers + Hono (TypeScript) + D1 (binding ชื่อ DB, ฐานข้อมูลชื่อ app-db) + Static Assets ในโฟลเดอร์ public/
+   (สร้างด้วย npm create cloudflare@latest แบบไม่ deploy แล้วติดตั้ง hono)
+2. GET /api/health ตอบ { ok, db, time } โดย db บอกสถานะ "ready" / "no-binding" / "not-migrated"
+3. ระบบผู้ใช้: ตั้งค่าครั้งแรก (สร้าง admin คนแรกได้เฉพาะตอนยังไม่มีผู้ใช้), login, logout, me,
+   เปลี่ยนรหัสของตัวเอง (ต้องยืนยันรหัสเดิม) และ admin จัดการผู้ใช้ (เพิ่ม แก้ ลบ ตั้งรหัสใหม่)
+4. หน้าเว็บ HTML/CSS/JS ธรรมดา (ไม่ใช้ framework) ใช้บนมือถือได้: ตั้งค่าครั้งแรก, ล็อกอิน, หน้าหลัก, จัดการผู้ใช้, เปลี่ยนรหัส
+5. scripts/smoke.mjs ทดสอบทุกกติกาโดยเรียก API จริง (รับ url= user= pass= ต่อท้ายคำสั่ง ชื่อเคสขึ้นต้นด้วยรหัส AC)
+   และ scripts/trace.mjs ตรวจว่า AC ทุกข้อใน SPEC.md มีเคสทดสอบ · npm scripts: dev, deploy, smoke, trace
+6. เอกสาร: AGENTS.md, SPEC.md (ส่วนผู้ใช้เขียนครบเป็นตัวอย่าง: user story + AC แบบ Given/When/Then มีรหัสตัวหนา),
+   README.md และแม่แบบ docs/SRS.md, docs/DESIGN.md, TASKS.md
+
+ข้อบังคับ (ห้ามละเว้น):
+- ใช้เฉพาะบริการใน Cloudflare free plan ห้ามใช้บริการที่ต้องผูกบัตร (เช่น Access, R2, Email)
+- รหัสผ่านเก็บแบบ hash: PBKDF2-SHA256 100,000 รอบ + salt สุ่ม · session token สุ่ม 32 ไบต์ อายุ 7 วัน ใน cookie HttpOnly + SameSite=Lax
+- SQL ทุกคำสั่งเป็น prepared statement · เปลี่ยนโครงสร้างฐานข้อมูลด้วยไฟล์ migration เท่านั้น
+- ตรวจสิทธิ์ที่ server ทุกคำขอ · ล็อกอินผิดตอบข้อความเดียวกันไม่ว่าชื่อหรือรหัสผิด
+  admin ลบตัวเองไม่ได้ · ต้องเหลือ admin อย่างน้อย 1 คน · ตั้งรหัสใหม่ให้ใครแล้ว session เดิมของคนนั้นต้องใช้ไม่ได้
+- คอมเมนต์และข้อความ error เป็นภาษาไทย · API ตอบ JSON { "error": "..." } พร้อม status ที่ถูกต้อง
+
+ลำดับการทำ:
+- สร้างฐานข้อมูลด้วย npx wrangler d1 create app-db --binding DB --update-config
+  (ถ้ายังไม่ได้ล็อกอิน Cloudflare ให้หยุด แล้วบอกให้ฉันรัน npx wrangler login เอง)
+- รัน migration แบบ --local เปิด npm run dev แล้วรัน npm run smoke จนผ่านทุกเคส และ npm run trace ขึ้นว่าครบ
+- git commit เป็นช่วง ๆ ทุกครั้งที่ส่วนหนึ่งทำงานได้
+- จบแล้วสรุปให้ฉัน: ไฟล์ที่สร้าง ผล smoke/trace และคำสั่งที่ฉันต้องรันเองเพื่อ deploy</code></pre>
+  <div class="box warn"><span class="label">⚠ ที่ยังห้ามไว้ และทำไม</span>
+    <p>แบบด่วนเอาข้อห้ามเรื่อง “agent ห้ามรันคำสั่ง” ออกเพื่อให้คนทำน้อยลง แต่ยังคง 4 เรื่องไว้เพราะถ้าเอาออกจะได้ระบบที่ใช้ไม่ได้หรือไม่ปลอดภัย:
+    ใช้เฉพาะของฟรี · เก็บรหัสผ่านแบบ hash และใช้ prepared statement · ห้าม deploy จนกว่าจะสั่ง · ต้องมี smoke test ที่ผ่าน
+    — และไม่ว่า agent จะรายงานว่าเสร็จแล้ว ให้รัน <code>npm run smoke</code> ด้วยตัวเองอีกครั้งก่อน deploy</p>
   </div>
+
+  <h3 id="future-tasks">แบบทีละ task — คนรันคำสั่งเอง ตรวจทุกขั้น</h3>
+  <p>เขียนแบบ <strong>spec + WBS</strong> (WBS = แตกงานใหญ่เป็นงานย่อย): ส่งข้อมูลพื้นหลังของโปรเจกต์ (บริบท) ให้ AI ครั้งเดียว แล้วสั่งทีละงานย่อย (task)
+  โดยคนเป็นผู้รันคำสั่งเอง และตรวจด้วย smoke/trace หลังจบทุก task</p>
 
   <h3>ส่วนที่ 1 — บริบท (ข้อมูลพื้นหลังของโปรเจกต์ ส่งครั้งแรกครั้งเดียว)</h3>
 <pre><code>ฉันจะสร้าง "starter" สำหรับเว็บแอปบน Cloudflare ที่นำไปต่อยอดได้ทุกโจทย์ ทำทีละ task ตามที่ฉันสั่งเท่านั้น
