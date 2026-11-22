@@ -255,7 +255,13 @@ Q5: [คำตอบ]
 
 
   <h2 id="s7">7 · บันทึกงานลง Git (3 นาที)</h2>
-  <p>ใน Git Bash (โฟลเดอร์ <code>my-app</code>) พิมพ์ทีละบรรทัด:</p>
+  <div class="you"><b class="t">👤 ก่อน commit เช็กว่ามีครบ 3 ไฟล์</b>
+    <p>ไม่ต้องขอไฟล์ทั้งหมดจาก AI ใหม่ แต่ละไฟล์วางไปแล้วในขั้นของมัน: <code>docs/SRS.md</code> (ขั้น 3–4) · <code>SPEC.md</code> (ขั้น 5) · <code>docs/DESIGN.md</code> (ขั้น 6)
+    — เปิดแต่ละไฟล์ใน VS Code ดูว่ามีเนื้อหาของระบบจองรถแล้ว ไม่ใช่แม่แบบที่มีแต่ <code>[ ]</code></p>
+    <p>ถ้าไฟล์ไหนยังไม่ได้วาง ให้ขอจาก AI ใหม่ในแชตเดิม (เปลี่ยนชื่อไฟล์ให้ตรง) แล้ววางตามวิธีของขั้นนั้น:</p>
+  </div>
+<pre><code>ส่งไฟล์ docs/SRS.md ฉบับล่าสุดทั้งไฟล์อีกครั้ง ใน code block เดียว</code></pre>
+  <p>เมื่อครบแล้ว ใน Git Bash (โฟลเดอร์ <code>my-app</code>) พิมพ์ทีละบรรทัด:</p>
 <pre><code>git add docs/SRS.md docs/DESIGN.md SPEC.md</code></pre>
 <pre><code>git commit -m "lab 2: my SRS + design draft"</code></pre>
   <div class="box check"><span class="label">✅ ผ่าน Lab 2 เมื่อ</span>
