@@ -1,18 +1,147 @@
 <!doctype html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lab 4: ตรวจรับและส่งมอบ — เปิด 13:00</title>
-<link rel="stylesheet" href="assets/style.css">
-<script src="assets/site.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab 4 · ตรวจและตรวจรับ — Vibe Coding × SDLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
 </head>
 <body data-page="lab-4.html">
 <main>
-  <h1>Lab 4: ตรวจรับและส่งมอบ</h1>
-  <div class="box">
-    <span class="label">🔒 หน้านี้เปิดเวลา 13:00</span>
-    <p>Lab นี้ใช้ spec อ้างอิง จึงเปิดพร้อมหน้า Baseline เวลา 13:00</p>
+  <p class="eyebrow">Lab 4 · 15:20–15:45 (25 นาที)</p>
+  <h1>Verify แล้ว Validate: ตรวจระบบ และตรวจรับกับ "ผู้ใช้"</h1>
+  <p class="lede">ช่วงแรกถามว่า <strong>"สร้างถูกตาม spec ไหม"</strong> (verification) ด้วยเช็กลิสต์บน production
+  ช่วงหลังถามว่า <strong>"สร้างของที่ผู้ใช้ต้องการจริงไหม"</strong> (validation) โดยให้เพื่อนเล่นบทเจ้าของโจทย์ ทดสอบเทียบกับโจทย์ต้นฉบับ</p>
+
+  <div class="meta">
+    <span class="chip">⏱ 25 นาที</span>
+    <span class="chip">👥 จับคู่</span>
+    <span class="chip">🪙 ~0–50K token (เฉพาะถ้าต้องแก้)</span>
+    <span class="chip">SDLC: Testing → Acceptance → Release</span>
+  </div>
+
+  <div class="toc">
+    <b>ในหน้านี้</b>
+    <ol>
+      <li><a href="#verify">เช็กลิสต์ verification บน production (10 นาที)</a></li>
+      <li><a href="#accept">ตรวจรับกับ "ผู้ใช้" (10 นาที)</a></li>
+      <li><a href="#fast">กลุ่มเร็ว: change request / บั๊กปลูก</a></li>
+      <li><a href="#tag">ปิด release v1.0</a></li>
+      <li><a href="#retro">คำถาม retro</a></li>
+      <li><a href="#signout">ออกจากระบบก่อนออกจากห้อง</a></li>
+    </ol>
+  </div>
+
+  <h2 id="verify">1 · เช็กลิสต์ verification บน production (10 นาที)</h2>
+  <div class="box intent"><span class="label">🎯 เจตนา</span>
+    <p>smoke test ตรวจ AC ให้แล้ว แต่บางเรื่องตรวจด้วยวิธีอื่น: <strong>ตรวจ (inspection)</strong> ข้อมูลในฐานข้อมูล · <strong>สาธิต (demonstration)</strong> บนมือถือ
+    — ทำบน <strong>production</strong> ซึ่งเป็นของที่ผู้ใช้จะใช้จริง</p>
+  </div>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>ตรวจอะไร</th><th>วิธีตรวจ</th><th>วิธี</th><th>ผล</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>ไม่ล็อกอิน เรียกการจองไม่ได้</td><td>เปิดหน้าต่าง InPrivate แล้วไปที่ <code>https://…workers.dev/api/bookings</code> ต้องเห็น <code>{"error":"กรุณาเข้าสู่ระบบ"}</code> (401)</td><td>test</td><td>☐</td></tr>
+      <tr><td>2</td><td>รหัสผ่านไม่ถูกเก็บเป็นข้อความเปล่า (NFR-03)</td><td>รันคำสั่งด้านล่าง ต้องเห็นรูปแบบ <code>salt:hash</code> ยาว ๆ ไม่ใช่รหัสจริง</td><td>inspection</td><td>☐</td></tr>
+      <tr><td>3</td><td>cookie session เป็น HttpOnly</td><td>F12 → Application → Cookies → <code>session</code> ช่อง HttpOnly ✓ และ Secure ✓ (บน https)</td><td>inspection</td><td>☐</td></tr>
+      <tr><td>4</td><td>A ไม่เห็น / ยกเลิกการจองของ B ไม่ได้ (NFR-04)</td><td>admin สร้างผู้ใช้ 2 คน · แต่ละคนจอง 1 รายการ · สลับล็อกอินดูหน้า "การจองของฉัน"</td><td>demonstration</td><td>☐</td></tr>
+      <tr><td>5</td><td>ผู้ใช้ทั่วไปจัดการผู้ใช้/รถไม่ได้</td><td>ล็อกอินเป็น user → ไม่เห็นเมนู "ผู้ใช้" · เปิด <code>/api/users</code> ตรง ๆ ได้ 403</td><td>test</td><td>☐</td></tr>
+      <tr><td>6</td><td>ใช้บนมือถือจอเล็กได้ (NFR-01)</td><td>เปิดบนมือถือ (หรือ F12 → โหมดอุปกรณ์ 375px) ทุกหน้าไม่มี scroll แนวนอน</td><td>demonstration</td><td>☐</td></tr>
+      <tr><td>7</td><td>จองเสร็จใน 1 นาที (NFR-02)</td><td>ให้เพื่อนจับเวลา: จากเปิดหน้าจองจนเห็น "จองสำเร็จ"</td><td>demonstration</td><td>☐</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box cmd"><span class="label">⌨️ ข้อ 2 — ดูข้อมูลจริงในฐานข้อมูลบนคลาวด์</span></div>
+<pre><code>npx wrangler d1 execute app-db --remote --command "SELECT username, role, password_hash FROM users"</code></pre>
+  <div class="box intent"><span class="label">🎯 เจตนาของคำสั่งนี้</span>
+    <p>อ่านอย่างเดียว ไม่แก้ข้อมูล · <code>--remote</code> = ฐานข้อมูลบน production (ถ้าไม่ใส่จะดูฐานข้อมูลในเครื่อง) — ระวังอย่ารันคำสั่ง <code>DELETE</code>/<code>UPDATE</code> กับ <code>--remote</code> โดยไม่ตั้งใจ</p>
+  </div>
+  <p>ข้อไหนไม่ผ่าน → แก้ด้วย agent โดยรายงานเป็นเลขข้อ เช่น <code>เช็กลิสต์ข้อ 4 ไม่ผ่าน: B เห็นการจองของ A ที่หน้า #mine ช่วยหาสาเหตุก่อน อย่าเพิ่งแก้</code> แล้ว release ใหม่</p>
+
+  <h2 id="accept">2 · ตรวจรับกับ "ผู้ใช้" (10 นาที)</h2>
+  <div class="box intent"><span class="label">🎯 เจตนา</span>
+    <p>ทุก test ผ่าน ≠ ผู้ใช้พอใจ · ให้เพื่อนเล่นบท <strong>หัวหน้างานยานพาหนะ</strong> ใช้ระบบของคุณบนมือถือ แล้วตรวจเทียบกับ
+    <a href="brief.html">โจทย์ต้นฉบับ B1–B7</a> — <strong>ไม่ใช่เทียบกับ SPEC</strong> เพราะ spec เองก็อาจผิดหรือขาดได้</p>
+  </div>
+  <ol>
+    <li>จับคู่ คนหนึ่งเป็น "ผู้ใช้" อีกคนเป็นทีมพัฒนา (สลับกันหลัง 5 นาที)</li>
+    <li>"ผู้ใช้" อ่านโจทย์ทีละย่อหน้า แล้วลองทำสิ่งนั้นในระบบจริง</li>
+    <li>ทีมพัฒนาจดผลลงตาราง <strong>ห้ามอธิบายแก้ตัว</strong> — จดอย่างเดียว</li>
+  </ol>
+  <div class="table-wrap"><table>
+    <thead><tr><th>ย่อหน้า</th><th>"ผู้ใช้" ลองอะไร</th><th>ผล</th><th>ถ้าไม่ตรง: เป็นแบบไหน</th></tr></thead>
+    <tbody>
+      <tr><td>B2</td><td>จองรถคันเล็กไป 5 คน</td><td>☐ ตรง ☐ ไม่ตรง</td><td></td></tr>
+      <tr><td>B3</td><td>ดูว่ารถว่างไหม · จองชน · ยกเลิก</td><td>☐ ตรง ☐ ไม่ตรง</td><td></td></tr>
+      <tr><td>B4</td><td>เพิ่มรถใหม่ · สร้างบัญชีพนักงาน</td><td>☐ ตรง ☐ ไม่ตรง</td><td></td></tr>
+      <tr><td>B5</td><td>ยกเลิกการจองของคนอื่น</td><td>☐ ตรง ☐ ไม่ตรง</td><td></td></tr>
+      <tr><td>B6</td><td>จองล่วงหน้า · ขออนุมัติ</td><td>☐ ตรง ☐ ไม่ตรง</td><td></td></tr>
+      <tr><td>B1, B7</td><td>ใช้แทน LINE/สมุดได้จริงไหม · มีค่าใช้จ่ายไหม</td><td>☐ ตรง ☐ ไม่ตรง</td><td></td></tr>
+    </tbody>
+  </table></div>
+  <div class="grid">
+    <div class="card"><h4>🐞 bug</h4><p>ระบบ<strong>ไม่ตรงกับ spec</strong> — เช่น AC บอกต่อคิวพอดีได้ แต่ระบบปฏิเสธ · แก้ที่โค้ด แล้วเพิ่มเคส smoke ที่จับได้</p></div>
+    <div class="card"><h4>🕳 requirement gap</h4><p>ระบบตรง spec แต่ <strong>spec ไม่ครอบคลุมความต้องการ</strong> — แก้ที่ spec ก่อน (SRS → AC → task) แล้วค่อยโค้ด</p></div>
+    <div class="card"><h4>📌 ตั้งใจเลื่อน</h4><p>อยู่ใน SRS แต่จัดเป็น Release 2 หรือ "ยังไม่ทำ" — เช่น B6 การอนุมัติ → FR-14 · ตอบผู้ใช้ได้ว่า "อยู่ในแผน รอบหน้า" เพราะ<strong>เขียนไว้แล้ว</strong></p></div>
+  </div>
+  <div class="box theory"><span class="label">📖 ข้อสังเกต</span>
+    <p>ถ้าตอนเช้าไม่ได้ถามเจ้าของโจทย์เรื่องการอนุมัติ (Q3) ช่องนี้จะกลายเป็น "requirement gap" ที่น่าอายต่อหน้าผู้ใช้ —
+    การบันทึกสิ่งที่<strong>ตั้งใจไม่ทำ</strong>ไว้ใน spec จึงสำคัญพอ ๆ กับสิ่งที่ทำ</p>
+  </div>
+
+  <h2 id="fast">3 · กลุ่มเร็ว: เลือก 1 อย่าง</h2>
+  <h3>ก. Change request: FR-11 หรือ FR-12</h3>
+  <div class="box intent"><span class="label">🎯 เจตนา</span>
+    <p>เจ้าของโจทย์ขอเพิ่มหลังเห็นระบบ — ฝึกเดินวงจรครบ <strong>SRS → SPEC (AC + ตัวอย่าง) → smoke → TASKS → agent → verify</strong> โดยไม่ข้ามขั้น</p>
+  </div>
+  <ol>
+    <li>เลือก <strong>FR-11</strong> (จองล่วงหน้าไม่เกิน 30 วัน) หรือ <strong>FR-12</strong> (ยกเลิกได้เฉพาะก่อนเวลาเริ่ม) — ย้ายจาก §7 ใน SPEC.md มาเป็น US/AC ใหม่ เช่น <code>**AC-2.8**</code> พร้อมแถวตัวอย่างขอบเขต (วันที่ 30 ได้ · วันที่ 31 ไม่ได้)</li>
+    <li>รัน <code>npm run trace</code> → ต้องเห็น ❌ AC ใหม่ยังไม่มีเคส (ดีแล้ว: spec นำหน้าโค้ด)</li>
+    <li>เพิ่ม task ใน TASKS.md เช่น <code>T3.1</code> แล้วสั่ง <code>ทำ task T3.1 ใน TASKS.md</code></li>
+    <li>smoke + trace ✅ → commit → migration (ถ้ามี) → deploy</li>
+  </ol>
+  <p class="small">ข้อสังเกตสำหรับ FR-12: เคส "ยกเลิกหลังเวลาเริ่มไม่ได้" เขียนเป็น smoke test ยาก (สร้างการจองในอดีตไม่ได้เพราะ AC-2.5) — ตัดสินใจว่าจะตรวจด้วยวิธีไหน แล้วเขียนวิธีตรวจลงใน SPEC</p>
+  <h3>ข. ล่าบั๊กปลูก</h3>
+  <p>ขอการ์ดบั๊กจากผู้สอน ติดตั้งตามการ์ด แล้วหาว่า <strong>smoke test เคสไหนจับได้</strong> — มีบั๊กหนึ่งตัวที่ smoke test จับไม่ได้ ต้องใช้วิธีตรวจอื่น ลองหาให้เจอ</p>
+
+  <h2 id="tag">4 · ปิด release v1.0</h2>
+  <div class="box intent"><span class="label">🎯 เจตนา</span>
+    <p>ติดป้ายเวอร์ชันให้ commit ที่ผ่านการตรวจรับแล้ว — วันหน้าย้อนกลับมาดูได้ว่า "เวอร์ชันที่ผู้ใช้รับ" คือโค้ดชุดไหน</p>
+  </div>
+<pre><code>git add . &amp;&amp; git commit -m "release 1: verified and accepted"</code></pre>
+<pre><code>git tag v1.0</code></pre>
+<pre><code>git log --oneline --decorate</code></pre>
+  <div class="box check"><span class="label">✅ ผ่าน Lab 4 เมื่อ</span>
+    <ul class="checklist">
+      <li>เช็กลิสต์ verification ผ่านครบ 7 ข้อบน production</li>
+      <li>ตารางตรวจรับมีผลครบทุกย่อหน้า และแยก bug / gap / ตั้งใจเลื่อน ได้</li>
+      <li>มี tag <code>v1.0</code> ใน <code>git log</code></li>
+    </ul>
+  </div>
+
+  <h2 id="retro">5 · คำถาม retro (ช่วง 15:45)</h2>
+  <ol>
+    <li>วางแต่ละ commit ของคุณวันนี้ลงบน phase ของ SDLC — phase ไหนที่ AI ช่วยมากที่สุด และ phase ไหนที่คนต้องทำเองทั้งหมด?</li>
+    <li>คำถามข้อไหนที่ถามเจ้าของโจทย์ตอนเช้า ถ้าไม่ได้ถาม ระบบจะสร้างผิด?</li>
+    <li>SRS ตอนเช้าของคุณ "แต่งเพิ่ม" (⚠) กี่ข้อ — LLM เดาอะไรที่ไม่มีในโจทย์?</li>
+    <li>มีอะไรที่ smoke test ผ่านหมดแต่ผู้ใช้ยังไม่พอใจไหม? เป็น bug หรือ gap?</li>
+    <li>ถ้าต้องสร้างระบบใหม่พรุ่งนี้ (เช่น จองห้องประชุม) จะใช้อะไรจากวันนี้ซ้ำได้บ้าง? (starter, template, skill, STARTER-PROMPT)</li>
+  </ol>
+
+  <h2 id="signout">6 · ออกจากระบบก่อนออกจากห้อง</h2>
+  <div class="box warn"><span class="label">🔒 เครื่อง Lab เป็นของส่วนกลาง</span>
+    <p>ถ้าไม่ออกจากระบบ คนที่ใช้เครื่องต่อจะ deploy ทับ ลบฐานข้อมูล หรือใช้โควต้า AI ของคุณได้ — แอปที่ deploy แล้วยังเปิดได้ตามปกติหลัง logout</p>
+<pre><code>npx wrangler logout</code></pre>
+<pre><code>npx wrangler whoami</code></pre>
+    <ul class="checklist">
+      <li><code>whoami</code> บอกว่ายังไม่ได้ล็อกอิน</li>
+      <li>ZCode → log out</li>
+      <li>เบราว์เซอร์: ออกจากระบบ dash.cloudflare.com · z.ai · Gemini / ChatGPT แล้วปิดทุกหน้าต่าง</li>
+    </ul>
+    <p>รายละเอียดที่ <a href="setup.html#signout">เตรียมเครื่อง PART D</a></p>
   </div>
 </main>
 </body>

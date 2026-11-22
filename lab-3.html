@@ -1,19 +1,262 @@
 <!doctype html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lab 3: สร้าง MVP กับ ZCode — เปิด 13:00</title>
-<link rel="stylesheet" href="assets/style.css">
-<script src="assets/site.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab 3 · สร้าง MVP จาก baseline — Vibe Coding × SDLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
 </head>
 <body data-page="lab-3.html">
 <main>
-  <h1>Lab 3: สร้าง MVP กับ ZCode</h1>
-  <div class="box">
-    <span class="label">🔒 หน้านี้เปิดเวลา 13:00</span>
-    <p>Lab นี้ใช้ spec อ้างอิง จึงเปิดพร้อมหน้า Baseline เวลา 13:00</p>
+  <p class="eyebrow">Lab 3 · 13:45–14:40 (55 นาที)</p>
+  <h1>สร้าง MVP จาก baseline ด้วย ZCode</h1>
+  <p class="lede">ทุกคนมี spec ชุดเดียวกันแล้ว (baseline) ต่อไปนี้คือ phase <strong>Implementation</strong>:
+  สั่ง agent ทีละ task จาก <code>TASKS.md</code> แล้ว<strong>คนเป็นผู้ตรวจ</strong>ทุกครั้งด้วย smoke test, trace และ <code>git diff</code> ก่อน commit</p>
+
+  <div class="meta">
+    <span class="chip">⏱ 55 นาที</span>
+    <span class="chip">🤖 ZCode · Flash (GLM-5.3 เมื่อติด)</span>
+    <span class="chip">🪙 ~200–400K token (ประมาณการ)</span>
+    <span class="chip">SDLC: Implementation → Testing → Deployment</span>
   </div>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>👤 คน</th><th>🤖 Agent (ZCode)</th></tr></thead>
+    <tbody>
+      <tr><td>เลือก task · สั่งด้วย prompt สั้น · รัน migration / smoke / trace · อ่าน diff · commit · deploy</td>
+          <td>อ่าน AGENTS.md + SPEC.md + skill <code>add-endpoint</code> · เขียนโค้ดและเคสทดสอบของ task นั้น · บอกคำสั่งที่คนต้องรัน</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="toc">
+    <b>ในหน้านี้</b>
+    <ol>
+      <li><a href="#prep">เตรียม session ใหม่</a></li>
+      <li><a href="#loop">วงจรของทุก task</a></li>
+      <li><a href="#t11">Epic 1: รถส่วนกลาง (T1.1–T1.2)</a></li>
+      <li><a href="#t21">Epic 2: การจอง (T2.1–T2.4)</a></li>
+      <li><a href="#release">Release ขึ้น production</a></li>
+      <li><a href="#trouble">ปัญหาที่พบบ่อย</a></li>
+      <li><a href="#sdlc">SDLC ที่เพิ่งทำ</a></li>
+    </ol>
+  </div>
+
+  <div class="box warn">
+    <span class="label">⚠ ก่อนเริ่ม</span>
+    <p>ต้องทำ <a href="baseline.html">Spec Review + Baseline</a> เสร็จแล้ว คือคัดลอก <code>SPEC.md</code>, <code>TASKS.md</code>, <code>docs/SRS.md</code>, <code>docs/DESIGN.md</code>
+    ฉบับอ้างอิงลงโปรเจกต์ และ commit <code>adopt baseline spec</code> แล้ว — ถ้ายังไม่ได้ทำ ขอโฟลเดอร์ <code>baseline/</code> จากผู้สอน</p>
+  </div>
+
+  <h2 id="prep">เตรียม session ใหม่ (3 นาที)</h2>
+  <div class="step"><div class="step-num">0</div><div class="step-body">
+    <h3>เปิด ZCode session ใหม่ในโฟลเดอร์ <code>my-app</code></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>session ใหม่ = context สะอาด agent จะอ่าน <code>AGENTS.md</code> เป็นอย่างแรก (กติกา: ทำทีละ task, ห้ามรัน wrangler/npm/git เอง, ถามก่อนเดา)
+      ไม่ต้องลากบทสนทนาตอน warm-up มาด้วย ประหยัด token</p>
+    </div>
+    <p>เลือกโมเดล <strong>Flash</strong> แล้วเปิด <code>npm run dev</code> ค้างไว้ใน Git Bash อีกหน้าต่างหนึ่ง (ไว้ทดสอบหลังแต่ละ task)</p>
+<pre><code>npm run dev</code></pre>
+    <div class="box token"><span class="label">🪙 กติกาโมเดล</span>
+      <ul>
+        <li><strong>Flash</strong> ทุก task เป็นค่าเริ่มต้น</li>
+        <li>Flash แก้ไม่ตก <strong>2 รอบติด</strong> → สลับ GLM-5.3 พร้อมแปะสรุปว่าลองอะไรไปแล้ว (ไม่เริ่มใหม่จากศูนย์)</li>
+        <li>แปะเฉพาะบรรทัด error ที่เกี่ยวข้อง ไม่แปะทั้งหน้าจอ</li>
+      </ul>
+    </div>
+  </div></div>
+
+  <h2 id="loop">วงจรของทุก task</h2>
+  <div class="flow">
+    <div class="node hl"><b>💬 สั่ง</b><code>ทำ task Tx.y ใน TASKS.md</code></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>👤 migration</b>เฉพาะ task ที่มีไฟล์ใน <code>migrations/</code> ใหม่</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>👤 smoke + trace</b>ต้องผ่านเคสของ task นี้</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>👤 git diff</b>อ่านว่า agent แก้อะไร</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>👤 commit</b>checkpoint</div>
+  </div>
+  <div class="box theory"><span class="label">📖 ทำไม prompt สั้นได้</span>
+    <p>รายละเอียดอยู่ในไฟล์หมดแล้ว: <strong>อะไรคือถูก</strong> อยู่ใน AC ของ SPEC.md · <strong>ทำอะไรก่อนหลัง</strong> อยู่ใน TASKS.md ·
+    <strong>ทำอย่างไร</strong> อยู่ใน skill <code>add-endpoint</code> ที่สั่งให้เลียนแบบ <code>src/routes/users.ts</code> — prompt จึงเหลือแค่ชี้ว่าทำ task ไหน</p>
+  </div>
+  <p>คำสั่งตรวจที่ใช้ซ้ำหลังทุก task (เปิด <code>npm run dev</code> ค้างไว้อีกหน้าต่าง):</p>
+<pre><code>SMOKE_ADMIN_USER=admin SMOKE_ADMIN_PASS=รหัสadminในเครื่องของคุณ npm run smoke</code></pre>
+<pre><code>npm run trace</code></pre>
+<pre><code>git diff</code></pre>
+  <p class="small"><code>npm run trace</code> จะ ❌ จนกว่า task สุดท้ายจะเสร็จ (AC ที่ยังไม่ได้ทำยังไม่มีเคส) — ดูว่า AC ของ task <strong>ที่เพิ่งทำ</strong> กลายเป็น ✅ หรือยัง</p>
+
+  <!-- ═══════════ EPIC 1 ═══════════ -->
+  <h2 id="t11">Epic 1: รถส่วนกลาง</h2>
+
+  <div class="step"><div class="step-num">1</div><div class="step-body">
+    <h3>T1.1 ตารางรถ + API รถ <span class="small">· 10 นาที · 🤖</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>ให้ agent สร้าง migration <code>0002_cars.sql</code>, <code>src/routes/cars.ts</code> (ทุกคนที่ล็อกอินดูได้ · เพิ่ม/แก้/ลบเฉพาะ admin) และเคส smoke AC-1.1–AC-1.6</p>
+    </div>
+    <div class="box prompt"><span class="label">💬 พิมพ์ให้ ZCode</span></div>
+<pre><code>ทำ task T1.1 ใน TASKS.md</code></pre>
+    <div class="box cmd"><span class="label">⌨️ หลัง agent ตอบ — มี migration ใหม่ จึงต้องใช้กับฐานข้อมูลในเครื่องก่อน</span></div>
+<pre><code>npx wrangler d1 migrations apply app-db --local</code></pre>
+    <p>แล้วรัน smoke + trace + <code>git diff</code></p>
+    <div class="box check"><span class="label">✅ ตรวจใน diff</span>
+      <ul class="checklist">
+        <li>มีไฟล์ใหม่ <code>migrations/0002_cars.sql</code> — ไม่แก้ <code>0001_auth.sql</code></li>
+        <li><code>plate</code> เป็น UNIQUE และ <code>seats &gt; 0</code></li>
+        <li>POST/PUT/DELETE มี <code>requireAdmin</code> · SQL เป็น <code>.prepare(...).bind(...)</code></li>
+        <li>มีเคส smoke ชื่อขึ้นต้นด้วย AC-1.1 … AC-1.6 และ trace แสดง ✅ ครบ 6 ข้อ</li>
+        <li>ไม่แตะ <code>src/lib/auth.ts</code>, <code>src/routes/auth.ts</code></li>
+      </ul>
+    </div>
+<pre><code>git add . &amp;&amp; git commit -m "T1.1: cars API"</code></pre>
+  </div></div>
+
+  <div class="step"><div class="step-num">2</div><div class="step-body">
+    <h3>T1.2 หน้าเว็บ "รถ" <span class="small">· 6 นาที · 🤖</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>เพิ่มหน้าใหม่แบบเดียวกับหน้าจัดการผู้ใช้ของ starter: รายการรถ + ฟอร์มเพิ่ม/แก้/ลบที่เห็นเฉพาะ admin</p>
+    </div>
+<pre><code>ทำ task T1.2 ใน TASKS.md</code></pre>
+    <p>เปิด <a href="http://localhost:8787/#cars" target="_blank" rel="noopener">http://localhost:8787/#cars</a> ลองเพิ่มรถ 2 คัน แก้ 1 คัน แล้วลองเพิ่มทะเบียนซ้ำ (ต้องเห็นข้อความ error)</p>
+    <div class="box check"><span class="label">✅ ตรวจ</span>
+      <ul class="checklist">
+        <li>มีเมนู "รถ" · ล็อกอินเป็น user ธรรมดาแล้วไม่เห็นฟอร์มเพิ่มรถ</li>
+        <li>ข้อมูลจากผู้ใช้แสดงผ่าน <code>esc()</code> (กัน XSS)</li>
+      </ul>
+    </div>
+<pre><code>git add . &amp;&amp; git commit -m "T1.2: cars page"</code></pre>
+    <div class="box warn"><span class="label">🆘 ถ้าตามไม่ทัน (เกิน 14:10)</span>
+      <p>ขอโฟลเดอร์ <code>build-cars/</code> จากผู้สอน → คัดลอก <code>src/ public/ migrations/ scripts/</code> และ <code>TASKS.md</code> ทับของตัวเอง (<strong>ไม่ทับ <code>wrangler.jsonc</code></strong>)
+      → <code>npx wrangler d1 migrations apply app-db --local</code> → ทำต่อที่ T2.1</p>
+    </div>
+  </div></div>
+
+  <!-- ═══════════ EPIC 2 ═══════════ -->
+  <h2 id="t21">Epic 2: การจอง</h2>
+
+  <div class="step"><div class="step-num">3</div><div class="step-body">
+    <h3>T2.1 ตารางการจอง + POST /api/bookings + กติกาทั้งหมด <span class="small">· 12 นาที · 🤖</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>task ที่สำคัญที่สุดของวัน: migration <code>0003_bookings.sql</code>, <code>src/lib/time.ts</code> และการจองที่ตรวจ ย้อนหลัง · ผู้โดยสารเกินที่นั่ง · <strong>เวลาซ้อน</strong>
+      — เคส smoke ต้องมาจาก<strong>ตารางตัวอย่าง #1–#8</strong> ใน SPEC.md ครบทุกแถว</p>
+    </div>
+<pre><code>ทำ task T2.1 ใน TASKS.md</code></pre>
+<pre><code>npx wrangler d1 migrations apply app-db --local</code></pre>
+    <p>แล้ว smoke + trace + diff</p>
+    <div class="box check"><span class="label">✅ ตรวจใน diff — อ่านช้า ๆ ตรงนี้</span>
+      <ul class="checklist">
+        <li>เงื่อนไขเวลาซ้อนเป็น <code>start_at &lt; ?(จบใหม่) AND end_at &gt; ?(เริ่มใหม่)</code> — ถ้าเห็น <code>&lt;=</code> หรือ <code>&gt;=</code> เคสต่อคิวพอดี (#6, #7) จะพัง</li>
+        <li>เวลาปัจจุบันใช้<strong>เวลาไทย</strong> (+7 ชั่วโมง) ไม่ใช่ <code>new Date().toISOString()</code> ตรง ๆ (ADR-03)</li>
+        <li><code>user_id</code> ของการจองมาจาก <code>c.get("userId")</code> ไม่ใช่จาก body ที่ผู้ใช้ส่งมา</li>
+        <li>smoke มีเคส AC-2.2 ห้าเคส (#1–#5) และ AC-2.3 สามเคส (#6–#8) · trace ✅ AC-2.1 … AC-2.7</li>
+      </ul>
+    </div>
+<pre><code>git add . &amp;&amp; git commit -m "T2.1: create booking with rules"</code></pre>
+  </div></div>
+
+  <div class="step"><div class="step-num">4</div><div class="step-body">
+    <h3>T2.2 การจองของฉัน + ยกเลิก <span class="small">· 6 นาที · 🤖</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>GET เฉพาะของตัวเอง · DELETE ได้เฉพาะของตัวเอง ของคนอื่นตอบ 404 — นี่คือ <strong>authorization</strong> ที่ต้องอยู่ในทุก query</p>
+    </div>
+<pre><code>ทำ task T2.2 ใน TASKS.md</code></pre>
+    <div class="box check"><span class="label">✅ ตรวจใน diff</span>
+      <ul class="checklist">
+        <li>ทั้ง GET และ DELETE มี <code>user_id = ?</code> ที่ bind ด้วย <code>c.get("userId")</code></li>
+        <li>smoke AC-3.1, AC-3.2, AC-3.3 ผ่าน (ใช้ผู้ใช้ทดสอบ 2 คน)</li>
+      </ul>
+    </div>
+<pre><code>git add . &amp;&amp; git commit -m "T2.2: my bookings + cancel"</code></pre>
+  </div></div>
+
+  <div class="step"><div class="step-num">5</div><div class="step-body">
+    <h3>T2.3 ตารางรถรายวัน <span class="small">· 5 นาที · 🤖</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p><code>GET /api/cars/:id/schedule?date=YYYY-MM-DD</code> ส่งเฉพาะ <code>start_at</code>, <code>end_at</code> — <strong>ไม่มีข้อมูลผู้จอง</strong> ตามคำตอบ Q6 ของเจ้าของโจทย์</p>
+    </div>
+<pre><code>ทำ task T2.3 ใน TASKS.md</code></pre>
+    <div class="box check"><span class="label">✅ ตรวจ</span>
+      <ul class="checklist">
+        <li>SELECT เลือกแค่ <code>start_at, end_at</code> (ไม่ใช่ <code>SELECT *</code>)</li>
+        <li>smoke AC-4.1, AC-4.2 ผ่าน</li>
+      </ul>
+    </div>
+<pre><code>git add . &amp;&amp; git commit -m "T2.3: car schedule"</code></pre>
+  </div></div>
+
+  <div class="step"><div class="step-num">6</div><div class="step-body">
+    <h3>T2.4 หน้าเว็บ "จองรถ" + "การจองของฉัน" <span class="small">· 8 นาที · 🤖</span></h3>
+    <div class="box intent"><span class="label">🎯 เจตนา</span>
+      <p>หน้าเดียวจบตาม NFR-02: เลือกรถ → เห็นตารางวันนั้นทันที → กรอก → จอง · และหน้ารายการของฉันพร้อมปุ่มยกเลิก</p>
+    </div>
+<pre><code>ทำ task T2.4 ใน TASKS.md</code></pre>
+    <p>ทดสอบในเบราว์เซอร์: จอง 1 รายการ → ลองจองซ้อน (ต้องเห็น "รถคันนี้ไม่ว่างในช่วงเวลานั้น") → ดูตารางวันนั้น → ยกเลิกจากหน้า "การจองของฉัน"</p>
+    <p>ตอนนี้ <code>npm run trace</code> ต้องขึ้น <strong>✅ ตามรอยครบ</strong></p>
+<pre><code>git add . &amp;&amp; git commit -m "T2.4: booking pages"</code></pre>
+  </div></div>
+
+  <!-- ═══════════ RELEASE ═══════════ -->
+  <h2 id="release">Release ขึ้น production (5 นาที)</h2>
+  <div class="box intent"><span class="label">🎯 เจตนา</span>
+    <p>ลำดับต้องเป็น <strong>migration ก่อน แล้วค่อย deploy</strong> — ถ้าโค้ดใหม่ขึ้นไปก่อนตาราง ผู้ใช้จริงจะเจอ error <code>no such table</code></p>
+  </div>
+<pre><code>npx wrangler d1 migrations apply app-db --remote</code></pre>
+<pre><code>npx wrangler deploy</code></pre>
+  <p>แล้วรัน smoke test กับ production ด้วยบัญชี admin <strong>บน production</strong> ของคุณ (เปลี่ยน URL และรหัสเป็นของตัวเอง):</p>
+<pre><code>BASE_URL=https://my-app.ชื่อsubdomain.workers.dev SMOKE_ADMIN_USER=admin SMOKE_ADMIN_PASS=รหัสของคุณ npm run smoke</code></pre>
+  <p class="small">PowerShell: <code>$env:BASE_URL="https://..."; $env:SMOKE_ADMIN_USER="admin"; $env:SMOKE_ADMIN_PASS="..."; npm run smoke</code> · smoke test สร้างรถ/ผู้ใช้ชั่วคราวแล้วลบทิ้งเองตอนจบ</p>
+  <div class="box check"><span class="label">✅ ผ่าน Lab 3 เมื่อ</span>
+    <ul class="checklist">
+      <li><code>npm run trace</code> ✅ ตามรอยครบ (AC 33 ข้อ · FR 15 ข้อ)</li>
+      <li>smoke test กับ production ไม่มี ❌</li>
+      <li>จองรถจากมือถือบน URL จริงได้ 1 รายการ</li>
+      <li><code>git log</code> มี commit แยกต่อ task</li>
+    </ul>
+  </div>
+  <div class="box warn"><span class="label">🆘 ถ้าตามไม่ทัน (เกิน 14:35)</span>
+    <p>ขอโฟลเดอร์ <code>final/</code> จากผู้สอน → คัดลอก <code>src/ public/ migrations/ scripts/</code> ทับ (ไม่ทับ <code>wrangler.jsonc</code>) → migration local → smoke → แล้วทำ Release ด้านบน
+    — ทฤษฎี 4 และ Lab 4 ใช้ระบบที่ deploy แล้ว จึงต้องมีของบน production</p>
+  </div>
+  <div class="box token"><span class="label">🪙 ประหยัด token</span>
+    <ul>
+      <li>agent ทำเกิน task (เช่น ทำหน้าเว็บมาด้วยตอน T2.1 หรือทำ FR-11 ล่วงหน้า) → <code>git restore .</code> แล้วสั่งใหม่พร้อมชี้ว่า "ทำเฉพาะ T2.1 ตาม SPEC §7 ห้ามทำ Release 2"</li>
+      <li>รายงานปัญหาด้วยรหัส AC: <code>smoke เคส AC-2.3 ตัวอย่าง #6 ได้ 409 แต่ควรได้ 201</code> — สั้นและชัดกว่าเล่าอาการ</li>
+    </ul>
+  </div>
+
+  <h2 id="trouble">ปัญหาที่พบบ่อย</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>อาการ</th><th>สาเหตุ / วิธีแก้</th></tr></thead>
+    <tbody>
+      <tr><td>error <code>no such table: cars</code> / <code>bookings</code></td><td>ยังไม่ได้รัน migration — <code>npx wrangler d1 migrations apply app-db --local</code> (บน production ใช้ <code>--remote</code>)</td></tr>
+      <tr><td>agent รัน <code>wrangler</code> / <code>npm</code> / <code>git</code> เอง</td><td>ขัดกับ AGENTS.md ข้อ 2 — หยุด แล้วพิมพ์ <code>อ่าน AGENTS.md กติกาข้อ 2 อีกครั้ง จากนี้ให้บอกคำสั่งแทนการรันเอง</code> · ตรวจ <code>git status</code> ว่ามันไม่ได้ commit อะไรไป</td></tr>
+      <tr><td>agent แก้ <code>src/lib/auth.ts</code> หรือ <code>src/routes/auth.ts</code></td><td>skill <code>add-endpoint</code> ห้ามไว้ — <code>git restore src/lib/auth.ts src/routes/auth.ts</code> แล้วสั่งใหม่</td></tr>
+      <tr><td><code>npm run trace</code> บอก AC-x.y ยังไม่มีเคส</td><td>agent ลืมเขียนเคส หรือชื่อเคสไม่ขึ้นต้นด้วยรหัส AC — <code>เพิ่มเคส smoke สำหรับ AC-x.y ตาม SPEC.md</code></td></tr>
+      <tr><td>trace บอกเคสอ้าง AC ที่ไม่มีใน SPEC</td><td>agent ตั้งรหัส AC เอง — ให้แก้ชื่อเคสให้ตรง SPEC (spec เป็นตัวตั้ง ไม่ใช่โค้ด)</td></tr>
+      <tr><td>จองช่วงเย็นวันนี้แล้วขึ้น "จองย้อนหลังไม่ได้" ทั้งที่ยังไม่ถึงเวลา (หรือกลับกัน)</td><td>เวลาเพี้ยน 7 ชั่วโมง — โค้ดเทียบกับเวลา UTC · ให้ใช้เวลาไทย (+7) ตาม ADR-03 / <code>nowThai()</code></td></tr>
+      <tr><td>agent ทำฟีเจอร์ Release 2 มาด้วย (จองล่วงหน้า 30 วัน, admin ดูทั้งหมด)</td><td><code>git restore .</code> (หรือ <code>git checkout -- ไฟล์</code>) แล้วชี้ SPEC §7 นอกขอบเขต — scope creep ทำให้ token หมดและตรวจยาก</td></tr>
+      <tr><td>smoke ขึ้น ⏭ ข้ามเกือบทุกเคส</td><td>smoke ไม่รู้รหัส admin — ใส่ <code>SMOKE_ADMIN_USER</code> / <code>SMOKE_ADMIN_PASS</code> ของคุณ</td></tr>
+      <tr><td>smoke ขึ้น "ติดต่อเซิร์ฟเวอร์ไม่ได้"</td><td>ยังไม่ได้เปิด <code>npm run dev</code> ในอีกหน้าต่าง หรือ BASE_URL ผิด</td></tr>
+      <tr><td>deploy แล้วหน้าเว็บ error 500</td><td>ลืม <code>migrations apply --remote</code> ก่อน deploy — รันแล้วรีเฟรช</td></tr>
+      <tr><td>Flash วนแก้ไม่จบ</td><td>ครบ 2 รอบ → GLM-5.3 พร้อมสรุปสิ่งที่ลองแล้ว · เกิน 5 นาที → ยกมือ / ใช้ checkpoint</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="sdlc">SDLC ที่เพิ่งทำ</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Phase</th><th>ใน Lab นี้</th></tr></thead>
+    <tbody>
+      <tr><td>Planning</td><td>ใช้ WBS ใน TASKS.md ที่แตกไว้แล้ว — 1 task = 1 prompt</td></tr>
+      <tr><td>Implementation</td><td>agent เขียนโค้ดตาม SPEC + skill ทีละ task</td></tr>
+      <tr><td>Testing (verification)</td><td>smoke test ตาม AC · trace ตรวจว่าทุก AC มีเคส · คนอ่าน diff</td></tr>
+      <tr><td>Deployment</td><td>migration remote → deploy → smoke กับ production</td></tr>
+    </tbody>
+  </table></div>
+  <p>สังเกตว่า<strong>ไม่มีขั้นไหนที่ agent เป็นผู้ตัดสินว่า "ถูก"</strong> — spec เป็นตัวตัดสิน และคนเป็นผู้ตรวจ ต่อไปใน <a href="theory-4-verify-release.html">ทฤษฎี 4</a> เราจะถามคำถามที่ใหญ่กว่า: ผ่านทุก test แล้ว แต่ตรงกับที่ผู้ใช้ต้องการจริงหรือเปล่า?</p>
 </main>
 </body>
 </html>
