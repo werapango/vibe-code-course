@@ -40,6 +40,21 @@
   ตอนนี้ทุกคนมี <code>TASKS.md</code> <strong>ฉบับ baseline</strong> ชุดเดียวกัน ช่วงบ่ายจะสั่ง agent ทำตามนี้ทีละ task: <code>ทำ task T1.1 ใน TASKS.md</code> → T1.2 → T2.1 → … → T2.4
   ระหว่าง task ขั้นที่มี 👤 คือคุณทำเอง (migration, smoke, trace, อ่าน diff, commit)</p>
 
+  <div class="box theory">
+    <span class="label">📦 ตัวอย่างจริง: WBS ที่ใช้สร้าง starter ของวันนี้</span>
+    <p>starter ที่ดึงมาใน Lab 1b ก็สร้างด้วย WBS แบบเดียวกัน — แตกเป็น 6 task ส่งให้ agent ทีละข้อ และคนตรวจ + commit หลังทุกข้อ:</p>
+    <div class="flow">
+      <div class="node"><b>T1</b>โครงแอป + /api/health</div><span class="arrow">→</span>
+      <div class="node"><b>T2</b>smoke + trace</div><span class="arrow">→</span>
+      <div class="node"><b>T3</b>ฐานข้อมูลผู้ใช้ + auth</div><span class="arrow">→</span>
+      <div class="node"><b>T4</b>API ผู้ใช้</div><span class="arrow">→</span>
+      <div class="node"><b>T5</b>หน้าเว็บ</div><span class="arrow">→</span>
+      <div class="node"><b>T6</b>เอกสาร</div>
+    </div>
+    <p>สังเกตว่าเครื่องมือทดสอบ (T2) มาก่อนโค้ดที่ต้องทดสอบ (T3–T4) และระหว่าง task มีขั้นที่คนรันคำสั่งเอง (สร้างฐานข้อมูล, migration)
+    — prompt ทั้งชุดจะเปิดให้ดูตอนท้ายวันใน <a href="lab-4.html#future">Lab 4 ข้อ 7</a></p>
+  </div>
+
   <h2 id="agent">Agent ทำงานอย่างไร</h2>
   <div class="flow">
     <div class="node"><b>LLM</b>โมเดลภาษา ทำหน้าที่คิดและเขียน</div><div class="arrow">+</div>
