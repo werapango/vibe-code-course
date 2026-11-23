@@ -78,7 +78,7 @@
     <div class="arrow">→</div>
     <div class="node"><b>👤 smoke + trace</b>ต้องผ่านเคสของ task นี้</div>
     <div class="arrow">→</div>
-    <div class="node"><b>👤 git diff</b>อ่านว่า agent แก้อะไร</div>
+    <div class="node"><b>👤 git add + diff</b>อ่านว่า agent แก้อะไร (รวมไฟล์ใหม่)</div>
     <div class="arrow">→</div>
     <div class="node"><b>👤 commit</b>บันทึกจุดที่ใช้ได้ไว้ ย้อนกลับมาได้</div>
   </div>
@@ -86,11 +86,19 @@
     <p>รายละเอียดทั้งหมดเขียนไว้ในไฟล์แล้ว: <strong>แบบไหนถือว่าถูก</strong> อยู่ใน AC (acceptance criteria หรือเกณฑ์ตรวจรับ) ของ SPEC.md, <strong>ทำอะไรก่อนหลัง</strong> อยู่ใน TASKS.md
     และ<strong>เขียนโค้ดอย่างไร</strong> อยู่ใน skill (ไฟล์คู่มือที่ agent อ่านก่อนทำงานประเภทนั้น) ชื่อ <code>add-endpoint</code> ซึ่งสั่งให้เลียนแบบ <code>src/routes/users.ts</code> ดังนั้น prompt จึงเหลือแค่บอกว่าให้ทำ task ไหน</p>
   </div>
-  <p>คำสั่งตรวจ 3 คำสั่งนี้ใช้ซ้ำหลังทุก task ให้รันใน Git Bash อีกหน้าต่างหนึ่ง (ไม่ใช่หน้าต่างที่รัน <code>npm run dev</code> ค้างไว้) และเปลี่ยน <code>รหัสadminในเครื่องของคุณ</code> เป็นรหัส admin ที่คุณตั้งไว้:</p>
-<pre><code>npm run smoke user=admin pass=รหัสadminในเครื่องของคุณ</code></pre>
+  <p>คำสั่งตรวจชุดนี้ใช้ซ้ำหลังทุก task ให้รันใน Git Bash อีกหน้าต่างหนึ่ง (ไม่ใช่หน้าต่างที่รัน <code>npm run dev</code> ค้างไว้)</p>
+  <p><strong>1) smoke test</strong> — เปลี่ยน <code>admin</code> และ <code>รหัสadmin</code> เป็นชื่อและรหัสของบัญชี admin ที่คุณสร้างไว้<strong>ในเครื่อง</strong> (ตอน Lab 1b) ใส่รหัสไว้ใน <code>'...'</code> เสมอ กันปัญหารหัสที่มีเครื่องหมายอย่าง <code>!</code> หรือ <code>$</code>:</p>
+<pre><code>npm run smoke user=admin pass='รหัสadmin'</code></pre>
+  <p class="small">อ่านผลที่<strong>บรรทัดสุดท้าย</strong>: ผ่านเมื่อ <code>ไม่ผ่าน 0</code> (มี <code>ข้าม 1</code> ได้ คือเคสสร้าง admin คนแรก ซึ่งข้ามเพราะมี admin แล้ว)
+  ถ้าขึ้น <code>❌ บัญชี admin: ล็อกอิน admin ไม่ได้</code> แปลว่าชื่อหรือรหัสใน user=/pass= ผิด เคสอื่นเลยถูกข้ามหมด ให้แก้ชื่อ/รหัสแล้วรันใหม่</p>
+  <p><strong>2) ตามรอย AC → เคสทดสอบ</strong></p>
 <pre><code>npm run trace</code></pre>
-<pre><code>git diff</code></pre>
-  <p class="small">ผ่านเมื่อ smoke ไม่มี ❌ ส่วน <code>npm run trace</code> จะยังมี ❌ อยู่จนกว่า task สุดท้ายจะเสร็จ เพราะ AC ของ task ที่ยังไม่ได้ทำยังไม่มีเคสทดสอบ ให้ดูแค่ว่า AC ของ task <strong>ที่เพิ่งทำ</strong> กลายเป็น ✅ แล้วหรือยัง</p>
+  <p class="small"><code>npm run trace</code> จะยังมี ❌ อยู่จนกว่า task สุดท้ายจะเสร็จ เพราะ AC ของ task ที่ยังไม่ได้ทำยังไม่มีเคสทดสอบ ให้ดูแค่ว่า AC ของ task <strong>ที่เพิ่งทำ</strong> กลายเป็น ✅ แล้วหรือยัง</p>
+  <p><strong>3) ดูว่า agent แก้อะไร</strong> — ต้อง <code>git add .</code> ก่อน เพราะ <code>git diff</code> เฉย ๆ <strong>ไม่แสดงไฟล์ใหม่</strong> (เช่น migration หรือไฟล์ route ที่ agent เพิ่งสร้าง):</p>
+<pre><code>git add .</code></pre>
+<pre><code>git diff --staged</code></pre>
+  <p class="small">ผลยาวจะแสดงทีละหน้า: กด <kbd>Space</kbd> เลื่อนต่อ · กด <kbd>q</kbd> เพื่อออก · หรือดูในแท็บ Source Control ของ VS Code ก็ได้
+  ถ้าเจอสิ่งที่ไม่ควรแก้ ให้ <code>git restore --staged .</code> แล้ว <code>git restore .</code> เพื่อทิ้งงานของ task นี้ แล้วสั่ง agent ใหม่ให้ชัดขึ้น (ไฟล์ใหม่ที่ agent สร้างต้องลบเองด้วย <code>git clean -fd</code>)</p>
 
   <!-- ═══════════ EPIC 1 ═══════════ -->
   <h2 id="t11">Epic 1: รถส่วนกลาง</h2>
@@ -104,7 +112,8 @@
 <pre><code>ทำ task T1.1 ใน TASKS.md</code></pre>
     <div class="box cmd"><span class="label">⌨️ ใน Git Bash หลัง agent ทำเสร็จ: task นี้มี migration ใหม่ จึงต้องสร้างตารางในฐานข้อมูลในเครื่องก่อน</span></div>
 <pre><code>npx wrangler d1 migrations apply app-db --local</code></pre>
-    <p>จากนั้นรัน 3 คำสั่งตรวจ (smoke, trace, <code>git diff</code>) จากหัวข้อ “วงจรของทุก task” ด้านบน แล้วไล่เช็กตามรายการนี้</p>
+    <p class="small">ถ้าขึ้นคำถาม <code>continue? (Y/n)</code> ให้กด <kbd>y</kbd> แล้ว Enter · ผ่านเมื่อเห็นตารางที่มี ✅ หลังชื่อไฟล์ migration ใหม่</p>
+    <p>จากนั้นรันคำสั่งตรวจ (smoke, trace, ดู diff) จากหัวข้อ “วงจรของทุก task” ด้านบน แล้วไล่เช็กตามรายการนี้</p>
     <div class="box check"><span class="label">✅ ตรวจใน diff</span>
       <ul class="checklist">
         <li>มีไฟล์ใหม่ <code>migrations/0002_cars.sql</code> — ไม่แก้ <code>0001_auth.sql</code></li>
@@ -150,7 +159,7 @@
 <pre><code>ทำ task T2.1 ใน TASKS.md</code></pre>
     <p>เมื่อ agent ทำเสร็จ รันใน Git Bash:</p>
 <pre><code>npx wrangler d1 migrations apply app-db --local</code></pre>
-    <p>แล้วรัน 3 คำสั่งตรวจ (smoke, trace, diff) และเช็กตามรายการนี้</p>
+    <p>แล้วรันคำสั่งตรวจ (smoke, trace, ดู diff) และเช็กตามรายการนี้</p>
     <div class="box check"><span class="label">✅ ตรวจใน diff — ส่วนนี้ต้องอ่านอย่างละเอียด</span>
       <ul class="checklist">
         <li>เงื่อนไขเวลาซ้อนเป็น <code>start_at &lt; ?(จบใหม่) AND end_at &gt; ?(เริ่มใหม่)</code> ถ้าเห็น <code>&lt;=</code> หรือ <code>&gt;=</code> แปลว่าผิด เพราะเคสต่อคิวพอดี (#6, #7) จะถูกปฏิเสธทั้งที่ควรจองได้</li>
@@ -167,7 +176,7 @@
     <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
       <p>ผู้ใช้ดูรายการ (GET) ได้เฉพาะการจองของตัวเอง และยกเลิก (DELETE) ได้เฉพาะของตัวเอง ถ้าพยายามยกเลิกของคนอื่น ระบบต้องตอบ 404 (ไม่พบ) การเช็กสิทธิ์แบบนี้เรียกว่า <strong>authorization</strong> และต้องใส่ไว้ในทุก query ที่อ่านหรือแก้ข้อมูลการจอง</p>
     </div>
-    <p>พิมพ์ใน ZCode แล้วรัน 3 คำสั่งตรวจใน Git Bash เหมือนเดิม (task นี้ไม่มี migration)</p>
+    <p>พิมพ์ใน ZCode แล้วรันคำสั่งตรวจใน Git Bash เหมือนเดิม (task นี้ไม่มี migration)</p>
 <pre><code>ทำ task T2.2 ใน TASKS.md</code></pre>
     <div class="box check"><span class="label">✅ ตรวจใน diff</span>
       <ul class="checklist">
@@ -183,7 +192,7 @@
     <div class="box intent"><span class="label">🎯 ทำขั้นนี้เพื่ออะไร</span>
       <p>สร้าง API <code>GET /api/cars/:id/schedule?date=YYYY-MM-DD</code> ที่ส่งกลับเฉพาะเวลาเริ่ม–จบ (<code>start_at</code>, <code>end_at</code>) ของแต่ละการจองในวันนั้น โดย<strong>ไม่ส่งข้อมูลผู้จอง</strong> ตามที่เจ้าของโจทย์ตอบไว้ใน Q6</p>
     </div>
-    <p>พิมพ์ใน ZCode แล้วรัน 3 คำสั่งตรวจใน Git Bash</p>
+    <p>พิมพ์ใน ZCode แล้วรันคำสั่งตรวจใน Git Bash</p>
 <pre><code>ทำ task T2.3 ใน TASKS.md</code></pre>
     <div class="box check"><span class="label">✅ ตรวจ</span>
       <ul class="checklist">
@@ -212,10 +221,11 @@
   </div>
   <p>รันใน Git Bash ทีละคำสั่ง (<code>--remote</code> หมายถึงฐานข้อมูลบนคลาวด์):</p>
 <pre><code>npx wrangler d1 migrations apply app-db --remote</code></pre>
+  <p class="small">คำสั่งนี้แก้ฐานข้อมูลจริง จึงถามยืนยัน <code>continue?</code> ก่อน ให้กด <kbd>y</kbd> · ถ้าขึ้นว่า migration ทั้งหมดถูกใช้แล้ว (No migrations to apply) ก็ไปต่อได้</p>
 <pre><code>npx wrangler deploy</code></pre>
   <p>คำสั่ง deploy จะแสดง URL ของแอปตอนจบ จากนั้นรัน smoke test กับ production โดยใช้บัญชี admin <strong>บน production</strong> ของคุณ (เปลี่ยน URL และรหัสในคำสั่งเป็นของตัวเอง):</p>
-<pre><code>npm run smoke url=https://my-app.ชื่อsubdomain.workers.dev user=admin pass=รหัสของคุณ</code></pre>
-  <p class="small">คำสั่งนี้ใช้ได้ทั้ง Git Bash และ PowerShell ไม่ต้องกังวลว่าข้อมูลทดสอบจะค้างอยู่ เพราะ smoke test สร้างรถและผู้ใช้ชั่วคราว แล้วลบทิ้งเองตอนจบ</p>
+<pre><code>npm run smoke url=https://my-app.ชื่อsubdomain.workers.dev user=admin pass='รหัสadminบนproduction'</code></pre>
+  <p class="small">admin บน production คือบัญชีที่สร้างทันทีหลัง deploy ครั้งแรกใน Lab 1b (คนละบัญชีกับในเครื่อง) · ถ้าขึ้น <code>❌ บัญชี admin</code> แปลว่าชื่อ/รหัสผิด · คำสั่งนี้ใช้ได้ทั้ง Git Bash และ PowerShell ไม่ต้องกังวลว่าข้อมูลทดสอบจะค้างอยู่ เพราะ smoke test สร้างรถและผู้ใช้ชั่วคราว แล้วลบทิ้งเองตอนจบ</p>
   <div class="box check"><span class="label">✅ ผ่าน Lab 3 เมื่อ</span>
     <ul class="checklist">
       <li><code>npm run trace</code> ✅ ตามรอยครบ (AC 33 ข้อ · FR 15 ข้อ)</li>

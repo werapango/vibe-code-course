@@ -90,8 +90,8 @@
     <thead><tr><th>คำสั่ง</th><th>ทำอะไร</th><th>ใช้เมื่อไร</th><th>กระทบอะไร</th></tr></thead>
     <tbody>
       <tr><td><code>npm run smoke</code></td><td>เรียก API จริงที่ localhost แล้วเช็กผลตาม AC (ต้องเปิด <code>npm run dev</code> ไว้)</td><td>หลังทุก task</td><td>สร้างผู้ใช้/ข้อมูลชั่วคราวแล้วลบทิ้งเอง · ถ้าฐานข้อมูลว่างจะสร้าง admin <code>admin</code> / <code>admin-pass-1234</code></td></tr>
-      <tr><td><code>npm run smoke user=admin pass=รหัสของคุณ</code></td><td>บอก smoke test ว่า admin ของคุณคือใคร</td><td>เมื่อสร้าง admin เองแล้ว (ไม่บอก = เคสที่ต้องใช้ admin จะถูกข้าม)</td><td>เหมือนข้างบน</td></tr>
-      <tr><td><code>npm run smoke url=https://my-app.….workers.dev user=admin pass=…</code></td><td>รัน smoke test ชุดเดียวกันกับ <strong>production</strong></td><td>หลัง deploy</td><td>สร้างแล้วลบข้อมูลชั่วคราวบน production</td></tr>
+      <tr><td><code>npm run smoke user=admin pass='รหัสของคุณ'</code></td><td>บอก smoke test ว่า admin ของคุณคือใคร</td><td>เมื่อสร้าง admin เองแล้ว (ชื่อ/รหัสผิด = ขึ้น ❌ บัญชี admin)</td><td>เหมือนข้างบน</td></tr>
+      <tr><td><code>npm run smoke url=https://my-app.….workers.dev user=admin pass='…'</code></td><td>รัน smoke test ชุดเดียวกันกับ <strong>production</strong></td><td>หลัง deploy</td><td>สร้างแล้วลบข้อมูลชั่วคราวบน production</td></tr>
       <tr><td><code>npm run trace</code></td><td>ตรวจว่า AC ทุกข้อใน SPEC.md มีเคสใน smoke และ FR ทุกข้อใน docs/SRS.md ถูกอ้างใน SPEC</td><td>หลังแก้ spec หรือหลังทุก task</td><td>อ่านไฟล์อย่างเดียว ไม่ต้องเปิด dev</td></tr>
     </tbody>
   </table></div>

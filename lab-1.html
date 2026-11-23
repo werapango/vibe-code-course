@@ -206,7 +206,7 @@
       · ปล่อยหน้าต่าง Git Bash ที่รัน <code>npm run dev</code> ไว้ แล้วเปิด Git Bash <strong>หน้าต่างที่สอง</strong> ในโฟลเดอร์ <code>my-app</code>
       · ในคำสั่งแรก ให้แทน <code>ชื่อadmin</code> และ <code>รหัสadmin</code> ด้วยชื่อและรหัส admin ที่คุณสร้างในขั้น 4</p>
     </div>
-<pre><code>npm run smoke user=ชื่อadmin pass=รหัสadmin</code></pre>
+<pre><code>npm run smoke user=ชื่อadmin pass='รหัสadmin'</code></pre>
 <pre><code>npm run trace</code></pre>
     <p>ถือว่าสำเร็จเมื่อ smoke ผ่านทุกข้อ (ยกเว้น AC-A1.1 ที่จะขึ้นว่า “ข้าม” เพราะฐานข้อมูลมีผู้ใช้แล้ว ซึ่งเป็นเรื่องปกติ) และ trace ขึ้นข้อความ <code>✅ ตามรอยครบ</code></p>
     <p class="small">คำสั่งนี้ใช้ได้ทั้ง Git Bash และ PowerShell</p>
@@ -292,7 +292,7 @@
       <tr><td><code>/api/health</code> ได้ <code>"db": "no-binding"</code></td><td>ยังไม่ได้เชื่อมฐานข้อมูล → ทำขั้น 3 (แล้วหยุดและรัน <code>npm run dev</code> ใหม่)</td></tr>
       <tr><td><code>/api/health</code> ได้ <code>"db": "not-migrated"</code> / error <code>no such table</code></td><td>ยังไม่ได้รัน migration (ยังไม่มีตาราง) → รัน <code>migrations apply</code> แบบ <code>--local</code> สำหรับในเครื่อง หรือ <code>--remote</code> สำหรับ production</td></tr>
       <tr><td>production ไม่ขึ้นหน้าตั้งค่าครั้งแรก แต่ขึ้นหน้าล็อกอิน</td><td>มีคนสร้าง admin ไปแล้ว — ถ้าไม่ใช่คุณ แจ้งผู้สอนทันที (รัน <code>npx wrangler d1 execute app-db --remote --command "DELETE FROM users"</code> แล้วสร้างใหม่)</td></tr>
-      <tr><td>smoke ขึ้น “ข้าม” หลายเคส</td><td>ไม่ได้บอกชื่อ/รหัส admin หรือรหัสผิด → ใส่ <code>user=ชื่อadmin pass=รหัสadmin</code> ต่อท้าย <code>npm run smoke</code></td></tr>
+      <tr><td>smoke ขึ้น <code>❌ บัญชี admin: ล็อกอิน admin ไม่ได้</code> และเคสอื่น “ข้าม” หมด</td><td>ไม่ได้บอกชื่อ/รหัส admin หรือพิมพ์ผิด → ใส่ <code>user=ชื่อadmin pass='รหัสadmin'</code> ต่อท้าย <code>npm run smoke</code> (ใส่รหัสใน <code>'...'</code> กันเครื่องหมายอย่าง <code>!</code> <code>$</code>)</td></tr>
       <tr><td>smoke: <code>ติดต่อเซิร์ฟเวอร์ไม่ได้</code></td><td>ไม่ได้เปิด <code>npm run dev</code> ไว้ใน terminal อีกหน้าต่าง</td></tr>
       <tr><td><code>git commit</code> ขึ้น “Please tell me who you are”</td><td>ยังไม่ได้รัน <code>git config user.name/email</code> ในขั้น 6</td></tr>
       <tr><td>port 8787 ถูกใช้อยู่</td><td>ปิด terminal เก่าที่ dev ค้าง หรือ <code>npx wrangler dev --port 8788</code></td></tr>
